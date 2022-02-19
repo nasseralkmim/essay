@@ -1,0 +1,29 @@
+#+title: Plots aesthetics
+#+date: <2021-10-08 Fri>
+#+lastmod: 2021-10-08 14:39:02
+#+author: Nasser Alkmim
+#+draft: t
+#+toc: t
+#+tags[]: favorites 
+* Introduction
+Back in 2018 I was inspired by [cite:@tufteVisualDisplayQuantitative2013] to rationalize my preference for plotting style. 
+* Current preference
+
+#+header: :var fname="figures/current-style.svg"
+#+header: :epilogue plt.savefig(fname)
+#+header: :return fname :results file value
+#+begin_src python
+import matplotlib.pyplot as plt
+import figtex; figtex.style()
+fig, ax = plt.subplots(figsize=(4, 3))
+ax.plot([1, 3, 6], label='data')
+ax.legend()
+#+end_src
+
+#+RESULTS:
+[[file:figures/current-style.svg]]
+* Grid or no grid?
+
+In [[https://www.perceptualedge.com/articles/dmreview/grid_lines.pdf]] it is argued that grid lines are useful in specific situations, otherwise they just clutter the space.
+I agree with that argument.
+

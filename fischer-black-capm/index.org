@@ -1,0 +1,25 @@
+#+options: ':nil *:t -:t ::t <:t H:3 \n:nil ^:t arch:headline
+#+options: author:t broken-links:nil c:nil creator:nil
+#+options: d:(not "LOGBOOK") date:t e:t email:nil f:t inline:t num:t
+#+options: p:nil pri:nil prop:nil stat:t tags:t tasks:t tex:t
+#+options: timestamp:t title:t toc:t todo:t |:t
+#+title: Fischer Black CAPM
+#+date: <2021-01-09 Sat>
+#+author: Nasser Alkmim
+#+email: nasser.alkmim@gmail.com
+#+language: en
+#+select_tags: export
+#+exclude_tags: noexport
+#+creator: Emacs 27.1 (Org mode 9.4.3)
+#+draft: t
+
+Fischer's quote:
+#+begin_quote
+stock prices are informative if they are between “one-half” and “twice” their fundamental values.
+#+end_quote
+
+Here he is saying that when in normal times, in the range [0.5, 2], stock prices are in fact informative.
+However when an event that largely deviates from the standard deviation (Mandelbrot), we call this event a Black Swan (Taleb), stock prices does not contain information about value.
+
+
+1. [[https://economicquestions.org/when-it-comes-to-market-liquidity-what-if-private-dealing-system-is-not-the-only-game-in-town-anymore-part-1/]]

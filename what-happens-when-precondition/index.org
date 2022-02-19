@@ -1,0 +1,13 @@
+#+title: What happens when you precondition a system?
+#+date: <2021-08-30 Mon>
+#+lastmod: 2021-08-30 08:33:48
+#+author: Nasser Alkmim
+#+draft: t
+#+toc: t
+#+tags[]:  numerical-analysis python
+* Introduction
+In this post I will show an experiment about solving linear system of equations with a iterative procedure with and without preconditioning.
+* Why eigenvalues impact convergence of iterative solvers?
+* Conclusion
+1. The success of a iterative solver is intrinsicly related with the eigenvalues distribution.
+2. A good preconditioner should produce a clustered eigenvalues, close to 1 (eigenvalues of the identity matrix).

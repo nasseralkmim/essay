@@ -1,0 +1,158 @@
+#+options: ':nil *:t -:t ::t <:t H:3 \n:nil ^:t arch:headline
+#+options: author:t broken-links:nil c:nil creator:nil
+#+options: d:(not "LOGBOOK") date:t e:t email:nil f:t inline:t num:t
+#+options: p:nil pri:nil prop:nil stat:t tags:t tasks:t tex:t
+#+options: timestamp:t title:t toc:t todo:t |:t
+#+title: Portfolio theory, CAPM and Nassim Taleb
+#+date: <2021-01-07 Thu>
+#+author: Nasser Alkmim
+#+email: nasser.alkmim@gmail.com
+#+language: en
+#+select_tags: export
+#+exclude_tags: noexport
+#+creator: Emacs 27.1 (Org mode 9.4.4)
+#+tags[]: finance portugues 
+#+toc: t
+#+draft: t
+* Portfolio theory
+
+Markowitz calculou o desvio padrão de uma carteira por meio da covariança entre os ativos que compõem a carteira.
+Com isso obteve uma relação entre retorno e desvio padrão da carteira, que entendia como medida de risco.
+
+Além disso, outra conclusão importante: *o risco de uma carteira não é simplesmente a soma da variância de cada ativo mas a soma das covariâncias*.
+Portanto, é possível a combinação de dois ativos com retornos voláteis para gerar uma carteira menos volátil se por exemplo quando um ativo cai de preço o outro aumenta, ou seja, são correlacionados negativamente.
+Dai surgiu a ideia central da diversificação do risco não sistêmico.
+
+* Fronteira eficiente
+
+Ao plotar todas as possíveis combinações de portfolios (retorno e desvio padrão), chega-se a uma figura com uma fronteira bem definida.
+Essa fronteira tem duas pernas, uma superior e outra inferior.
+Existem portfolio que apresentam o mesmo risco mas fornecem retornos distintos, um maior que o outro.
+Nesse caso, o que apresenta maior retorno está no ramo eficiente da fronteira.
+Portanto, a parte superior dessa fronteira é dita fronteira eficiente.
+
+
+#+DOWNLOADED: screenshot @ 2021-01-08 15:45:02
+#+attr_html: :width 350px
+[[file:Fronteira_eficiente/2021-01-08_15-45-02_screenshot.png]]
+
+
+* Portfolios eficientes
+
+Portfolios eficientes (portfolio ótimo), assim chamados por Markowitz, são aqueles localizados na fronteira eficiente.
+Esses portfolios são aqueles que para um nível de risco proporcionam o maior retorno esperado.
+
+
+
+#+DOWNLOADED: screenshot @ 2021-01-08 15:46:09
+#+attr_html: :width 350px
+[[file:Portfolios_eficientes/2021-01-08_15-46-09_screenshot.png]]
+
+
+* Portfolio tangente
+
+Dada a opção para um investidor em ter uma carteira com um ativo sem risco e um ativo (ou conjunto) de risco.
+Por que precisamos dessa possibilidade?
+Pois no desenvolvimento do CAPM existe um argumento de equilíbrio considerando o agregado, todos os investidores.
+Como nem todos os investidores estarão com 100% do patrimônio em ações, precisa de uma alternativa para se prosseguir com o argumento.
+
+Nesse caso, o investidor com parte em renda fixa está de fato emprestando esses recursos para alguém[fn:1].
+No gráfico retorno esperado por desvio padrão, essa escolha em ter uma carteira com essa combinação é representada por uma reta.
+A proporção entre essas duas classes de ativos define onde, na reta, o investidor está com relação ao risco e retorno esperado.
+
+
+#+DOWNLOADED: screenshot @ 2021-01-09 07:54:17
+#+attr_html: :width 350px
+[[file:Portfolio_tangente/2021-01-09_07-54-17_screenshot.png]]
+
+
+Existe um portfolio $S$ que é a melhor opção de ativo de risco a se ter em combinação com renda fixa.
+Esse portfolio é o ponto tangente entre a linha e a curva que define os possíveis portfolios, chamado de *portfolio tangente*.
+Esse é o portfolio no qual:
+1. Todos ($n$) os participantes do mercado o possuem pois ele do ponto de vista racional[fn:2] é o melhor (mais risco com menos retorno);
+2. Os participantes do mercado representam a *demanda*;
+3. Como todos os participantes do mercado possuem o mesmo portfolio M, então do outro lado existe uma *oferta* que engloba todas as empresas;
+4. A oferta é representada pelo valor total de todas as empresa $V_t=V_1+V_2+V_3+...+V_m$;
+5. Então $n(S)=V_t$ e portanto cada investidor possui uma fração do valor total das empresas;
+6. O portfolio $S=V_t/n$ é a divisão do valor total das empresas pelo número de participates no mercado;
+7. A única maneira de $S$ ser igual para todos os $n$ investidores é se o portfólio $S$ for igual a um portfólio que contém todas as empresas e é ponderado pelo valor de mercado dessas empresas;
+
+   $$S = V_1\frac{1}{n} + V_2\frac{1}{n}+ ... + V_m\frac{1}{n}$$
+
+Essa lógica mostra um argumento de equilíbrio, oferta e demanda, que estende a teoria do portfólio de um investidor individual para todo o mercado.
+A conclusão é que o portfolio tangente é o melhor entre os portfolios eficientes e /consiste em ter todo o mercado ponderado pelo market cap de cada empresa/.
+
+
+
+Notar que essa reta tangente é a mais vertical possível, indicando maior retorno possível por nível de risco.
+Significa uma otimização da média-variância, não quero só o maior retorno (médio), quero o maior retorno por unidade de risco (variância).
+Essa reta tangente é denominada capital market line (CML). 
+
+#+DOWNLOADED: screenshot @ 2021-01-08 20:30:06
+#+attr_html: :width 350px
+[[file:Portfolio_tangente/2021-01-08_20-30-06_screenshot.png]]
+
+
+
+* Capital asset pricing model (CAPM)
+
+O que é CAPM? um modelo para precificar ativos, como o nome sugere: capital asset pricing model.
+É uma teoria que descreve o equilíbrio entre retorno esperado e risco.
+
+Como surgiu?
+O retorno de um portfolio é relacionado com o retorno ponderado dos ativos nesse portfolio.
+E o risco do portfolio?
+Não é simplemente uma ponderação das variâncias dos ativos, depende também da correlação entre eles (Markowitz).
+
+Qual a relação com teoria de portfolio e o CAPM?
+
+#+begin_quote
+Portfolio Theory focused on the actions of a single investor with an optimal portfolio. You wondered what would happen to risk and return if everyone followed Markowitz and built efficient portfolios. -- Sharpe
+#+end_quote
+
+A CML fornece o retorno esperado com da carteira com ativo sem risco (Renda fixa) e ativo com risco (carteira de mercado).
+O retorno base é o recebido pela renda fixa e o excesso é dado pelo retorno do mercado menos a renda fixa, prêmio de risco.
+Esse prêmio de risco é ponderado pela razão entre o desvio padrão do portfólio e o desvio padrão do mercado.
+
+$$R_p = R_f + \frac{\sigma_p}{\sigma_m} (R_m - R_f)$$
+
+O desvio padrão do portfolio é a covariância dos ativos no portfólio, no caso renda fixa e mercado.
+
+#+begin_quote
+I said what if everyone was optimizing? They've all got their copies of Markowitz and they're doing what he says. Then some people decide they want to hold more IBM, but there aren't enough shares to satisfy demand. So they put price pressure on IBM and up it goes, at which point they have to change their estimates of risk and return, because now they're paying more for the stock. That process of upward and downward pressure on prices continues until prices reach an equilibrium and everyone collectively wants to hold what's available. At that point, what can you say about the relationship between risk and return? The answer is that expected return is proportionate to beta relative to the market portfolio. -- Sharpe
+#+end_quote
+
+
+* Nassim Taleb
+*** Fooled by randomness
+
+Critica o uso da variância como medida de risco e para isso assume a distribuição normal dos retornos históricos.
+*** Antifragil
+
+#+begin_quote
+Note one fallacy promoted by Markowitz users: portfolio theory entices people to diversify, hence it is better than nothing. Wrong, you ﬁnance fools: it pushes them to optimize, hence overallocate. It does not drive people to take less risk based on diversiﬁcation, but causes them to take more open positions owing to perception of offsetting statistical properties…
+#+end_quote
+
+Markowitz argumenta e produz evidência em favor da diversificação para reduzir o risco não sistêmico (diversificável).
+Taleb fala que é uma falácia achar que diversificação reduz risco, pois estamos olhando o risco por meio de correlações.
+E ele explica em seguida que correlações variam no tempo,
+
+#+begin_quote
+I noticed as a trader— and obsessed over the idea— that correlations were never the same in different measurements. Unstable would be a mild word for them: 0.8 over a long period becomes −0.2 over another long period. A pure sucker game. At times of stress, correlations experience even more abrupt changes— without any reliable regularity, in spite of attempts to model “stress correlations.”
+#+end_quote
+
+* Footnotes
+
+[fn:1] Se alguém empresta recursos, alguém mutua (pega emprestado). Essa é uma hipótese central para desenvolver o modelo CAPM, assume-se que há amplo acesso a financiamento pela taxa livre de risco. *A liquidez é ampla, grátis e continua.*
+
+[fn:2] Essa é a hipótese de mercado eficiente que introduz o "homo economicus". Não é uma verdade absoluta, mas não há razão para pensar o contrário do ponto de vista racional.
+
+* Referencias
+
+1. [[https://www.youtube.com/watch?v=z2oQe6B1Qa4&t=179s][Ses 15: Portfolio Theory III & The CAPM and APT I - YouTube]]
+2. Principles of Corporate Finance, Richard Brealey, Stewart Myers, and Franklin Allen
+3. [[https://www.next-finance.net/Nassim-Taleb-portfolio-theory-it-s][Interview - Nassim Taleb « portfolio theory: it's a bit what astrology was to...]]
+4. [[https://economicquestions.org/when-it-comes-to-market-liquidity-what-if-private-dealing-system-is-not-the-only-game-in-town-anymore-part-1/][When it Comes to Market Liquidity, what if Private Dealing System is Not "The...]]
+5. [[https://web.stanford.edu/~wfsharpe/art/djam/djam.htm][Revisiting the Capital Asset Pricing Model]]
+6. [[https://www.jstor.org/stable/3440419?seq=1][William F. Sharpe's Contributions to Financial Economics on JSTOR]]
+   

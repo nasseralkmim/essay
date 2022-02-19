@@ -1,0 +1,77 @@
+#+options: ':nil *:t -:t ::t <:t H:3 \n:nil ^:t arch:headline
+#+options: author:t broken-links:nil c:nil creator:nil
+#+options: d:(not "LOGBOOK") date:t e:t email:nil f:t inline:t num:t
+#+options: p:nil pri:nil prop:nil stat:t tags:t tasks:t tex:t
+#+options: timestamp:t title:t toc:t todo:t |:t
+#+title: Portfolio pessoal
+#+date: <2020-12-30 Wed>
+#+author: Nasser Alkmim
+#+email: nasser.alkmim@gmail.com
+#+language: en
+#+select_tags: export
+#+exclude_tags: noexport
+#+creator: Emacs 27.1 (Org mode N/A)
+#+toc: t
+#+tags[]: personal-portfolio
+#+draft: t
+* Consolidação do portfolio
+
+#+begin_src jupyter-python
+import pandas as pd
+import portman as pm
+
+pm.consolidate('trade_data.csv')
+#+end_src
+
+#+RESULTS:
+
+
+* Análise
+
+#+begin_src jupyter-python 
+import matplotlib
+import matplotlib.pyplot as plt
+matplotlib.style.use('ggplot')
+import portman as pm
+
+pm.analysis.summary('portfolio.csv')
+pm.analysis.allocation('portfolio.csv')
+pm.analysis.returns('returns.csv')
+pm.analysis.dividends('dividends.csv')
+plt.tight_layout()
+#+end_src
+
+#+RESULTS:
+:RESULTS:
+[[file:./jupyter/bfb4f9af039fb1691cef2a09662817305f701ac0.png]]
+[[file:./jupyter/08fcebaf8a3a4cb3110fddd076148e265fb9439a.png]]
+[[file:./jupyter/3f16ab03e35aad001a6a130a51a94e9914196660.png]]
+[[file:./jupyter/d35c91b60af2a80357957842b2c31c32ddbb91a5.png]]
+:END:
+
+
+
+
+* Outros
+
+#+begin_src jupyter-python
+div = pd.read_csv('dividends.csv', parse_dates=['date_com'])
+print(div.groupby([div.date_com.dt.to_period('M'), 'ticker', 'type', 'date_com']).sum().tail(10))
+#+end_src
+
+#+RESULTS:
+#+begin_example
+                                            Unnamed: 0  value  vol_liq  total
+date_com ticker type            date_com                                     
+2020-12  B3SA3  DIVIDENDO       2020-12-30          67   0.41       36  14.78
+                JRS CAP PROPRIO 2020-12-30          68   0.15       36   5.29
+         EGIE3  DIVIDENDO       2020-12-18          60   0.68      107  72.71
+                JRS CAP PROPRIO 2020-12-18          61   0.21      107  22.95
+         HYPE3  JRS CAP PROPRIO 2020-12-28          22   0.29       81  23.72
+         ITUB3  DIVIDENDO       2020-12-30         336   0.01      213   3.19
+         MDIA3  JRS CAP PROPRIO 2020-12-23          17   0.46       56  25.60
+         MGLU3  JRS CAP PROPRIO 2020-12-29          13   0.03      460  12.10
+         ODPV3  JRS CAP PROPRIO 2020-12-15          87   0.02      290   6.81
+         WEGE3  JRS CAP PROPRIO 2020-12-18          96   0.04      135   4.98
+#+end_example
+

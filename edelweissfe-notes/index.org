@@ -1,0 +1,1418 @@
+#+title: eldweissFE notes
+#+date: <2021-05-23 Sun>
+#+author: Nasser Alkmim
+#+email: nasser.alkmim@gmail.com
+#+draft: t
+#+toc: t
+#+tags[]: python edelweissfe
+* Installation
+** Overview
+We need =Marmot= libraries to be built (compiled) and installed (copied) to the python environment in which =edelweissFE= will run.
+
+It also depends on Cython modules.
+This is done by running the =python setup.py build_ext -i=. (from the README.md).
+** Requirements
+Python 3.5+ and python packages:
+
+- Python 3.5+*
+- Numpy*
+- Scipy*
+- Cython 0.28+*
+- Matplotlib*
+- Sympy
+- Rich
+- OpenMP* (*CONDA* only)
+- Intel MKL for the PARDISO*  (binaries and header files; if you use Anaconda, install packages `mkl` and `mkl-include`) (CONDA)
+
+Non python external libraries:
+
+- Marmot (built and installed into python environment)
+- Eigen Library for Linear Algebra (http://eigen.tuxfamily.org/index.php?title=Main_Page) (header only installed in the python environment)
+  
+*** Intel MKL
+
+Optimized multi thread routines that Eigen uses automatically to improve performance.
+[[https://eigen.tuxfamily.org/dox/TopicUsingIntelMKL.html][Eigen: Using Intel® MKL from Eigen]].
+
+=conda install mkl=
+
+
+*** Cython
+
+=conda install cython=
+
+
+*** OpenMP
+
+=conda install -c conda-forge openmp=
+
+
+**** Prolems
+
+=conda install openMP= does not work.
+
+=conda install -c conda-forge openmp= works.
+
+*** Rich
+=conda install -c conda-forge rich=
+
+** Running an example
+*** Run command
+Correct python environment, to edelweissfe.py script and an input file
+#+begin_src shell
+~/miniconda3/envs/edelweissFE/bin/python /mnt/c/Users/c8441205/OneDrive/Academy/PhD/projects/EdelweissFE/edelweiss.py input.inp
+#+end_src
+
+
+** amgcl
+*** What it amgcl?
+It is a header only C++ library for AMG and Krylov subspace methods.
+*** How to build amgcl?
+Since it is a header only, it does not require installation.
+We just need to point to the compiler the library location.
+
+The python side we just need =pip install -e .= with the correct =pip= environment.
+
+**** What cmake do in a header only?
+It will run the =CMakeList.txt= file.
+
+If we inspect this file we notice:
+1. dependency of boost (program options, serialization and unit test)
+
+In the amgcl source folder.
+
+#+begin_src shell
+mkdir build
+cd build
+cmake ..
+make
+#+end_src
+
+*** Requirements
+
+1. =sudo apt install libboost-serialization-dev=
+1. =sudo apt install libboost-test-dev=
+
+error:
+#+begin_example
+ Could not find a package configuration file provided by
+  "boost_program_options" (requested version 1.71.0) with any of the
+  following names:
+
+    boost_program_optionsConfig.cmake
+    boost_program_options-config.cmake
+
+  Add the installation prefix of "boost_program_options" to CMAKE_PREFIX_PATH
+  or set "boost_program_options_DIR" to a directory containing one of the
+  above files.  If "boost_program_options" provides a separate development
+  package or SDK, be sure it has been installed
+#+end_example
+
+
+*** How to use it with python?
+:PROPERTIES:
+:ID:       22bc44d8-1015-4529-8f90-3a7eb42ca202
+:END:
+
+It uses =pybind11= to make a C++ file available to python.
+See for example [[id:b5954efc-0570-4afe-a457-e4b6b1edb24d][How is it used?]] 
+
+To use the python library, make =pyamgcl= available in the environment we just need run in the =amgcl= root folder with the =setup.py= file.
+
+
+#+begin_src shell
+pip install -e .
+#+end_src
+
+This will install (-editable) version of the =pyamgcl= into the environment,
+
+#+begin_src shell
+pip list | grep pyamgcl
+#+end_src
+
+#+RESULTS:
+: pyamgcl             1.4.0.post76        /mnt/c/Users/c8441205/OneDrive/Academy/PhD/softwares/EdelweissFE/fe/linsolve/amgcl/amgcl
+
+Then we can import it,
+
+#+begin_src python
+import numpy as np
+import pyamgcl as amg
+from scipy.sparse import csr_matrix
+np.random.seed(1)
+np.set_printoptions(2, suppress=True)
+
+A = np.random.random((30, 30))
+b = A[:, 0]
+print(np.linalg.solve(A, b))
+As = csr_matrix(A)
+S = amg.solver(amg.amgcl(As, prm={'relax.type': 'spai0'}),
+               prm=dict(type='gmres',
+                        tol=1e-8,
+			maxiter=1000))
+print(S(b))
+#+end_src
+
+#+RESULTS:
+: [ 1.  0. -0.  0.  0.  0. -0. -0. -0. -0. -0. -0.  0.  0. -0. -0.  0. -0.
+:  -0. -0. -0. -0.  0.  0. -0.  0. -0.  0.  0.  0.]
+: [-0.13  0.89 -0.16 -0.38  0.46  0.17 -0.55 -0.23 -0.97 -0.39 -0.2   0.08
+:   0.48 -0.59 -0.61 -0.71  0.8  -0.98  0.64 -0.42 -0.35  0.21  1.07  1.14
+:   0.1  -0.12 -0.27  0.04  0.7   0.76]
+
+** Details
+*** Marmot Installation
+In Marmot source code.
+
+Install prefix directed to edelweissFE environment so it can know where the is the c++ program.
+
+#+begin_src shell
+mkdir build
+cd build
+cmake .. -DCMAKE_INSTALL_PREFIX=~/miniconda3/envs/edelweissFE
+#+end_src
+
+Header files will be included in the prefix folders.
+In this case it it as conda virtual environment where all =edelweissFE= dependencies are installed.
+
+To compile the code =sudo make -j12= and to install =make install=.
+
+#+begin_src shell
+cd ~/miniconda3/envs/edelweissFE/include/Marmot/
+ls
+#+end_src
+
+#+RESULTS:
+#+begin_example
+Marmot.h
+MarmotElement.h
+MarmotElementProperty.h
+MarmotJournal.h
+MarmotMaterial.h
+MarmotMaterialGradientEnhancedHypoElastic.h
+MarmotMaterialGradientEnhancedMechanical.h
+MarmotMaterialHyperElastic.h
+MarmotMaterialHypoElastic.h
+MarmotMaterialMechanical.h
+MarmotMaterialRegistrationHelper.h
+MarmotUtils.h
+#+end_example
+
+*** Eigen
+
+C++ linear algebra with headers only.
+Does not need to compile, just need to link it to your code.
+
+Just make the headers available to Edelweissfe (in the same venv).
+
+In the =eigen= source code folder:
+
+#+begin_src shell
+mkdir build
+cd build
+cmake .. -DBUILD_TESTING=off -DCMAKE_INSTALL_PREFIX=/home/nasser/miniconda3/envs/edelweissFE
+#+end_src
+
+Check with:
+#+begin_src shell
+cd /home/nasser/miniconda3/envs/edelweissFE/include/
+ls | grep eigen
+#+end_src
+
+#+RESULTS:
+: eigen3
+
+
+#+RESULTS:
+
+The default installation path for the headers is =/usr/local/include/eigen3=.
+Which is the standard location for user installed libraries.
+That is where =Marmot= will try to look for the library.
+
+You can check the installation path with,
+#+begin_src shell
+cd ~/eigen/build
+grep -C 3 prefix CMakeCache.txt 
+#+end_src
+
+#+RESULTS:
+: //C header files for non-gcc (/usr/include)
+: CMAKE_INSTALL_OLDINCLUDEDIR:PATH=/usr/include
+: 
+: //Install path prefix, prepended onto install directories.
+: CMAKE_INSTALL_PREFIX:PATH=/usr/local
+: 
+: //Run-time variable data (LOCALSTATEDIR/run)
+
+After =cmake= creates the building files, the installation can be done with =make install=.
+
+Edelweiss defaults looks for eigen in =include/= folder in the environment.
+But eigen defaults the installation to =/include/eigen3/.=
+In eigen build environment we can change that with =-D INCLUDE_INSTALL_DIR:PATH=include= during =cmake= call.
+
+
+*** MKL Pardiso
+
+Install from conda.
+
+#+begin_src shell
+conda install mkl mkl-include
+#+end_src
+
+
+*** Adding modules to Marmot
+
+1. clone new modules into marmot folder, =modules/materials/= for materials and =modules/elements/= for elements.
+2. in the =build/= folder, =cmake .. -DCMAKE_INSTALL_PREFIX=~/miniconda3/envs/edelweissFE=.
+3. =make= and =sudo make install= to update the library.
+4. Edelweissfe will be able to access without any additional step from the python side.
+
+Element modules end with =Element= suffix.
+Core modules end with =Core= suffix.
+
+#+begin_src shell :dir /mnt/c/Users/c8441205/OneDrive/Academy/PhD/softwares/ 
+tree -L 2 Marmot/modules
+#+end_src
+
+#+RESULTS:
+#+begin_example
+Marmot/modules
+├── core
+│   ├── MarmotCosseratCore
+│   ├── MarmotFiniteElementCore
+│   ├── MarmotMathCore
+│   └── MarmotMechanicsCore
+├── elements
+│   ├── DisplacementFiniteElement
+│   ├── GradientEnhancedCosseratFiniteElement
+│   ├── GradientEnhancedDisplacementFiniteElement
+│   └── place_your_elements_here
+└── materials
+    ├── GMCDP
+    ├── LinearElastic
+    ├── MCDP
+    ├── ModLeon
+    ├── ModLeonNonLocal
+    └── place_your_materials_here
+
+15 directories, 2 files
+#+end_example
+
+
+#+begin_src shell
+cd /mnt/c/Users/c8441205/OneDrive/Academy/PhD/softwares/Marmot/build
+cmake .. -DCMAKE_INSTALL_PREFIX=~/miniconda3/envs/edelweissFE
+#+end_src
+
+#+RESULTS:
+: -- This is CMake 3.20.3
+: -- 
+: --> found Eigen: /usr/local/include/eigen3
+: --> found MarmotMathCore
+: --> found MarmotMechanicsCore
+: --> found MarmotFiniteElementCore
+: --> found GMCDP
+: --> found LinearElastic
+: --> found ModLeon
+: --> found ModLeonNonLocal
+: --> found DisplacementFiniteElement
+: --> found GradientEnhancedDisplacementFiniteElement
+: --> found GradientEnhancedCosseratFiniteElement
+: -- CMAKE_INSTALL_PREFIX: /home/nasser/miniconda3/envs/edelweissFE
+: -- Configuring done
+: -- Generating done
+: -- Build files have been written to: /mnt/c/Users/c8441205/OneDrive/Academy/PhD/softwares/Marmot/build
+
+
+*** Run edelweissfe
+
+Use it as a _standalone application_.
+
+=python edelweiss.py input.inp=
+
+If not in the same folder as =edelweiss.py=, you need to provide the correct path to it.
+Or create an alias for the whole command =python edelweiss.py= in the =~/.bashrc=.
+Using the  =python= interpreter from the right environment.
+In my case:
+
+#+begin_src shell :dir /home/nasser/miniconda3/envs/edelweissFE/bin
+./python --version
+./pip -V
+#+end_src
+
+#+RESULTS:
+: Python 3.9.5
+: pip 21.1.1 from /home/nasser/miniconda3/envs/edelweissFE/lib/python3.9/site-packages/pip (python 3.9)
+
+
+*** Installed requirements and version
+
+
+#+begin_src shell
+conda list -n edelweissFE | grep -E "numpy|scipy|cython|matplotlib|rich|openmp|mkl|eigen|edelweiss"
+#+end_src
+
+#+RESULTS:
+#+begin_example
+# packages in environment at /home/nasser/miniconda3/envs/edelweissFE:
+blas                      1.0                         mkl  
+cython                    0.29.23          py39h2531618_0  
+intel-openmp              2021.2.0           h06a4308_610  
+llvm-openmp               8.0.1                hc9558a2_0    conda-forge
+matplotlib                3.3.4            py39h06a4308_0  
+matplotlib-base           3.3.4            py39h62a2d02_0  
+matplotlib-inline         0.1.2                    pypi_0    pypi
+mkl                       2021.2.0           h06a4308_296  
+mkl-include               2021.2.0           h06a4308_296  
+mkl-service               2.3.0            py39h27cfd23_1  
+mkl_fft                   1.3.0            py39h42c9631_2  
+mkl_random                1.2.1            py39ha9443f7_2  
+numpy                     1.20.2           py39h2d18471_0  
+numpy-base                1.20.2           py39hfae3a4d_0  
+openmp                    8.0.1                         0    conda-forge
+rich                      10.2.2           py39hf3d152e_0    conda-forge
+scipy                     1.6.2            py39had2a1c9_1  
+#+end_example
+
+*** EdelweissFE validate
+
+Run the python script to check the available elements and materials.
+
+
+#+begin_src shell
+cd /mnt/c/Users/c8441205/OneDrive/Academy/PhD/softwares/EdelweissFE/
+python validateEdelweiss.py
+#+end_src
+
+#+RESULTS:
+#+begin_example
+Test BendingTrussGMNeoHooke                            Test BendingTrussGMNeoHooke                             FAILED: Invalid element 
+GMC3D8UL requested!
+Test BodyForce3D                                       Test BodyForce3D                                        PASSED \[0.7]
+Test C3D20                                             Test C3D20                                              PASSED \[0.2]
+Test C3D8                                              Test C3D8                                               PASSED \[0.7]
+Test C3D8TL                                            Test C3D8TL                                             FAILED: Invalid element 
+C3D8TL requested!
+Test CCPE8R                                            Test CCPE8R                                             FAILED: Invalid element 
+CCPE8R requested!
+Test CDP                                               Test CDP                                                FAILED: Invalid material
+CDP requested!
+Test CDPPlane                                          Test CDPPlane                                           FAILED: Invalid material
+CDP requested!
+Test CPE4EAS2                                          Test CPE4EAS2                                           FAILED: Invalid element 
+CPE4EAS2 requested!
+Test CPE4EAS5                                          Test CPE4EAS5                                           FAILED: Invalid element 
+CPE4EAS5 requested!
+Test CPS4                                              Test CPS4                                               PASSED \[11.9]
+Test CPS8R                                             Test CPS8R                                              PASSED \[7.7]
+Test DLoad                                             Test DLoad                                              PASSED \[0.6]
+Test DLoad3DTotalLagrange                              Test DLoad3DTotalLagrange                               FAILED: Invalid element 
+C3D8TL requested!
+Test DLoad3DUpdatedLagrange                            Test DLoad3DUpdatedLagrange                             FAILED: Invalid element 
+C3D8UL requested!
+Test DLoadLargeStrain                                  Test DLoadLargeStrain                                   FAILED: Invalid element 
+CPE4TL requested!
+Test GC3D20RMixed                                      Test GC3D20RMixed                                       FAILED: Invalid element 
+GC3D20RMIXED requested!
+Test GC3D8                                             Test GC3D8                                              PASSED \[6.5]
+Test GCPE4EAS2                                         Test GCPE4EAS2                                          FAILED: Invalid element 
+GCPE4EAS2 requested!
+Test GCPE4ULFBar                                       Test GCPE4ULFBar                                        FAILED: Invalid element 
+GCPE4ULFBAR requested!
+Test GCPS4                                             Test GCPS4                                              PASSED \[0.8]
+Test GeoStatic                                         Test GeoStatic                                          PASSED \[0.9]
+Test GMCDPFiniteStrainHydrostatic                      Test GMCDPFiniteStrainHydrostatic                       FAILED: Invalid element 
+GMC3D20RUL requested!
+Test GMCDPFiniteStrainPlaneStrain                      Test GMCDPFiniteStrainPlaneStrain                       FAILED: Invalid element 
+GMCPE8RUL requested!
+Test GMDruckerPragerPlaneStrain                        Test GMDruckerPragerPlaneStrain                         FAILED: Invalid element 
+GMCPE8RUL requested!
+Test IndirectDisplacementControl                       Test IndirectDisplacementControl                        FAILED: Invalid element 
+GCPE4EAS2 requested!
+Test IndirectDisplacementControl2                      Test IndirectDisplacementControl2                       PASSED \[4.6]
+Test JaumannShearPanel2D                               Test JaumannShearPanel2D                                FAILED: Invalid element 
+CPE4UL requested!
+Test LinearElasticIsotropic                            Test LinearElasticIsotropic                             PASSED \[0.0]
+Test LinearElasticOrthotropic                          Test LinearElasticOrthotropic                           PASSED \[0.0]
+Test LinearElasticShrinkage                            Test LinearElasticShrinkage                             FAILED: Invalid material
+LINEARELASTICSHRINKAGE requested!
+Test LinearElasticSolidificationCreep                  Test LinearElasticSolidificationCreep                   FAILED: Invalid material
+LINEARELASTICSOLIDIFICATIONCREEP requested!
+Test LinearElasticTransverseIsotropic                  Test LinearElasticTransverseIsotropic                   PASSED \[0.0]
+Test LinearizedRigidBodyConstraint                     Test LinearizedRigidBodyConstraint                      PASSED \[0.3]
+Test MCDPPlaneStrain                                   Test MCDPPlaneStrain                                    FAILED: Invalid element 
+CCPE8R requested!
+Test MeshPlot                                          Test MeshPlot                                           PASSED \[2.9]
+Test ModifiedCamClay                                   Test ModifiedCamClay                                    FAILED: Invalid material
+MODIFIEDCAMCLAY requested!
+Test NodeForces                                        Test NodeForces                                         PASSED \[0.8]
+Test OutputManagers                                    Test OutputManagers                                     PASSED \[3.7]
+Test PlaneStrainBiAxHB                                 Test PlaneStrainBiAxHB                                  FAILED: Invalid material
+HOEKBROWN requested!
+Test PlaneStrainBiAxORDP                               Test PlaneStrainBiAxORDP                                FAILED: Invalid material
+ORDP requested!
+Test PlaneStrainBiAxRDP                                Test PlaneStrainBiAxRDP                                 FAILED: Invalid material
+ROCKDAMAGEPLASTICITY requested!
+Test PorousElastic                                     Test PorousElastic                                      FAILED: Invalid material
+POROUSELASTIC requested!
+Test RigidBodyConstraintLargeDeformations3D            Test RigidBodyConstraintLargeDeformations3D             FAILED: Invalid element 
+C3D8TL requested!
+Test SetField                                          Test SetField                                           PASSED \[0.5]
+Test ShotLeon                                          Test ShotLeon                                           FAILED: Invalid material
+SHOTLEON requested!
+Test ShotLeonV2                                        Test ShotLeonV2                                         FAILED: Invalid material
+SHOTLEONV2 requested!
+Test ShotLeonV2NonLocal                                Test ShotLeonV2NonLocal                                 FAILED: Invalid material
+SHOTLEONV2NONLOCAL requested!
+Test ShotLeonV2NonLocalCreepTest                       Test ShotLeonV2NonLocalCreepTest                        FAILED: Invalid material
+SHOTLEONV2NONLOCAL requested!
+Test T2D2                                              Test T2D2                                               PASSED \[0.1]
+Test TwistingTrussGMNeoHooke                           Test TwistingTrussGMNeoHooke                            FAILED: Invalid element 
+GMC3D8UL requested!
+Test TwistingTrussJaumannRate                          Test TwistingTrussJaumannRate                           FAILED: Invalid element 
+C3D8UL requested!
+#+end_example
+
+*** Latex
+
+For the MethPlot test it is required some latex dependencies.
+
+For instance, =type1ec.sty= is required for unicode support.
+This can be installed in a =texlive= installation with =sudo apt install cm-super=.
+
+*** Error: Conda with libstdc++.so.6
+
+#+begin_example
+ImportError: /home/nasser/miniconda3/envs/edelweissfe/lib/python3.9/site-packages/matplotlib/../../../libstdc++.so.6: version `GLIBCXX_3.4.29' not found (required by /home/nasser/miniconda3/envs/edelweissfe/lib/libMarmot.so)
+#+end_example
+
+It seems that =libMarmot.so= is looking into matpltolib =libstdc++.so.6=
+
+Check if =GLIBCXX_3.4.29= is in the =~/miniconda3/lib= folder.
+
+#+begin_src shell :dir /-::~/ :shebang ""
+strings ~/miniconda3/lib/libstdc++.so.6 | grep GLIBCXX_3.4.2
+#+end_src
+
+#+RESULTS:
+#+begin_example
+GLIBCXX_3.4.2
+GLIBCXX_3.4.20
+GLIBCXX_3.4.21
+GLIBCXX_3.4.22
+GLIBCXX_3.4.23
+GLIBCXX_3.4.24
+GLIBCXX_3.4.25
+GLIBCXX_3.4.26
+GLIBCXX_3.4.27
+GLIBCXX_3.4.28
+GLIBCXX_3.4.21
+GLIBCXX_3.4.28
+GLIBCXX_3.4.25
+GLIBCXX_3.4.24
+GLIBCXX_3.4.20
+GLIBCXX_3.4.2
+GLIBCXX_3.4.27
+GLIBCXX_3.4.23
+GLIBCXX_3.4.22
+GLIBCXX_3.4.26
+#+end_example
+
+It is missing the =3.4.29=.
+
+Check in the system lib:
+
+#+begin_src shell :dir /-::~/ :shebang ""
+strings /lib/libstdc++.so.6 | grep GLIBCXX_3.4.29
+#+end_src
+
+#+RESULTS:
+: GLIBCXX_3.4.29
+: GLIBCXX_3.4.29
+
+Its is there.
+If a copy the system to the miniconda, this solves the error.
+
+#+begin_src shell :dir /-::~/ :shebang ""
+cp /lib/libstdc++.so.6 ~/miniconda3/lib/
+#+end_src
+
+#+RESULTS:
+
+* Input file
+** Prologue
+Contains the whole model data and history data.
+Follows Abaqus notation [[https://classes.engineering.wustl.edu/2009/spring/mase5513/abaqus/docs/v6.6/books/gss/ch02s03.html][2.3 Creating an input file]].
+
+Model data has geometry and material property.
+History data represents the sequence of events happening during the simulation.
+
+** Notation
+1. =*= heading
+2. =**= comment
+** Model data
+*** Material
+
+The name is used to associate a material with a element section.
+
+#+begin_example
+*material, name=LinearElastic, id=myMaterial
+**Isotropic
+**E   | nu |
+1.8e4, 0.22
+#+end_example
+
+*** Node
+
+#+begin_example
+*node
+<node number>,<-coordinate>,<-coordinate>,<-coordinate>
+#+end_example
+
+
+*** Node set
+*** Element
+Element type specify the kind of element.
+#+begin_example
+*element, Type=C3D8
+<element number>, <node 1>, ... <node n>
+#+end_example
+
+
+*** Element set
+*** Surface
+** History data
+*** Job
+
+#+begin_example
+*job, name=c3d8job, domain=3d, solver=NISTParallel
+#+end_example
+
+*** Step
+Each step defines the events in the simulations.
+
+1. the step refers to the specific job
+
+Specifications:
+1. type
+2. name
+3. set of node where the conditions is applied
+4. what field, coordinate and value
+   
+#+begin_example
+*step, jobName=c3d8job, maxInc=1e0, minInc=1e0, maxNumInc=100, maxIter=25, stepLength=1
+dirichlet, name=1, nSet=left, field=displacement, 2=0
+dirichlet, name=2, nSet=bottomback, field=displacement, 1=0,3=0
+dirichlet, name=3, nSet=bottomleft, field=displacement, 3=0
+
+*step, jobName=c3d8job, maxInc=1e0, minInc=1e0, maxNumInc=10, maxIter=25, stepLength=1
+dirichlet, name=right, nSet=right, field=displacement, 2=-0.01
+#+end_example
+
+
+*** Field output
+
+**** Types
+
+#+begin_example
+*output, type=ensight, jobName=c3d8job, name=ensightExport
+#+end_example
+
+* Architecture
+** Config
+*** lisolver
+:PROPERTIES:
+:ID:       a321ecb9-c392-4272-a120-10623caa658f
+:END:
+:BACKLINKS:
+[2021-07-22 Thu 15:17] <- [[id:8e150f99-daba-48f3-8d8b-042594278372][Nonlinear solver (Classe)]]
+:END:
+Selects the linear solver.
+The linear solver selector is called in the nonlinear implicit static method, in the solver sub-package.
+** Constraints
+** Elements
+** Core
+** Generators
+** Journal
+Prints messages to the terminal.
+
+** Linsolve
+** Materials
+** Output Manager
+*** Field output
+
+1. name of the field output
+2. elSet is the collection of elements
+3. results: values from integration points are defined in marmort
+4. field: is the nodal solution, displacements
+   1. U: is the variable name for the solution
+   2. P: is for the force vector.
+
+*** Output managers
+
+
+** Solvers
+*** Nonlinear solver (Classe)
+:PROPERTIES:
+:ID:       8e150f99-daba-48f3-8d8b-042594278372
+:END:
+The NIST is the non linear implicit static solver.
+
+The "solver" is a class that implements the =solveStep= method that solves for all steps.
+
+Inside =solveStep= there is a =solveIncrement= that solves the linear system for each increment.
+
+In this function the linear solver, selected in [[id:a321ecb9-c392-4272-a120-10623caa658f][lisolver]], is called.
+*** =solveStep=
+
+Solves for a step.
+Increments always start with 0
+
+In the =solveStep= there is a call for =solveIncrement=.
+An increment is a Newton Raphson step from $n$ to $n+1$.
+
+*** =solveIncrement=
+
+During the increment solver, there is a call to =computeElements= method.
+This will form the element matrices and assemble the global ones.
+
+The first increment has RHS equals the zero vector.
+
+First Newton iteration, the RHS is used to apply Dirichlet boundary conditions.
+Then, the subsequent iterations, those degree's of freedom will have 1 in the diagonal and 0 on the RHS.
+
+** Step actions
+*** What is a step?
+A step is a component that forms an `analysis` or `job`.
+
+The concept of step is a `history phase` for the analysis.
+For instance, a static analysis where the load changes from a magnitude to another, or an applied displacement changes.
+
+Steps are useful to change `analysis type` or just as a convenience tool to better control the procedure.
+
+Ref: [[https://abaqus-docs.mit.edu/2017/English/SIMACAEANLRefMap/simaanl-c-over.htm][Defining an analysis]]
+*** What is the difference between an 'initial' step and an 'analysis' step?
+
+Initial step usually is for boundary conditions.
+
+obs: Abaqus creates _one_ 'initial' step for the model.
+
+One or more _analysis step_ follows the initial step.
+
+For example.
+First steps applies Dirichlet boundary conditions.
+Second step applies a fixed displacement on right node set.
+Since the =minInc= is equal the =stepLength= the whole specified displacement is applied.
+If the increment was smaller, the displacement would be applied linearly with the increment. 
+
+#begin_src example
+*step, jobName=c3d8job, maxInc=1e0, minInc=1e0, maxNumInc=100, maxIter=25, stepLength=1
+dirichlet, name=1, nSet=left, field=displacement, 2=0
+dirichlet, name=2, nSet=bottomback, field=displacement, 1=0,3=0
+dirichlet, name=3, nSet=bottomleft, field=displacement, 3=0
+
+*step, jobName=c3d8job, maxInc=1, minInc=1, maxNumInc=10, maxIter=25, stepLength=1
+dirichlet, name=right, nSet=right, field=displacement, 2=-0.01
+#+end_src
+
+This will yield an analysis (linear):
+
+#+begin_src example
+increment 0: 0.000000, 0.000000; time   0.000000 to   0.000000                       NISTPSolver 
+increment 1: 1.000000, 1.000000; time   0.000000 to   1.000000                       NISTPSolver 
+|Step computation time                 |    0.0269s                           |                  feCore 
+increment 0: 0.000000, 0.000000; time   1.000000 to   1.000000                            NISTPSolver 
+increment 1: 1.000000, 1.000000; time   1.000000 to   2.000000                            NISTPSolver 
+|Step computation time                    |    0.0104s                              |                 feCore 
+|Job computation time                       |    0.0373s                                |                  feCore 
+#+end_src
+
+First step was specified with =stepLength=1=, and the =maxInc=minInc=1=.
+
+The first step has 2 increments, the first goes from 0 to 0.
+TODO what the first increment, without advancing analysis, do?
+
+Second step was specified with =steplength=1= also.
+It continues from the previous step, which advanced the analysis from 0 to 1.
+It has two increments, the first does not advances the analysis.
+The second goes from 1 to 2.
+This had no problems because the model is linear and the residual was very small.
+*** What is the relation between a 'step' and an 'increment'?
+Step defines an 'Abaqus' step, for apply a specific boundary condition, load, etc.
+
+Increment is the division in the Newton procedure.
+At each increment there can be multiple Newton iterations.
+The end of an increment, the converged solution is returned.
+
+Each increment starts with a size zero increment.
+
+*** What information characterizes a step?
+
+1. maximum size of the Newton increment.
+   1. each Newton increment evolves the analysis towards the end of the step length.
+   2. at each increment equilibrium must be achieved by a certain tolerance, this can requires multiple iterations (outer Newton iteration). 
+2. minimum size to reduce increment when required.
+3. maximum number of increment to achieve convergence, otherwise cut back on the increment size.
+4. step length is the total step size, the analysis is evolved by this amount.
+
+
+** Utils
+*** Input file parsers
+Where all input parameters are specified with some help functions.
+* Python environment
+** Current setup
+<2021-06-02 Wed> just calling from shell the correct python environment and =cd= or absolute paths to =edelweissfe.py=.
+
+
+** Python version
+<2021-07-20 Tue> Better solution is to use the emacs package =pyvev= and activate the python environment when needed. This way I avoid starting the shell with conda activated.
+
+It is the default because conda changed the =.bashrc= to automatically initialize and also because of the package =exec-path-from-shell=.
+Without this package it would pick =/usr/local/bin/python= and =jupyter= command would not be available.
+This because emacs GUI does not picks all environment variables, just a minimal set of them.
+
+#+begin_src shell
+which python
+#+end_src
+
+#+RESULTS:
+: /home/nasser/miniconda3/envs/edelweissFE/bin/python
+
+** Jupyter and virtualenv kernel
+
+What kernels are available.
+After creating an =edelweissFE= environment with =conda= and adding it to jupyter kernel with =ipykernel.=
+
+#+begin_src shell
+jupyter kernelspec list
+#+end_src
+
+#+RESULTS:
+: Available kernels:
+:   python3        /home/nasser/.local/lib/python3.8/site-packages/ipykernel/resources
+:   edelweissfe    /home/nasser/.local/share/jupyter/kernels/edelweissfe
+
+It picks the kernel specified with the source block =:kernel name=.
+The default is python3.
+
+#+begin_src python
+import sys
+print(sys.executable)
+print(sys.version)
+print(sys.version_info)
+#+end_src
+
+#+RESULTS:
+: /usr/bin/python3
+: 3.8.10 (default, May 11 2021, 09:48:23) 
+: [GCC 9.3.0]
+: sys.version_info(major=3, minor=8, micro=10, releaselevel='final', serial=0)
+
+Now using =:kernel edelweissfe= we get
+(See [[*Adding the virtual environment as a kernel to Jupyter][Adding the virtual environment as a kernel to Jupyter]])
+
+#+begin_src python :kernel edelweissfe
+import sys
+print(sys.executable)
+print(sys.version)
+print(sys.version_info)
+#+end_src
+
+#+RESULTS:
+: /home/nasser/miniconda3/envs/edelweissFE/bin/python
+: 3.9.5 (default, May 18 2021, 19:34:48) 
+: [GCC 7.3.0]
+: sys.version_info(major=3, minor=9, micro=5, releaselevel='final', serial=0)
+
+** Workarounds
+*** Conda
+Install miniconda.
+Conda will insert an automatic script in =.bashrc= so it loads automatically.
+We can see the default python in from conda.
+
+#+begin_src sh
+which conda
+which python
+python --version
+#+end_src
+
+#+RESULTS:
+: /home/nasser/miniconda3/bin/conda
+: /home/nasser/miniconda3/bin/python
+: Python 3.9.1
+
+But by default emacs-jupyter is using other python.
+
+#+begin_src python :kernel python
+import sys
+print(sys.version)
+print(sys.executable)
+#+end_src
+
+#+RESULTS:
+: 3.8.6 (default, Oct  9 2020, 11:59:16) 
+: [GCC 9.3.0]
+: /usr/local/bin/python
+
+#+begin_src shell
+jupyter kernelspec list
+#+end_src
+
+#+RESULTS:
+: Available kernels:
+:   python3    /home/nasser/.local/share/jupyter/kernels/python3
+
+*** Create virtual environment
+To create an environment =conda create --name myenv=.
+
+To remove it =conda remove --name myenv --all.=
+
+#+begin_src shell
+conda info --envs
+#+end_src
+
+#+RESULTS:
+: # conda environments:
+: #
+: base                  *  /home/nasser/miniconda3
+: edelweissFE              /home/nasser/miniconda3/envs/edelweissFE
+: 
+
+To see the packages in the environment:
+#+begin_src shell
+conda list -n edelweissFE
+#+end_src
+
+#+RESULTS:
+#+begin_example
+# packages in environment at /home/nasser/miniconda3/envs/edelweissFE:
+#
+# Name                    Version                   Build  Channel
+_libgcc_mutex             0.1                        main  
+argon2-cffi               20.1.0           py39h27cfd23_1  
+async_generator           1.10               pyhd3eb1b0_0  
+attrs                     21.2.0             pyhd3eb1b0_0  
+backcall                  0.2.0              pyhd3eb1b0_0  
+blas                      1.0                         mkl  
+bleach                    3.3.0              pyhd3eb1b0_0  
+ca-certificates           2021.4.13            h06a4308_1  
+certifi                   2020.12.5        py39h06a4308_0  
+cffi                      1.14.5           py39h261ae71_0  
+colorama                  0.4.4                    pypi_0    pypi
+commonmark                0.9.1                    pypi_0    pypi
+cycler                    0.10.0           py39h06a4308_0  
+cython                    0.29.23                  pypi_0    pypi
+dbus                      1.13.18              hb2f20db_0  
+decorator                 5.0.9              pyhd3eb1b0_0  
+defusedxml                0.7.1              pyhd3eb1b0_0  
+entrypoints               0.3              py39h06a4308_0  
+expat                     2.3.0                h2531618_2  
+fontconfig                2.13.1               h6c09931_0  
+freetype                  2.10.4               h5ab3b9f_0  
+glib                      2.68.2               h36276a3_0  
+gst-plugins-base          1.14.0               h8213a91_2  
+gstreamer                 1.14.0               h28cd5cc_2  
+icu                       58.2                 he6710b0_3  
+importlib-metadata        3.10.0           py39h06a4308_0  
+importlib_metadata        3.10.0               hd3eb1b0_0  
+intel-openmp              2021.2.0           h06a4308_610  
+ipykernel                 5.5.5                    pypi_0    pypi
+ipython                   7.23.1                   pypi_0    pypi
+ipython_genutils          0.2.0              pyhd3eb1b0_1  
+ipywidgets                7.6.3              pyhd3eb1b0_1  
+jedi                      0.18.0                   pypi_0    pypi
+jinja2                    3.0.0              pyhd3eb1b0_0  
+jpeg                      9b                   h024ee3a_2  
+jsonschema                3.2.0                      py_2  
+jupyter                   1.0.0            py39h06a4308_7  
+jupyter_client            6.1.12             pyhd3eb1b0_0  
+jupyter_console           6.4.0              pyhd3eb1b0_0  
+jupyter_core              4.7.1            py39h06a4308_0  
+jupyterlab_pygments       0.1.2                      py_0  
+jupyterlab_widgets        1.0.0              pyhd3eb1b0_1  
+kiwisolver                1.3.1            py39h2531618_0  
+lcms2                     2.12                 h3be6417_0  
+ld_impl_linux-64          2.33.1               h53a641e_7  
+libffi                    3.3                  he6710b0_2  
+libgcc-ng                 9.1.0                hdf63c60_0  
+libgfortran-ng            7.3.0                hdf63c60_0  
+libpng                    1.6.37               hbc83047_0  
+libsodium                 1.0.18               h7b6447c_0  
+libstdcxx-ng              9.1.0                hdf63c60_0  
+libtiff                   4.1.0                h2733197_1  
+libuuid                   1.0.3                h1bed415_2  
+libxcb                    1.14                 h7b6447c_0  
+libxml2                   2.9.10               hb55368b_3  
+lz4-c                     1.9.3                h2531618_0  
+markupsafe                2.0.1            py39h27cfd23_0  
+matplotlib                3.3.4            py39h06a4308_0  
+matplotlib-base           3.3.4            py39h62a2d02_0  
+matplotlib-inline         0.1.2                    pypi_0    pypi
+mistune                   0.8.4           py39h27cfd23_1000  
+mkl                       2021.2.0           h06a4308_296  
+mkl-service               2.3.0            py39h27cfd23_1  
+mkl_fft                   1.3.0            py39h42c9631_2  
+mkl_random                1.2.1            py39ha9443f7_2  
+nbclient                  0.5.3              pyhd3eb1b0_0  
+nbconvert                 6.0.7            py39h06a4308_0  
+nbformat                  5.1.3              pyhd3eb1b0_0  
+ncurses                   6.2                  he6710b0_1  
+nest-asyncio              1.5.1              pyhd3eb1b0_0  
+notebook                  6.4.0            py39h06a4308_0  
+numpy                     1.20.2           py39h2d18471_0  
+numpy-base                1.20.2           py39hfae3a4d_0  
+olefile                   0.46                       py_0  
+openssl                   1.1.1k               h27cfd23_0  
+packaging                 20.9               pyhd3eb1b0_0  
+pandoc                    2.12                 h06a4308_0  
+pandocfilters             1.4.3            py39h06a4308_1  
+parso                     0.8.2                    pypi_0    pypi
+pcre                      8.44                 he6710b0_0  
+pexpect                   4.8.0              pyhd3eb1b0_3  
+pickleshare               0.7.5           pyhd3eb1b0_1003  
+pillow                    8.2.0            py39he98fc37_0  
+pip                       21.1.1           py39h06a4308_0  
+prometheus_client         0.10.1             pyhd3eb1b0_0  
+prompt-toolkit            3.0.18                   pypi_0    pypi
+prompt_toolkit            3.0.17               hd3eb1b0_0  
+ptyprocess                0.7.0              pyhd3eb1b0_2  
+pycparser                 2.20                       py_2  
+pygments                  2.9.0              pyhd3eb1b0_0  
+pyparsing                 2.4.7              pyhd3eb1b0_0  
+pyqt                      5.9.2            py39h2531618_6  
+pyrsistent                0.17.3           py39h27cfd23_0  
+python                    3.9.5                hdb3f193_3  
+python-dateutil           2.8.1              pyhd3eb1b0_0  
+pyzmq                     22.0.3                   pypi_0    pypi
+qt                        5.9.7                h5867ecd_1  
+qtconsole                 5.0.3              pyhd3eb1b0_0  
+qtpy                      1.9.0                      py_0  
+readline                  8.1                  h27cfd23_0  
+rich                      10.2.2                   pypi_0    pypi
+scipy                     1.6.2            py39had2a1c9_1  
+send2trash                1.5.0              pyhd3eb1b0_1  
+setuptools                52.0.0           py39h06a4308_0  
+sip                       4.19.13          py39h2531618_0  
+six                       1.15.0           py39h06a4308_0  
+sqlite                    3.35.4               hdfb4753_0  
+terminado                 0.9.4            py39h06a4308_0  
+testpath                  0.4.4              pyhd3eb1b0_0  
+tk                        8.6.10               hbc83047_0  
+tornado                   6.1              py39h27cfd23_0  
+traitlets                 5.0.5              pyhd3eb1b0_0  
+tzdata                    2020f                h52ac0ba_0  
+wcwidth                   0.2.5                      py_0  
+webencodings              0.5.1            py39h06a4308_1  
+wheel                     0.36.2             pyhd3eb1b0_0  
+widgetsnbextension        3.5.1            py39h06a4308_0  
+xz                        5.2.5                h7b6447c_0  
+zeromq                    4.3.4                h2531618_0  
+zipp                      3.4.1              pyhd3eb1b0_0  
+zlib                      1.2.11               h7b6447c_3  
+zstd                      1.4.9                haebb681_0  
+#+end_example
+
+*** Adding the virtual environment as a kernel to Jupyter
+
+Using ipykernel inside the environment.
+=python -m ipykernel install --user --name=edelweissFE=
+
+Now it is in the list of available kernels for Jupyter.
+#+begin_src shell
+jupyter kernelspec list
+#+end_src
+
+#+RESULTS:
+: Available kernels:
+:   python3        /home/nasser/.local/lib/python3.8/site-packages/ipykernel/resources
+:   edelweissfe    /home/nasser/.local/share/jupyter/kernels/edelweissfe
+
+
+
+*** Emacs-jupyter setting up different environment
+
+Check which python is the default,
+#+begin_src shell
+conda deactivate
+#+end_src
+
+#+RESULTS:
+
+#+begin_src shell
+which python
+python --version
+#+end_src
+
+#+RESULTS:
+: /home/nasser/miniconda3/bin/python
+: Python 3.9.1
+
+
+Test the python libraries:
+It seems that emacs-jupyter with the default =:kernel python= is picking up a different python version.
+
+#+begin_src python
+import sys
+print(sys.executable)
+print(sys.version)
+import numpy
+import scipy
+import matplotlib
+#+end_src
+
+#+RESULTS:
+: /usr/local/bin/python
+: 3.8.6 (default, Oct  9 2020, 11:59:16) 
+: [GCC 9.3.0]
+
+Available kernels
+
+#+begin_src shell
+jupyter kernelspec list
+#+end_src
+
+#+RESULTS:
+: Available kernels:
+:   python3    /home/nasser/.local/share/jupyter/kernels/python3
+
+Now I'm going to activate the =edelweissFE= environment and install jupyter there.
+Still I can not see the kernel available.
+
+#+begin_src shell
+conda activate edelweissFE
+jupyter kernelspec list
+#+end_src
+
+#+RESULTS:
+: Available kernels:
+:   python3    /home/nasser/.local/share/jupyter/kernels/python3
+
+*** Can not run =jupyter= inside =org-mode= shell source blocks
+
+This does not return anything for jupyter, even though in the normal shell I can run it with the result =~/.local/bin/jupyter=.
+
+#+begin_src sh
+which jupyter
+which python
+#+end_src
+
+#+RESULTS:
+: /usr/local/bin/python
+
+Let's see what is the executable path that emacs looks for.
+
+#+begin_src emacs-lisp
+(exec-path)
+#+end_src
+
+#+RESULTS:
+| ~/.local/bin | /usr/local/sbin | /usr/local/bin | /usr/sbin | /usr/bin | /sbin | /bin | /usr/games | /usr/local/games | /mnt/c/Program Files/ImageMagick-7.0.11-Q16-HDRI | /mnt/c/WINDOWS/system32 | /mnt/c/WINDOWS | /mnt/c/WINDOWS/System32/Wbem | /mnt/c/WINDOWS/System32/WindowsPowerShell/v1.0/ | /mnt/c/Program Files/PuTTY/ | /mnt/c/WINDOWS/System32/OpenSSH/ | /mnt/c/ProgramData/chocolatey/bin | /mnt/c/Program Files/PowerShell/7/ | /mnt/c/Users/c8441205/AppData/Local/SumatraPDF | /mnt/c/Program Files/dotnet/ | /mnt/c/Users/c8441205/AppData/Local/Microsoft/WindowsApps | /usr/local/libexec/emacs/28.0.50/x86_64-pc-linux-gnu |
+
+We can see that =~/.local/bin= is there, but it still can not find jupyter.
+
+There is this package that seems to address this problem: [[https://github.com/purcell/exec-path-from-shell][GitHub - purcell/exec-path-from-shell: Make Emacs use the $PATH set up by the...]].
+In the description: "A command that works in shell but not in emacs", which is exactly what is happening.
+It seems that when we launch a GUI app of Emacs it runs with a _default set of environment variables_.
+
+My shell is bash.
+#+begin_src emacs-lisp
+(getenv "SHELL")
+#+end_src
+
+#+RESULTS:
+: /bin/bash
+
+After installing and initializing the package =exec-path-from-shell=.
+We can find jupyter as expected.
+
+#+begin_src shell
+which jupyter
+#+end_src
+
+#+RESULTS:
+: /home/nasser/.local/bin/jupyter
+
+*** No module named ipykernel_launcher
+In the virtualenv activated.
+=conda install ipykernel=
+
+#+begin_src python
+import sys
+print(sys.version)
+#+end_src
+
+#+RESULTS:
+: 3.9.5 (default, May 18 2021, 19:34:48) 
+: [GCC 7.3.0]
+
+*** Conda init
+
+=conda init= edit =.bashrc= file in order to:
+1. add the conda environment into the PATH
+*** Jupyter kernelspec list
+
+#+begin_src shell
+which python
+#+end_src
+
+#+RESULTS:
+: /usr/local/bin/python
+* Examples
+** BodyForce3D
+*** Description
+Linear elastic material with 3 dimensions.
+Top surface fixed.
+With body force applied $b=[0, 10, 20]$.
+
+*** Runnning
+Created alias in =.bashrc= for the =python= interpreter in the correct environment and for =edelweissfe.py=.
+ 
+#+begin_src shell :shebang #!/bin/bash -i
+edelweissfe /mnt/c/Users/c8441205/OneDrive/Academy/PhD/softwares/EdelweissFE/testfiles/BodyForce3d/test.inp
+#+end_src
+
+#+RESULTS:
+#+begin_example
+ total size of eq. system: 825                                                               feCore 
++--------------------------------------------------------------------------------------------------+
+   Converting elSet all to a nSet due to requested nodal results                       displacement 
++--------------------------------------------------------------------------------------------------+
+   increment 0: 0.000000, 0.000000; time   0.000000 to   0.000000                        NISTSolver 
+           displacement                                                                  NISTSolver 
+      ||R||∞      ||ddU||∞                                                               NISTSolver 
+      0.00e+00✓   0.00e+00✓                                                              NISTSolver 
+   Converged in 1 iteration(s)                                                           NISTSolver 
+   RF, nodalResult: 0.0                                                                     Monitor 
+   RF, nodalResult: 0.0                                                                     Monitor 
+   RF, nodalResult: 0.0                                                                     Monitor 
++--------------------------------------------------------------------------------------------------+
+   increment 1: 0.100000, 0.100000; time   0.000000 to   0.100000                        NISTSolver 
+           displacement                                                                  NISTSolver 
+      ||R||∞      ||ddU||∞                                                               NISTSolver 
+      4.34e-09✓   3.51e+01                                                               NISTSolver 
+      1.42e-09✓   5.22e-10✓                                                              NISTSolver 
+   Converged in 2 iteration(s)                                                           NISTSolver 
+   RF, nodalResult: -2.2737367544323206e-12                                                 Monitor 
+   RF, nodalResult: 9500.0                                                                  Monitor 
+   RF, nodalResult: 18999.999999999993                                                      Monitor 
++--------------------------------------------------------------------------------------------------+
+   increment 2: 0.100000, 0.200000; time   0.100000 to   0.200000                        NISTSolver 
+           displacement                                                                  NISTSolver 
+      ||R||∞      ||ddU||∞                                                               NISTSolver 
+      2.84e-09✓   0.00e+00✓                                                              NISTSolver 
+   Converged in 0 iteration(s)                                                           NISTSolver 
+   RF, nodalResult: -4.547473508864641e-12                                                  Monitor 
+   RF, nodalResult: 19000.0                                                                 Monitor 
+   RF, nodalResult: 37999.999999999985                                                      Monitor 
++--------------------------------------------------------------------------------------------------+
+   increment 3: 0.100000, 0.300000; time   0.200000 to   0.300000                        NISTSolver 
+           displacement                                                                  NISTSolver 
+      ||R||∞      ||ddU||∞                                                               NISTSolver 
+      4.26e-09✓   0.00e+00✓                                                              NISTSolver 
+   Converged in 0 iteration(s)                                                           NISTSolver 
+   RF, nodalResult: -8.640199666842818e-12                                                  Monitor 
+   RF, nodalResult: 28500.000000000004                                                      Monitor 
+   RF, nodalResult: 56999.99999999999                                                       Monitor 
++--------------------------------------------------------------------------------------------------+
+   increment 4: 0.100000, 0.400000; time   0.300000 to   0.400000                        NISTSolver 
+           displacement                                                                  NISTSolver 
+      ||R||∞      ||ddU||∞                                                               NISTSolver 
+      5.68e-09✓   0.00e+00✓                                                              NISTSolver 
+   Converged in 0 iteration(s)                                                           NISTSolver 
+   RF, nodalResult: -9.094947017729282e-12                                                  Monitor 
+   RF, nodalResult: 38000.0                                                                 Monitor 
+   RF, nodalResult: 75999.99999999997                                                       Monitor 
++--------------------------------------------------------------------------------------------------+
+   increment 5: 0.100000, 0.500000; time   0.400000 to   0.500000                        NISTSolver 
+           displacement                                                                  NISTSolver 
+      ||R||∞      ||ddU||∞                                                               NISTSolver 
+      7.10e-09✓   0.00e+00✓                                                              NISTSolver 
+   Converged in 0 iteration(s)                                                           NISTSolver 
+   RF, nodalResult: -8.185452315956354e-12                                                  Monitor 
+   RF, nodalResult: 47500.0                                                                 Monitor 
+   RF, nodalResult: 94999.99999999997                                                       Monitor 
++--------------------------------------------------------------------------------------------------+
+   increment 6: 0.100000, 0.600000; time   0.500000 to   0.600000                        NISTSolver 
+           displacement                                                                  NISTSolver 
+      ||R||∞      ||ddU||∞                                                               NISTSolver 
+      8.52e-09✓   0.00e+00✓                                                              NISTSolver 
+   Converged in 0 iteration(s)                                                           NISTSolver 
+   RF, nodalResult: -1.3642420526593924e-11                                                 Monitor 
+   RF, nodalResult: 57000.00000000001                                                       Monitor 
+   RF, nodalResult: 113999.99999999997                                                      Monitor 
++--------------------------------------------------------------------------------------------------+
+   increment 7: 0.100000, 0.700000; time   0.600000 to   0.700000                        NISTSolver 
+           displacement                                                                  NISTSolver 
+      ||R||∞      ||ddU||∞                                                               NISTSolver 
+      9.94e-09✓   0.00e+00✓                                                              NISTSolver 
+   Converged in 0 iteration(s)                                                           NISTSolver 
+   RF, nodalResult: -2.2737367544323206e-11                                                 Monitor 
+   RF, nodalResult: 66500.0                                                                 Monitor 
+   RF, nodalResult: 132999.99999999997                                                      Monitor 
++--------------------------------------------------------------------------------------------------+
+   increment 8: 0.100000, 0.800000; time   0.700000 to   0.800000                        NISTSolver 
+           displacement                                                                  NISTSolver 
+      ||R||∞      ||ddU||∞                                                               NISTSolver 
+      1.14e-08✓   0.00e+00✓                                                              NISTSolver 
+   Converged in 0 iteration(s)                                                           NISTSolver 
+   RF, nodalResult: -2.7284841053187847e-11                                                 Monitor 
+   RF, nodalResult: 76000.0                                                                 Monitor 
+   RF, nodalResult: 151999.99999999997                                                      Monitor 
++--------------------------------------------------------------------------------------------------+
+   increment 9: 0.100000, 0.900000; time   0.800000 to   0.900000                        NISTSolver 
+           displacement                                                                  NISTSolver 
+      ||R||∞      ||ddU||∞                                                               NISTSolver 
+      1.28e-08✓   0.00e+00✓                                                              NISTSolver 
+   Converged in 0 iteration(s)                                                           NISTSolver 
+   RF, nodalResult: -1.0913936421275139e-11                                                 Monitor 
+   RF, nodalResult: 85500.00000000001                                                       Monitor 
+   RF, nodalResult: 170999.99999999997                                                      Monitor 
++--------------------------------------------------------------------------------------------------+
+   increment 10: 0.100000, 1.000000; time   0.900000 to   1.000000                       NISTSolver 
+           displacement                                                                  NISTSolver 
+      ||R||∞      ||ddU||∞                                                               NISTSolver 
+      1.42e-08✓   0.00e+00✓                                                              NISTSolver 
+   Converged in 0 iteration(s)                                                           NISTSolver 
+   RF, nodalResult: -2.3646862246096134e-11                                                 Monitor 
+   RF, nodalResult: 95000.00000000001                                                       Monitor 
+   RF, nodalResult: 189999.9999999999                                                       Monitor 
+   +-------------------------------------+-------------------------------------+         NISTSolver 
+   |Time in elements                     |     0.0701s                         |         NISTSolver 
+   |Time in distributed loads            |     0.0001s                         |         NISTSolver 
+   |Time in body forces                  |     0.0230s                         |         NISTSolver 
+   |Time in constraints                  |     0.0000s                         |         NISTSolver 
+   |Time in dirichlet R                  |     0.0001s                         |         NISTSolver 
+   |Time in CSR generation               |     0.0011s                         |         NISTSolver 
+   |Time in dirichlet K                  |     0.0017s                         |         NISTSolver 
+   |Time in linear solve                 |     0.0451s                         |         NISTSolver 
+   |Time in convergence check            |     0.0035s                         |         NISTSolver 
+   +-------------------------------------+-------------------------------------+         NISTSolver 
+ +--------------------------------------+--------------------------------------+                  feCore 
+ |Step computation time                 |    0.3024s                           |                  feCore 
+ +--------------------------------------+--------------------------------------+                  feCore 
+ |Job computation time                     |    0.3024s                              |                 feCore 
+ +-----------------------------------------+-----------------------------------------+                 feCore 
+#+end_example
+
+
+
+edelweissFE generates the outputs from where the command is called.
+Not where the input file is.
+
+*** Visualizing the result
+**** Command
+#+begin_src shell
+cd /mnt/c/Users/c8441205/OneDrive/Academy/PhD/projects/EdelweissFE/testfiles/BodyForce3D
+paraview.exe ensightExport.case
+#+end_src
+**** Paraview
+***** Scale displacements
+1. add calculator
+2. mark coordinate results
+3. select the vector result and multiple by a factor
+
+**** Stress ZZ plane
+
+#+DOWNLOADED: screenshot @ 2021-06-02 10:15:00
+#+attr_html: :width 550px
+[[file:Examples/2021-06-02_10-15-00_screenshot.png]]
+
+**** Stress YY plane
+
+
+#+DOWNLOADED: screenshot @ 2021-06-02 10:18:56
+#+attr_html: :width 550px
+[[file:Examples/2021-06-02_10-18-56_screenshot.png]]
+
+** Iterative solver
+:PROPERTIES:
+:header-args:python: :session iterative
+:END:
+
+Adding to the =*job= options the =linSolver=amgcl= to use the =amgcl= python wrapper to solve the linear system.
+
+*** Control example
+
+1 cube element, displacement applied to a face of -0.01.
+
+#+begin_src python
+import pandas as pd
+import numpy as np
+import matplotlib.pyplot as plt
+import matplotlib
+matplotlib.style.use('ggplot')
+
+u_p = pd.DataFrame(np.loadtxt('gmres/displ_pardiso.csv'))
+print('y-displacement node 6 last time step:\n', u_p.iloc[-1, [2]])
+u_p.loc[:, 2].plot();plt.xlabel('Time step');plt.ylabel('y-displacement node 6')
+#+end_src
+
+#+RESULTS:
+:RESULTS:
+: y-displacement node 6 last time step:
+:  2   -0.01
+: Name: 13, dtype: float64
+[[file:./jupyter/b975aac4118149001fb79cb44b32d1b92cbd5d29.png]]
+:END:
+
+*** Comparing solution
+
+#+begin_src python
+import pandas as pd
+import numpy as np
+import matplotlib.pyplot as plt
+import matplotlib
+matplotlib.style.use('ggplot')
+
+u_amgcl_gmres = pd.DataFrame(np.loadtxt('gmres/displ_amgcl_gmres.csv'))
+u_amgcl_amg_gmres = pd.DataFrame(np.loadtxt('gmres/displ_amgcl_amg_gmres.csv'))
+u_scipy_gmres = pd.DataFrame(np.loadtxt('gmres/displ_scipy_gmres.csv'))
+u_amgcl_gmres.loc[:, 2].plot(label='amgcl-gmres', linestyle=':')
+u_scipy_gmres.loc[:, 2].plot(label='scipy-gmres', linestyle='--')
+u_amgcl_amg_gmres.loc[:, 2].plot(label='amgcl-gmres', linestyle='-.')
+plt.legend();plt.xlabel('Time step');plt.ylabel('y-displacement node 6')
+#+end_src
+
+#+RESULTS:
+[[file:./jupyter/df38cecfd0fb202e23ad9b93e186c42a9047b29f.png]]
+
+*** Number of iterations
+
+
+#+begin_src python
+import pandas as pd
+import numpy as np
+import matplotlib.pyplot as plt
+import matplotlib
+matplotlib.style.use('ggplot')
+fig, ax = plt.subplots()
+
+n_amgcl_gmres = pd.DataFrame(np.loadtxt('gmres/num_iter_amgcl_gmres.csv'), columns=['amgcl-gmres'])
+n_amgcl_amg_gmres = pd.DataFrame(np.loadtxt('gmres/num_iter_amgcl_amg_gmres.csv'), columns=['amgcl-amg-gmres'])
+n_scipy_gmres = pd.DataFrame(np.loadtxt('gmres/num_iter_scipy_gmres.csv'), columns=['scipy-gmres'])
+n_amgcl_gmres.plot(linestyle=':', marker='o', ax=ax)
+n_scipy_gmres.plot(linestyle='--', marker='x', ax=ax)
+n_amgcl_amg_gmres.plot(linestyle='-.', marker='s', ax=ax)
+ax.legend()
+#+end_src
+
+#+RESULTS:
+[[file:./jupyter/f120f18195e39a06e603e8159213f034f88308c6.png]]
+
+* Implementations
+** Iterative solver with preconditioner dispatcher
+*** Design
+
+1. when the 'linSolver' dispatcher is called, check if it is an iterative solver;
+2. if True, check if preconditioner parameters were passed
+3. 
+
+#+begin_src python :session test
+linsolver = 'scipy-preconditioned-gmres'
+if 'preconditioned' in linsolver:
+    print('this is an preconditioner iterative solver!')
+#+end_src
+
+#+RESULTS:
+: this is an preconditioner iterative solver!
+

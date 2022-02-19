@@ -1,0 +1,403 @@
+#+title: Principles for life
+#+date: <2021-05-04 Tue>
+#+lastmod: 2021-11-14 22:13:21
+#+author: Nasser Alkmim
+#+email: nasser.alkmim@gmail.com
+#+tags[]: essays
+#+draft: t
+#+toc: t
+* Introduction
+** Why I am writing this?
+I have been collecting some quotes for the past 10 years.
+I keep those on my phone, in a simple list.
+Every time I read something interesting I put it there.
+I try to arrange it in loose categories and sometimes include some commentary about it.
+As they grew bigger, I started to notice the formation of clusters of ideas that can be translated into principles.
+
+I think those are ideas are worth sharing.
+That is why I am writing this.
+
+Principle for life might seems as a bold title.
+But I could not think of anything else, it truly resonates to me as a _core root guide for oneself conduct across life_.
+
+I expect that reading this could provide you with ease of mind, alleviate some stress and maybe spark new ideas.
+** What are principles?
+Principles are what is left after you removed everything.
+They represent the essence.
+
+Principles are the end of a via negativa?
+** Why principles?
+Principles are memorable and easy to assimilate, but can carry a lot of meaning.
+** Importance of question yourself?
+
+#+begin_quote
+Those who have a why can bear any how. -- F. Nietzsche
+#+end_quote
+
+** Who are you?
+
+Via negativa style, you are not: your job, your academic title, your hobby, your sport, your social status and your marital status.
+
+You are not the voice that speak on your head.
+You /probably/ are the one that listens to it, but still, who listens to it?
+
+You are, /maybe/, a self referential creature that makes sense of the world through analogies that connect past, present and future.
+
+You act and behave based on principles.
+Principles are the foundation of your self.
+Principles guide your action without you need to think about them.
+They provide heuristics to alleviate your brain.
+** What is the difference between principles and advice?  
+Advice are followed, principles are incorporated.
+
+** What is a manifesto?
+By dictionary definition.
+It is a public declaration.
+Hence it should be available for many to see.
+
+If we can judge the quality of a manifesto, it should consider its reach and impact.
+The more people it reaches, the better.
+A high impact manifesto is the one that is remembered all the time.
+
+** What is my manifesto?
+
+There are many ways to live.
+
+The way I chose allows me to show better my appreciation.
+
+This is my poetic license to express myself the way I want.
+
+In a world of possibility, that is the certainty I choose.
+
+** What I value?
+Self love.
+
+** What is virtue?
+
+#+begin_quote
+A virtue is a morally good disposition of think, feel and act well in some domain of life.
+
+-- Rosaling Hursthouse "Virtue Ethics"
+#+end_quote
+
+TODO: read [[https://plato.stanford.edu/entries/aristotle-ethics/#HumaGoodFuncArgu][Aristotle’s Ethics (Stanford Encyclopedia of Philosophy)]]
+
+** What are my virtues?
+
+
+#+begin_quote
+“Simplicity, patience, compassion.
+These three are your greatest treasures.
+Simple in actions and thoughts, you return to the source of being.
+Patient with both friends and enemies,
+you accord with the way things are.
+Compassionate toward yourself,
+you reconcile all beings in the world.”
+
+― Lao Tzu, Tao Te Ching
+#+end_quote
+
+** Benefits of thinking about principles?
+
+Thinking about principles makes you focus on what is essential.
+
+You eventually realize that most things are not important, not essential and do not matter.
+
+* Seek nothing outside yourself
+** Quotes
+
+#+DOWNLOADED: screenshot @ 2021-05-13 07:03:30
+#+attr_html: :style width: 200px
+[[file:See_nothin_outside_yourself/2021-05-13_07-03-30_screenshot.png]]
+
+
+#+begin_quote
+“There is nothing outside of yourself that can ever enable you to get better, stronger, richer, quicker, or smarter. Everything is within. Everything exists. Seek nothing outside of yourself.”
+
+― Miyamoto Musashi, The Book of Five Rings
+#+end_quote
+
+#+begin_quote
+“The wise find pleasure in water; the virtuous find pleasure in hills. The wise are active; the virtuous are tranquil. The wise are joyful; the virtuous are long-lived.”
+
+-- Confucius 
+#+end_quote
+
+#+begin_quote
+“When there is no desire,
+all things are at peace.”
+
+― Lao Tzu, Tao Te Ching
+#+end_quote
+
+** Where does this principle applies?
+
+** Wealth
+Wealth is the difference between what you want and what you have.
+If you want many things compared with what you already have, you are poor.
+On the other hand, if you seek not much outside what you already have, you are rich.
+
+** What is home?
+Is it a place? people?
+Or a place where important people are and there is a sense of long term ownership?
+
+** Seek knowledge?
+
+Knowledge is acquired from outside stimulation.
+However only outside stimulation is not enough to acquire knowledge.
+One has to build it from within.
+
+Knowledge as a collection of internal mental models that abstract reality.
+
+** Happiness is not a constant state
+*** Quotes
+
+*** Happiness state 
+
+You are not happy all the time.
+Happiness is ephemeral not constant.
+In English the verb "to be" can have two meanings.
+The first, as in "you are here", means physical state, transitory.
+The seconds, as in "you are tall", means physical essence, permanent.
+
+Happiness is associate with the first.
+If  happiness could be constant it would represent an essence.
+
+** Definition of success?
+
+The "feeling of success" is a side effect product of the conversion of our imagination into reality.
+
+When one idea flourish inside our mind we are using imagination.
+To transform that into something real outside ourselves requires some effort.
+
+** Extrinsic and intrinsic motivation?
+
+The more you are driven by extrinsic motivation, meaning that something external is the reason why you are acting the way you are, the more your intrinsic motivation machine fades out.
+
+The "intrinsic motivation machine" is the responsible to give us "true to ourselves" reason for action.
+
+Why intrinsic motivation is better than extrinsic?
+Extrinsic is outside of our control.
+
+** Try to be the best version of yourself
+
+* Begin with a question in mind
+** Begin with end in mind is not a good advice for young people?
+Ingenuity is more adequate for young people.
+As you get older, begin with end in mind.
+** Is it a habit or a principle?
+What is the difference?
+
+A habit is something that your repeatedly do.
+A principle is something that permeates your mind and it is always the core that guides your actions.
+
+** Begin with development in mind
+
+Start with an idea of how the project will develop.
+
+Is it going to be sustainable?
+Is it supported by strong base or is it fragile?
+
+When you have a strong base, the development will happen little by little in a robust way.
+
+If its fragile, layers of complexity or "add-hoc" solutions, will make it harder in longer run.
+
+
+** Be brief
+*** Quotes
+#+begin_quote
+If you want to instruct, be brief.
+-- Cicero
+#+end_quote
+
+#+begin_quote
+I would have written a shorter letter, but I did not have the time.
+-- Blaise Pascal (Lettres Provinciales)
+#+end_quote
+
+*** Why be brief?
+
+By being brief you are demonstrating that you value other people time, a great act of appreciation and respect towards others.
+
+*** Why simplicity is harder than complexity?
+
+Unnecessary complexity is bad.
+Avoid it at all cost.
+
+** Hard work pays off?
+Not always, but no hard work guarantees no pay off (via negativa style).
+
+Easy to work hard when you know exactly what to do
+Not so much when there is no clear path.
+
+** Stay upwind
+*** What your options are?
+
+*** You are not your options, you are what you do with them.
+
+*** Maximizing optionality
+
+** Set yourself up for success
+
+Define it and measure it.
+*** Quotes
+
+#+begin_quote
+“The phrase "it's better to be lucky than good" must be one of the most ridiculous homilies ever uttered. In nearly any competitive endeavor, you have to be damned good before luck can be of any use to you at all.”
+
+― Garry Kasparov, Deep Thinking: Where Machine Intelligence Ends and Human Creativity Begins
+#+end_quote
+*** What is the importance of small victories and small failures?
+
+They build character.
+Affirmative actions empower the person.
+Makes you believe in yourself.
+
+Small failures teach you how to cope with them.
+
+Sports and learning music are important because of that.
+
+** Search the why
+#+begin_quote
+“He who has a why to live for can bear almost any how.”
+
+― Friedrich Nietzsche 
+#+end_quote
+
+** Build systems not stuff
+
+Systems improve with time, stuff just become obsolete.
+
+System can adapt, stuff is rigid.
+
+
+
+** Ruthless Pareto and pedantic nature
+
+Pedantic is a person that focus too much on details.
+
+* Be uncomfortable
+** Quotes
+
+#+begin_quote
+“Books: our unfailing companions”
+
+― Cicero
+#+end_quote
+
+
+
+#+begin_quote
+It's often the case that there's a seemingly obvious but actually incorrect reason something is true, a slightly less obvious reason the thing seems untrue, and then a subtle and complex reason that the thing is actually true
+
+- danluu.com/look-stupid
+#+end_quote
+
+** Buddhist idea
+
+#+begin_quote
+the two biggest problems (on the path to mastery): 1) not starting the journey and 2) not finishing the journey.
+#+end_quote
+
+** Analogy as the core of cognition
+
+Cognition is a mental process triggered by an information as input that encompass how we comprehend this information.
+
+At the core of comprehension is the analogy making nature of thinking.
+
+
+
+** Guide your learning through pain
+** Learning by forming connections
+#+begin_quote
+Explaining and comparing can both increase analogical transfer; effects of explanation may be greatest when it is combined with comparison. 
+-- Brian Edwards
+#+end_quote
+
+
+** Analogies and the learning of languages
+#+begin_quote
+E acho que estudar o espírito e o mecanismo de outras línguas ajuda muito à compreensão mais profunda do idioma nacional. Principalmente, porém, estudando-se por divertimento, gosto e distração.
+-- Guimarães Rosa
+#+end_quote
+
+
+** Why read and seek knowledge?
+
+The collection of categories that we accumulate helps us processing new information.
+Categories are not just the ones with clear label but the vast assemble of mental constructs that represent something.
+
+Not only processing, but with a robust collection we can incrementally add to it and making our capacity to understanding better. 
+
+Reading is a form to been exposed to different categories.
+It also occurs in a pace that enables us to processing it with our own set of analogies, and then we can appropriate it accordingly.
+
+#+begin_quote
+“There is, I assure you, a medical art for the soul. It is philosophy, whose aid need not be sought, as in bodily diseases, from outside ourselves. We must endeavor with all our resources and all our strength to become capable of doctoring ourselves.”
+
+― Cicero
+#+end_quote
+
+
+#+begin_quote
+"it is only when one reads what men wrote long ago that one realises how absolutely modern the best of the old things are"
+
+-- Joseph Rudyard Kipling, The Uses of reading (1928)
+#+end_quote
+
+Been exposed to other people core values and principles transmitted through their writing allows us to understand ourselves.
+
+** What is intelligence?
+
+Hofstadter has the best description.
+
+Intelligence is a capacity to identify the core, the essential.
+And we do that by analogies that relate new information with old mental constructs.
+
+** Why "pain" can guide us?
+
+Pain is a metaphor for been stimulated at the edge of our capabilities/capacities. 
+
+** How to take effective notes?
+
+Via negativa style:
+1. don't write when you can draw
+2. don't digress (1) when you can be brief answer a specific question
+3. don't write the obvious
+
+(1) digress: "divagar", "enrolar", leave the main subject
+
+** Learning and being honest to yourself?
+Being honest with your self means? 
+
+** Routines are essential?
+
+** Enjoy the process increase complexity gradually
+
+** Knowledge components?
+
+From Argrow, 2001 (Pro-active teaching and learning in the aerospace engineering sciences) and Felippa introduction to FEM course.
+
+1. conceptual knowledge:: understand the framework of the physical world.
+2. operational knowledge :: methods for (1) formulate, (2) analyzing and (3) solving problems.
+3. integral knowledge:: synthesis of conceptual and operational knowledge for technology development.
+
+Mathematics connects concepts to operational
+
+
+
+* Do no harm
+** Quotes
+
+#+begin_quote
+What you do not wish for yourself, do not do to others. (Analects 12.2, 6.30) -- Confucius
+#+end_quote
+
+#+begin_quote
+primum nil nocere.
+-- Hippocrates
+#+end_quote
+* Health is wealth
+* Lifestyle creep (finance)
+** Want and need
+

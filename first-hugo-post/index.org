@@ -1,0 +1,185 @@
+#+title: First post in HUGO
+#+date: <2020-12-03 Thu>
+#+lastmod: 2021-08-02 17:39:59
+#+author: Nasser Alkmim
+#+email: nasser.alkmim@gmail.com
+#+tags[]: meta
+#+toc: t
+* Introduction
+Meta post about how I am creating these blog.
+I'm using =org-mode= files, which is a markup language that has a lot conveniences inside emacs.
+This files are then processed by Hugo to generate the static html pages for the blog.
+* Theme
+
+The theme I'm using is a modified version of [[https://github.com/jakewies/hugo-theme-codex][GitHub - jakewies/hugo-theme-codex: A minimal blog theme for Hugo 🍜]].
+
+What I'm missing:
+1. TOC on mobile.
+2. progressively collapse and show toc as scroll down [[https://tecosaur.github.io/emacs-config/config.html#rudimentary-configuration][Doom Emacs Configuration]].
+3. easy change to dark mode.
+
+What I like:
+1. TOC on post with highlight of current session.
+2. summary on each post.
+3. syntax highlight.
+4. tag support.
+
+Probably will experiment in the future the [[https://www.takuzen.me/hugo-theme-cactus/][Cactus theme example]].
+Good:
+1. archive separated by year.
+2. tags with visual frequency.
+3. time expected to read.
+4. home page with projects, tags and recent posts.
+
+
+* Images from URL
+Use the html export block from org mode.
+In order to override the theme css for images display I manually inserted the html with a different /style="display: revert; max-width: fit-content;"./ (this depends on the theme you choose)
+
+#+begin_export html
+<img src="https://images-na.ssl-images-amazon.com/images/I/51283k0NwXL._SL200_.jpg" style="display: revert; max-width: fit-content;">
+<img src="https://images-na.ssl-images-amazon.com/images/I/514Oi-7cLQL._SL200_.jpg" style="display: revert; max-width: fit-content;">
+<img src="https://images-na.ssl-images-amazon.com/images/I/51xiWB0PfWL._SL200_.jpg" style="display: revert; max-width: fit-content;">
+<img src="https://images-na.ssl-images-amazon.com/images/I/51p7Riv4tjL._SL200_.jpg" style="display: revert; max-width: fit-content;">
+<img src="https://images-na.ssl-images-amazon.com/images/I/513Y4Zp0QuL._SL200_.jpg" style="display: revert; max-width: fit-content;">
+<img src="https://images-na.ssl-images-amazon.com/images/I/51lHQvZOZiL._SL200_.jpg" style="display: revert; max-width: fit-content;">
+<img src="https://images-na.ssl-images-amazon.com/images/I/51dUdCh2ZdL._SL200_.jpg" style="display: revert; max-width: fit-content;">
+<img src="https://images-na.ssl-images-amazon.com/images/I/51wGICTPShL._SL200_.jpg" style="display: revert; max-width: fit-content;">
+<img src="https://images-na.ssl-images-amazon.com/images/I/316IBDS3nhL._SL200_.jpg" style="display: revert; max-width: fit-content;">
+<img src="https://images-na.ssl-images-amazon.com/images/I/31sf4AgyQAL._SL200_.jpg" style="display: revert; max-width: fit-content;">
+<img src="https://images-na.ssl-images-amazon.com/images/I/51u3KCvc1iL._SL200_.jpg" style="display: revert; max-width: fit-content;">
+#+end_export
+
+
+* Graphs from interactive code blocks saved on =/static/images=[fn:2]
+
+Using =emacs-jupyter= together with =org-mode= babel.
+In order to use the generated graph from the code in the blog published with Hugu I did the following:
+1. save the figure with source block header argument =:file ../../static/images/graph1.png.= [fn:1]
+2. added also =:exports code= to avoid having a broken link in the html, which is automatically generated with ob-jupyter.
+3. inserted a link to the graph considering the folder structure after published with Hubo  =[[file:images/graph.png]]=
+
+#+begin_src jupyter-python :file ../../static/images/graph1.png :exports code
+import matplotlib.pyplot as plt
+import numpy as np
+
+x=np.linspace(-15,15, 100)
+fig = plt.figure(dpi=300)
+plt.plot(np.sin(x)**2/x**2)
+#+end_src
+
+#+RESULTS:
+[[file:../../static/images/graph1.png]]
+
+#+attr_html: :width 400px
+[[/images/graph1.png]]
+
+* Graphs saved in the same folder as the post
+This is the most convenient organization scheme.
+I create a new folder for each post that will have pictures.
+Inside this folder the post goes on a =index.org= file.
+And the figures are generated automatically with =emacs-jupyter=, I just changed the default directory variable to =(setq jupyter-org-resource-directory "./jupter/").=
+
+#+begin_src jupyter-python 
+import matplotlib.pyplot as plt
+import numpy as np
+
+x=np.linspace(-15,15, 100)
+fig = plt.figure(dpi=300)
+plt.plot(np.sin(x)**2/x)
+#+end_src
+
+#+RESULTS:
+[[file:./jupyter/4c8d0270a0b0daeca7d499707cc05b4b939bfb55.png]]
+
+
+* Dataframes from interactive jupyter-python code blocks
+
+#+begin_src jupyter-python
+import pandas as pd
+data = [[1, 2], [3, 4]]
+DF = pd.DataFrame(data, columns=["Foo", "Bar"])
+print(DF)
+#+end_src
+
+#+RESULTS:
+:    Foo  Bar
+: 0    1    2
+: 1    3    4
+
+* Python code block
+If I want python syntax highlight but using jupyter-python src blocks I need to change the language of the source block when I finish the post.
+_Update:_ there is a emacs-jupyter function that overrides the default python source block: =(org-babel-jupyter-override-src-block "python")=
+
+
+#+begin_src python
+import numpy as np
+
+a = np.linspace(3, 2)
+print(a)
+#+end_src
+
+#+RESULTS:
+: [3.         2.97959184 2.95918367 2.93877551 2.91836735 2.89795918
+:  2.87755102 2.85714286 2.83673469 2.81632653 2.79591837 2.7755102
+:  2.75510204 2.73469388 2.71428571 2.69387755 2.67346939 2.65306122
+:  2.63265306 2.6122449  2.59183673 2.57142857 2.55102041 2.53061224
+:  2.51020408 2.48979592 2.46938776 2.44897959 2.42857143 2.40816327
+:  2.3877551  2.36734694 2.34693878 2.32653061 2.30612245 2.28571429
+:  2.26530612 2.24489796 2.2244898  2.20408163 2.18367347 2.16326531
+:  2.14285714 2.12244898 2.10204082 2.08163265 2.06122449 2.04081633
+:  2.02040816 2.        ]
+
+
+* Figures from clipboard
+
+Using =org-download= with imagemagick =convert= command.
+The workflow is to just use the snipping tool from windows and use the =org-download-clipboard= function inside emacs org-mode.
+Right now I still need an easy way to control the image width, it seems that hugo can not understand =#+attr_html= parameters.
+
+
+#+DOWNLOADED: screenshot @ 2020-12-19 10:33:05
+#+attr_html: :width 300px
+[[file:Figures_from_clipboard/2020-12-19_10-33-05_screenshot.png]]
+
+* Equations
+
+I had to just enable =math=True= in my hugo =.toml= config file under site params.
+
+
+1. using double =$$= centering equations $$ f(x) = \int_0^1 x^2 d x $$
+2. single =$= for inline $ x^2 $
+
+* Stylized balance sheets from ditaa
+
+Well, this works. However it is too time consuming.
+
+#+begin_src ditaa :file test.png
+/------------------\
+|Federal Reserve   |
++--------+---------+
+|assets	 |liabilit |
++--------+---------+	
+|c1AB	 | cPNK    |	
+|JPY     | USD	   |
+|reserves| reserves|
+|at BoJ	 |to BoJ   |
++--------+---------+
+#+end_src
+
+#+RESULTS:
+[[file:test.png]]
+* Youtube
+in org-mode just the link does not do anything.
+We can use the markdown syntax also.
+
+[[https://www.youtube.com/watch?v=a5PF2PcElV0]]
+
+{{< youtube a5PF2PcElV0 >}}
+
+* Footnotes
+
+[fn:2] Not using this anymore, it is objective better to place images together with the post. 
+
+
+[fn:1] I manually created the =images= folder.

@@ -1,0 +1,60 @@
+#+title: Books chapters
+#+date: <2021-09-29 Wed>
+#+author: Nasser Alkmim
+#+draft: t
+#+toc: t
+#+tags[]: essays 
+#+lastmod: 2021-12-09 15:19:50
+* How we went from Pareto to "winner takes all"
+** When did the change happened?
+What happened that we went from Pareto 80/20 to "winner takes all" 99/1.
+** Why network effect is strong as ever?
+
+* Why reading books increases your intelligence
+** What is intelligence?
+Capacity to find the essential.
+** Why only books?
+
+** Analogy as the core of cognition
+
+** Why you want be more intelligent?
+
+** References
+
+- Douglas Hofstadter, Analogy 
+
+* Begin with a question in mind is
+contra ponctus to "begin with end in mind".
+
+** Problems with beginning with end in mind?
+
+Pessimistic nature.
+
+Overestimate chances of failure.
+
+* Why equilibrium is universal
+** Why we are addicted to consumption
+
+** Why passive consumption is bad
+
+When we read we engage with the author's ideas.
+It is a visual stimulates that triggers some cognitive effort. 
+
+When we have a conversation with someone we engage with this person.
+We receive a stimulus through sound waves that also triggers a cognitive response.
+
+However, when we passively receive stimulus without any sort of engagement with the content we just get filled with nothingness.
+
+The problem is not with the content itself, nor with the medium of transport but just with how we handle it.
+
+What about pure entertainment?
+When we want to get filled with nothingness?
+That's is fine, that is what we want to balance.
+
+
+** Equilibrium and symmetry
+
+* How to make decisions
+*** Opcionality
+*** Top down, bottom up
+*** Heuristics

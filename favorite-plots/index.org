@@ -1,0 +1,77 @@
+#+TITLE:       Favorite plots and graphs
+#+AUTHOR:      Nasser Alkmim
+#+EMAIL:       nasser.alkmim@gmail.com
+#+DATE:        2018-01-20
+#+TAGS[]:      favorites
+#+toc: t
+
+Here I'm going to compile a list of my favorite graphs and plots.
+
+* BIS Bulletins
+
+As of now, 2020, this are my favorite asthetic.
+The shaded background, no border, consistent line thickness and colors. 
+
+
+#+DOWNLOADED: screenshot @ 2020-12-22 10:42:41
+#+attr_html: :width 400 :style max-width:650px
+[[file:BIS_Bulletins/2020-12-22_10-42-41_screenshot.png]]
+
+
+#+DOWNLOADED: screenshot @ 2020-12-22 10:51:00
+#+attr_html: :width 400 :style max-width:650px
+[[file:BIS_Bulletins/2020-12-22_10-51-00_screenshot.png]]
+
+
+#+DOWNLOADED: screenshot @ 2020-12-22 10:51:51
+#+attr_html: :width 400 :style max-width:650px
+[[file:BIS_Bulletins/2020-12-22_10-51-51_screenshot.png]]
+
+* Old preferences
+
+*** Eckardt 2011
+This is one seems to be standard matplotlib plot. 
+It is from a paper (Unger ad Eckardt 2011)
+#+attr_org: :width 400 
+#+attr_html: :width 400 
+[[file:img/favorite_plots.org_20181231_105143_.png]]
+*** Toro 2016
+I think this one was made with TiKz library.
+I'm not sure about the dotted grid line, but a like the aesthetics of the markers and the shaded area.
+#+attr_org: :width 400 
+#+attr_html: :width 400 
+[[file:img/favorite_plots.org_20181231_110710_.png]]
+*** Callister 2007
+
+This books has some really beautiful aesthetic.
+The choice of color pallet is excellent.
+The plots have three different styles.
+
+This first one seems to be used for general numeric data.
+Solid gridline in a light grey is nice but sometimes it feels cluttered.
+The inward ticks are also nice but sometimes they can cover the data, that's why matplotlib default changed for outward ticks.
+
+#+attr_org: :width 300 
+#+attr_html: :width 300 
+[[file:img/favorite_plots.org_20190108_144819_.png]]
+
+Here is an example on how it sometimes can feel cluttered.
+He sometimes avoid grid lines when they are not needed.
+Gridlines are useful when we want compare the value of different curves, such as in this case.
+#+attr_org: :width 400 
+#+attr_html: :width 400 
+[[file:img/favorite_plots.org_20190108_145121_.png]]
+
+When there is no need to compare the value of different curves, he avoids the grid lines.
+#+attr_org: :width 400 
+#+attr_html: :width 400 
+[[file:img/favorite_plots.org_20190108_145724_.png]]
+
+He also uses simple vertical and horizontal lines for qualitative plots, which I think looks very pleasant to the eye.
+#+attr_org: :width 400 
+[[file:img/favorite_plots.org_20190108_145345_.png]]
+
+There is also a plot without ticks and gridlines, this one seems to be interested in qualitative data.
+#+attr_org: :width 350 
+#+attr_html: :width 350 
+[[file:img/favorite_plots.org_20190108_150150_.png]]

@@ -1,0 +1,1221 @@
+#+title: Linear algebra notes
+#+date: <2021-06-21 Mon>
+#+author: Nasser Alkmim
+#+draft: t
+#+toc: t
+#+tags[]: python linear-algebra  
+Linear algebra examples and visualizations to reinforce the theory.
+* Matrices and linear mapping
+** Invertible matrix interpretation
+A matrix is invertible, means that it can maps a vector into another uniquely.
+
+Analogously to a function map which is invertible when it is bijective.
+
+A linear map is injective if it has non zero determinant.
+
+The image of basis vectors of the domain are linearly independent.
+* Determinant and scaling
+:PROPERTIES:
+:header-args:python: :session mapping
+:END:
+In two dimension it measures the area scaling.
+
+In three dimension, the determinant measures the *scaling* factor the matrix stretches a volume.
+Is the ratio between volumes.
+
+In n-dimension is the hyper-volume scaling.
+
+** Linear mapping the basis vectors
+
+
+#+begin_src python
+import numpy as np
+import matplotlib.pyplot as plt
+import matplotlib
+matplotlib.style.use('ggplot')
+
+A = np.array([[3, 0], [0, 2]])
+fig, ax = plt.subplots()
+ax.quiver([0, 0], [0, 0], A[0, :], A[1, :], units='xy', scale=1)
+ax.axis('scaled')
+ax.set_xlim(- np.max(A[0, :]) - 1, np.max(A[0, :]) + 1)
+ax.set_ylim(- np.max(A[1, :]) - 1, np.max(A[1, :]) + 1)
+ax.add_patch(plt.Rectangle((0,0), 1, 1, fc='y', alpha=.3))
+e1, e2 = np.array([1, 0]), np.array([0, 1])
+ax.add_patch(plt.Rectangle((0,0), A[0,0], A[1,1], fc='g', alpha=.1))
+print(np.linalg.det(A))
+#+end_src
+
+#+RESULTS:
+:RESULTS:
+: 6.0
+#+attr_org: :width 329
+[[file:./jupyter/6e096e31491ca38b47ad89f37ad561a60af54845.png]]
+:END:
+
+Remarks:
+1. determinant: is the scale between the two areas, 1 and 6.
+
+* Condition number and eigenpairs 
+:PROPERTIES:
+:header-args:python: :session example
+:END:
+** Linear system
+
+The RHS is set as the first column of $A$.
+Which means that the "mapped" vector is in the column space of $A$.
+
+
+#+begin_src python
+import numpy as np
+np.set_printoptions(precision=3, suppress=True)
+
+A = np.array([[4, 6], [3, -2]])
+
+b = A[:, 0]
+print(A, b)
+x = np.linalg.solve(A, b)
+print(x)
+#+end_src
+
+#+RESULTS:
+: [[ 4  6]
+:  [ 3 -2]] [4 3]
+: [ 1. -0.]
+
+Remarks:
+1. columns of $A$ are linearly independent hence there is only one solution to the system.
+2. $A$ is not symmetric.
+   
+** Visualizing the column space
+
+#+begin_src python
+import matplotlib.pyplot as plt
+import matplotlib
+matplotlib.style.use('ggplot')
+
+fig, ax = plt.subplots()
+ax.quiver([0, 0], [0, 0], A[0, :], A[1, :], units='xy', scale=1)
+ax.axis('scaled')
+ax.set_xlim(np.max(np.abs(A[0, :])) * np.array([-1, 1]) * 1.1)
+ax.set_ylim(np.max(np.abs(A[1, :])) * np.array([-1, 1]) * 1.1)
+#+end_src
+
+#+RESULTS:
+[[file:./jupyter/83b03df304346254e832815beac8919f185f4ad8.png]]
+
+Remarks:
+1. the column vectors are almost linearly dependent
+   
+** If we add a perturbation to $b$
+
+#+begin_src python
+b = A[:, 0] + 0.01
+print(b)
+x = np.linalg.solve(A, b)
+print(x)
+#+end_src
+
+#+RESULTS:
+: [4.01 3.01]
+: [ 1.003 -0.   ]
+
+Remarks:
+1. solution almost did not change.
+
+** Condition number
+
+#+begin_src python
+cn = np.linalg.norm(A) * np.linalg.norm(np.linalg.inv(A))
+cn2 = np.linalg.norm(A, ord=np.inf) * np.linalg.norm(np.linalg.inv(A), ord=np.inf)
+print(cn)
+print(cn2)
+print(np.linalg.cond(A))
+print(np.linalg.cond(A, p=np.inf))
+#+end_src
+
+#+RESULTS:
+: 2.5
+: 3.076923076923077
+: 2.0
+: 3.076923076923077
+
+Remarks:
+1. default numpy norm function is the Frobenius norm (element wise) $\sum_i (x_i^2)^{1/2}$.
+2. the default norm of the condition number is the 2-norm (largest singular value).
+3. if $A$ is symmetric the condition number with the 2-norm is related to the eigenvalues relation, because the eigenvalues are related to the singular values.
+4. the 2-norm is also known as spectral norm of the matrix.
+
+** Eigenvalues of $A$
+
+#+begin_src python
+eigvals, eigvec = np.linalg.eig(A)
+print(eigvals)
+print(np.abs(eigvals.max()) / np.abs(eigvals.min()))
+print(np.linalg.cond(A))
+#+end_src
+
+#+RESULTS:
+: [ 6.196 -4.196]
+: 1.4766271094389716
+: 2.0
+
+Remarks:
+1. no clear relation between the eigenvalues and the condition number.
+   1. they are related when the absolute value of eigenvalues are the same as the singular values.
+
+** Eigenvectors of $A$
+
+#+begin_src python
+import matplotlib.pyplot as plt
+import matplotlib
+matplotlib.style.use('ggplot')
+
+fig, ax = plt.subplots()
+ax.arrow(*[0, 0], *eigvec[:, 0], color='k', width=.02, length_includes_head=True)
+ax.arrow(*[0, 0], *eigvec[:, 1], color='k', width=.02, length_includes_head=True)
+ax.axis('scaled')
+ax.set_xlim(np.max(np.abs(eigvec[0, :])) * np.array([-1, 1]) * 1.1)
+ax.set_ylim(np.max(np.abs(eigvec[1, :])) * np.array([-1, 1]) * 1.1)
+print(eigvec[:, 0] @ eigvec[:, 1])
+#+end_src
+
+#+RESULTS:
+:RESULTS:
+: -0.27735009811261463
+#+attr_org: :width 302
+[[file:./jupyter/fb584c0309cd44debf544cf85b98719bfe2294de.png]]
+:END:
+
+Remarks:
+1. eigenvectors not orthogonal.
+
+** If $A$ is symmetric
+
+#+begin_src python
+B = np.copy(A)
+B[1, 0] = B[0, 1]
+eigvals_B, eigvec_B = np.linalg.eig(B)
+print(eigvals_B)
+print(np.abs(eigvals_B.max()) / np.abs(eigvals_B.min()))
+print(np.linalg.cond(B))
+#+end_src
+
+#+RESULTS:
+: [ 7.708 -5.708]
+: 1.3503729060226988
+: 1.350372906022699
+
+
+Remarks:
+1. if $A$ is symmetric the condition number is the same as the ration between the max and min absolute value of eigenvalues.
+   
+** Eigenvectors of $A$ symmetric
+
+#+begin_src python
+import matplotlib.pyplot as plt
+import matplotlib
+matplotlib.style.use('ggplot')
+
+fig, ax = plt.subplots()
+ax.arrow(*[0, 0], *eigvec_B[:, 0], color='k', width=.05)
+ax.arrow(*[0, 0], *eigvec_B[:, 1], color='k', width=.05)
+ax.axis('scaled')
+ax.set_xlim(max(eigvec_B[0, :], key=abs)*np.array([-1, 1])*1.5)
+ax.set_ylim(max(eigvec_B[1, :], key=abs)*np.array([-1, 1])*1.5)
+print(eigvec_B[:, 0] @ eigvec_B[:, 1])
+#+end_src
+
+#+RESULTS:
+:RESULTS:
+: 0.0
+#+attr_org: :width 263
+[[file:./jupyter/e640d256be8f7e77e4d4a2fb79b1043182f3dd79.png]]
+:END:
+
+Remarks:
+1. eigenvectors orthogonal.
+2. the original matrix was not too far from been symmetric.
+
+
+** $A$ almost singular
+
+A singular matrix has its determinant equal to zero.
+
+#+begin_src python
+As = np.copy(A) * 1.0
+print(As)
+print(As[0, 0]*As[1, 1]/As[0, 1])
+As[1, 0] = As[0, 0]*As[1, 1]/As[0, 1] - 0.01
+print(As)
+print(As[0, 0]*As[1, 1] - As[0, 1]*As[1, 0])
+#+end_src
+
+#+RESULTS:
+: [[ 4.  6.]
+:  [ 3. -2.]]
+: -1.3333333333333333
+: [[ 4.     6.   ]
+:  [-1.343 -2.   ]]
+: 0.05999999999999872
+
+Remarks:
+1. singular means that the matrix is not invertible and the system has no solution.
+2. almost singular by changing the term that would make the  
+
+
+** Visualizing the almost singular matrix
+
+
+#+begin_src python
+import matplotlib.pyplot as plt
+import matplotlib
+matplotlib.style.use('ggplot')
+
+fig, ax = plt.subplots()
+ax.arrow(*[0, 0], *As[:, 0], color='k', width=.05, length_includes_head=True)
+ax.arrow(*[0, 0], *As[:, 1], color='r', width=.05, length_includes_head=True)
+ax.set_xlim(np.max(np.abs(As[0, :])) * np.array([-1, 1]) * 1.1)
+ax.set_ylim(np.max(np.abs(As[1, :])) * np.array([-1, 1]) * 1.1)
+ax.axis('scaled')
+#+end_src
+
+#+RESULTS:
+[[file:./jupyter/373d0440f6ebc8955bbdb71536e5c88c833ba2cf.png]]
+
+Remarks
+1. almost linear dependent vector columns.
+2. system close to singularity, with no unique solution, without inverse.
+
+   
+** Eigenvectors of $A$ almost singular
+
+#+begin_src python
+import matplotlib.pyplot as plt
+import matplotlib
+matplotlib.style.use('ggplot')
+
+eigvalue_As, eigvec_As = np.linalg.eig(As)
+
+fig, ax = plt.subplots()
+ax.arrow(*[0, 0], *eigvec_As[:, 0], color='k', width=.02, length_includes_head=True)
+ax.arrow(*[0, 0], *eigvec_As[:, 1], color='r', width=.02, length_includes_head=True)
+ax.axis('scaled')
+ax.set_xlim(np.max(np.abs(eigvec_As[0, :])) * np.array([-1, 1]) * 1.1)
+ax.set_ylim(np.max(np.abs(eigvec_As[1, :])) * np.array([-1, 1]) * 1.1)
+#+end_src
+
+#+RESULTS:
+[[file:./jupyter/480594e6f18d9be87ac823a7b2b0001293751a8e.png]]
+
+Remarks:
+1. eigenvectors almost with the same direction, linearly dependent.
+
+
+** Effects on singularity on condition number
+
+
+#+begin_src python
+print(np.linalg.cond(As))
+#+end_src
+
+#+RESULTS:
+: 963.4080360922819
+
+Remarks:
+1. large condition number when matrix is close to singular.
+
+** Effect of large condition number on eigenvalues
+
+
+#+begin_src python
+print(np.linalg.eigvals(As))
+print(np.linalg.eigvals(A))
+#+end_src
+
+#+RESULTS:
+: [1.97 0.03]
+: [ 6.196 -4.196]
+
+
+Remarks:
+1. eigenvalue close to zero because matrix is close to be singular (zero determinant, no inverse).
+   
+* Singular values and eigenvalues of Gram matrix
+:PROPERTIES:
+:header-args:python: :session singular-values-eigen
+:END:
+** Krylov subspace matrix
+
+#+begin_src python 
+import numpy as np
+np.set_printoptions(3, suppress=True)
+n = 4
+krylov_dimension = 4
+
+A = np.diagflat(np.arange(1, n+1))
+b = np.ones(n)
+K = np.empty((n, krylov_dimension))
+K[:, 0] = b
+for k in range(1, krylov_dimension):
+    K[:, k] = A**k @ b
+print(A)
+print(b)
+print(K)
+print('cond(K): ', np.linalg.cond(K))
+#+end_src
+
+#+RESULTS:
+: [[1 0 0 0]
+:  [0 2 0 0]
+:  [0 0 3 0]
+:  [0 0 0 4]]
+: [1. 1. 1. 1.]
+: [[ 1.  1.  1.  1.]
+:  [ 1.  2.  4.  8.]
+:  [ 1.  3.  9. 27.]
+:  [ 1.  4. 16. 64.]]
+: cond(K):  1171.012685914989
+
+Remarks:
+1. Krylov matrix is very ill conditioned. Why?
+
+** Eigenvalues of the Krylov matrix
+
+#+begin_src python
+eigval = np.linalg.eigvals(K)
+print(eigval)
+
+_, singval, _ = np.linalg.svd(K)
+print(singval)
+#+end_src
+
+#+RESULTS:
+: [71.599  3.62   0.717  0.065]
+: [72.554  3.655  0.73   0.062]
+
+
+Remarks:
+1. wide range between maximum and minimum.
+2. the Krylov matrix is not symmetric, therefore the eigenvalues are not the condition number.
+   1. but they are close.
+
+** Gram matrix derived from the Krylov matrix
+
+#+begin_src python
+Ks = K.T @ K                    #  Gram matrix
+print(Ks)
+
+eigval = np.linalg.eigvals(Ks)
+print(eigval)
+print(eigval**(.5))
+
+_, singval, _ = np.linalg.svd(K)
+print(singval)
+print(singval**2)
+#+end_src
+
+#+RESULTS:
+: [[   4.   10.   30.  100.]
+:  [  10.   30.  100.  354.]
+:  [  30.  100.  354. 1300.]
+:  [ 100.  354. 1300. 4890.]]
+: [5264.103   13.359    0.533    0.004]
+: [72.554  3.655  0.73   0.062]
+: [72.554  3.655  0.73   0.062]
+: [5264.103   13.359    0.533    0.004]
+
+Remarks:
+1. Gram matrix is the inner products between the columns of the Krylov matrix.
+   1. larger the inner product means large projection, means that they are almost "pointing" in the same direction, almost a scale of the other, almost linearly dependent.
+   2. if the columns are almost linearly dependent the system is almost singular.
+   3. Gram matrix measures how independent are the column vectors.
+2. the eigenvalues of the Gram matrix are the square of the singular values of the Krylov matrix.
+
+* Ill conditioned almost singular matrix
+:PROPERTIES:
+:header-args:python: :session illcond
+:END:
+** Definition
+# Strang 2019
+We want to solve the linear system $Ax=b$.
+This means we want to find a linear combination of $col(A)$ that returns $b$.
+Or, alternatively, we want to check if $b$ is in the space defined by the columns of $A$, $b \in col(A)$?
+
+When columns of $A$ are ill-conditioned, the ratio of the singular values range is large.
+The singular values are related to the eigenvalues of the $A^T A$ symmetric matrix by $\sigma^2 = eigvals(A^T A)$.
+The condition number $\kappa = \sigma_1 / \sigma_r$, where $\sigma_1$ is the maximum and $\sigma_r$ the minimum.
+Also, the condition number is defined by $\lVert A \rVert \lVert A^{-1} \rVert$.
+
+
+** Column vectors almost same direction
+
+#+begin_src python
+import numpy as np
+import matplotlib.pyplot as plt
+import matplotlib
+matplotlib.style.use('ggplot')
+np.set_printoptions(precision=3, suppress=True)
+
+e = 1e-6
+A = np.array([[1, 1], [1, 1 - e]])
+print(A)
+b = np.array([20, 20 - 10 * e])
+print(b)
+x = np.linalg.solve(A, b)
+print(x)
+fig, ax = plt.subplots()
+ax.arrow(*[0, 0], *A[0, :], color='k', width=.01, length_includes_head=True)
+ax.arrow(*[0, 0], *A[1, :], color='k', width=.01, length_includes_head=True)
+ax.axis('scaled')
+print(np.linalg.det(A))
+#+end_src
+
+#+RESULTS:
+:RESULTS:
+: [[1. 1.]
+:  [1. 1.]]
+: [20. 20.]
+: [10. 10.]
+: -1.000000000028756e-06
+#+attr_org: :width 254
+[[file:./jupyter/06a4ea41f3820401f695a018e21da174064461e8.png]]
+:END:
+
+
+Remarks:
+1. the second equation is slightly different from the first, just has an minor error.
+2. imperceptible difference in the direction.
+3. matrix almost singular, no inverse, determinant close to 0, columns close to be linearly dependent.
+
+
+** Slight change in the second matrix
+
+
+#+begin_src python
+e = 1e-6
+A = np.array([[1, 1], [1, 1 + e]])
+print(A)
+b = np.array([20, 20 - 10 * e])
+print(b)
+x = np.linalg.solve(A, b)
+print(x)
+#+end_src
+
+#+RESULTS:
+: [[1. 1.]
+:  [1. 1.]]
+: [20. 20.]
+: [ 30. -10.]
+
+Remarks:
+1. just changed the sign on second diagonal, the solution completely changed from [10, 10] to [30, -10].
+
+** Eigenvectors and eigenvalues
+
+#+begin_src python
+eigval, eigvec = np.linalg.eig(A)
+print('eigenvalues: ', eigval)
+print('eigenvectors: ', eigvec)
+print('eigenvectors orthogonal? ', eigvec[:, 0].T @ eigvec[:, 1] == 0)
+print('determinant A: ', np.linalg.det(A))
+_, singval, _ = np.linalg.svd(A)
+print('singular values: ', singval, singval == eigval)
+
+fig, ax = plt.subplots()
+ax.arrow(*[0, 0], *eigvec[:, 0], color='k', width=.02, length_includes_head=True)
+ax.arrow(*[0, 0], *eigvec[:, 1], color='k', width=.02, length_includes_head=True)
+ax.axis('scaled')
+#+end_src
+
+#+RESULTS:
+:RESULTS:
+: eigenvalues:  [ 1.99999950e+00 -5.00000125e-07]
+: eigenvectors:  [[ 0.70710696 -0.7071066 ]
+:  [ 0.7071066   0.70710696]]
+: eigenvectors orthogonal?  True
+: determinant A:  -1.000000000028756e-06
+: singular values:  [1.99999950e+00 5.00000125e-07] [False False]
+[[file:./jupyter/5e21e1f808e073b7f8abdc28b8f730f54231509a.png]]
+:END:
+
+Remarks:
+1. eigenvectors are orthogonal (we can see from figure, and dot product equal to 0)
+2. one eigenvalue is _negative_ and almost zero
+3. determinant almost zero, sign of almost singular matrix, no inverse
+4. singular values resemble the eigenvalues
+   1. _singular values are always positive_
+   2. singular values and eigenvalues are the same when the matrix is normal
+
+** Gram matrix
+
+#+begin_src python
+eigval, eigvec = np.linalg.eig(A.T @ A)
+print('Gram matrix: ', A.T @ A)
+print('eigenvalues: ', eigval)
+print('square route of eigenvalues: ', np.sqrt(eigval))
+print('eigenvectors: ', eigvec)
+print('eigenvectors orthogonal? ', eigvec[:, 0].T @ eigvec[:, 1] == 0)
+print('determinant A: ', np.linalg.det(A))
+_, singval, _ = np.linalg.svd(A)
+print('singular values: ', singval, np.isclose(singval, np.sqrt(eigval), atol=1e-8))
+
+fig, ax = plt.subplots()
+ax.arrow(*[0, 0], *eigvec[:, 0], color='k', width=.02, length_includes_head=True)
+ax.arrow(*[0, 0], *eigvec[:, 1], color='k', width=.02, length_includes_head=True)
+ax.axis('scaled')
+#+end_src
+
+#+RESULTS:
+:RESULTS:
+: Gram matrix:  [[2.       1.999999]
+:  [1.999999 1.999998]]
+: eigenvalues:  [3.99999800e+00 2.49800181e-13]
+: square route of eigenvalues:  [1.99999950e+00 4.99800141e-07]
+: eigenvectors:  [[ 0.70710696 -0.7071066 ]
+:  [ 0.7071066   0.70710696]]
+: eigenvectors orthogonal?  True
+: determinant A:  -1.000000000028756e-06
+: singular values:  [1.99999950e+00 5.00000125e-07] [ True  True]
+[[file:./jupyter/5e21e1f808e073b7f8abdc28b8f730f54231509a.png]]
+:END:
+
+Remarks:
+1. Gram matrix is symmetric.
+2. columns of gram matrix almost the same, because projection of vectors that point almost to the same direction.
+3. one eigenvalue of the Gram matrix is almost zero.
+4. singular value is the same as the square route of eigenvalues of the Gram matrix.
+5. one singular value is close to zero, which makes the condition number high
+6. even with orthogonal eigenvectors, the condition number can be high.
+   
+** Condition number
+
+#+begin_src python
+print(np.linalg.cond(A))
+print(np.linalg.norm(A) * np.linalg.norm(np.linalg.inv(A)))
+print(np.abs(eigval[0]) / np.abs(eigval[1]))
+print(np.abs(singval[0]) / np.abs(singval[1]))
+#+end_src
+
+#+RESULTS:
+: 3999997.999702917
+: 3999997.9998859772
+: 3999998.000240916
+: 3999997.999702917
+
+Remarks:
+1. condition number is very large (good condition number is 1).
+2. eigenvalue approximate the condition number because they are similar to singular values.
+   
+* Ill conditioned matrix with large discrepancies but non singular
+:PROPERTIES:
+:header-args:python: :session illcond-discrep
+:END:
+** Columns almost to the same direction due large off-diagonal
+
+Remarks:
+1. columns are linearly independent and determinant is different than zero.
+2. *large off diagonal does not affect eigenvalues, but affects singular values a lot*.
+   1. not symmetric so the singular values are different from the eigenvalues.
+3. the diagonal of the Gram matrix is the norm of the columns of $A$ squared.
+   1. since there is a large value, one column will have large norm.
+4. Gram entries are the projections of each column of $A$ on each other.
+   1. since the columns *point almost to the same* direction due difference in scale.
+   2. the columns of the gram will be almost linearly dependent,
+      1. since the projection is dominated by the norm of the largest column of $A$
+   3. Gram matrix will be almost singular, due very small eigenvalue.
+5. since the eigenvalue of the Gram matrix is related to the singular value of $A$, the small eigenvalue imply small singular value and hence large condition number.
+
+#+begin_src python
+import numpy as np
+import matplotlib.pyplot as plt
+import matplotlib
+matplotlib.style.use('ggplot')
+
+e = 20
+A = np.array([[1, e], [0, 2]])
+print('matrix', A)
+b = np.array([20, 20 - 10 * e])
+x = np.linalg.solve(A, b)
+print('determinant', np.linalg.det(A))
+print('condition', np.linalg.cond(A))
+print('eigenvals', np.linalg.eigvals(A))
+print('singular values', np.linalg.svd(A)[1])
+print('\n Gram matrix', A.T @ A)
+print('eigenvals Gram matrix', np.linalg.eigvals(A.T @ A))
+#+end_src
+
+#+RESULTS:
+: matrix [[ 1 20]
+:  [ 0  2]]
+: determinant 2.0
+: condition 202.49506160796184
+: eigenvals [1. 2.]
+: singular values [20.12436641  0.09938201]
+: 
+:  Gram matrix [[  1  20]
+:  [ 20 404]]
+: eigenvals Gram matrix [9.87678408e-03 4.04990123e+02]
+
+
+** Effects of linear transformation by this matrix
+
+If we imagine the linear transformation of this matrix into the canonical base, we get as result the columns of $A$.
+The linear transformation for the whole space would create a huge distortion due the difference in magnitude.
+
+Remarks:
+1. the condition number is associated with the distortion of the linear transformation.
+   1. from the definition $\kappa = \lVert A \rVert_2 \lVert A^{-1} \rVert_2$ and $\lVert A \rVert_2 = max \lVert A x \rVert_2 / \lVert x \rVert_2$ .
+   2. the maximum singular value is related to the maximum distortion produced by the linear transformation.
+2. large values in the columns produce large distortions hence large condition number.
+
+** Eigenvalues and eigenvectors
+
+Matrix is triangular, the eigenvalues are the diagonal members because $det(A - I a[i, i])=0$, so $a[i, i]$ is an eigenvalue.
+
+#+begin_src python
+eigval, eigvec = np.linalg.eig(A)
+print('eigenvalues: ', eigval)
+print('eigenvectors: ', eigvec)
+print('eigenvectors orthogonal? ', eigvec[:, 0].T @ eigvec[:, 1] == 0)
+print('determinant A: ', np.linalg.det(A))
+_, singval, _ = np.linalg.svd(A)
+print('singular values: ', singval, singval == eigval)
+
+fig, ax = plt.subplots()
+ax.arrow(*[0, 0], *eigvec[:, 0], color='k', width=.02, length_includes_head=True)
+ax.arrow(*[0, 0], *eigvec[:, 1], color='k', width=.02, length_includes_head=True)
+ax.axis('scaled')
+#+end_src
+
+#+RESULTS:
+:RESULTS:
+: eigenvalues:  [1. 2.]
+: eigenvectors:  [[1.   1.  ]
+:  [0.   0.01]]
+: eigenvectors orthogonal?  False
+: determinant A:  2.0
+: singular values:  [100.025   0.02 ] [False False]
+[[file:./jupyter/92a73b6788815a8b7f9fc7a18f5946130010266d.png]]
+:END:
+
+Remarks:
+1. eigenvalues are well behaved.
+2. _eigenvectors point almost in the same direction._
+3. determinant is different from zero, matrix is non singular.
+4. eigenvalues are very different from singular values.
+
+** Condition number
+
+#+begin_src python
+print(np.linalg.cond(A))
+print(np.linalg.norm(A) * np.linalg.norm(np.linalg.inv(A)))
+print(np.abs(eigval[0]) / np.abs(eigval[1]))
+print(np.abs(singval[0]) / np.abs(singval[1]))
+#+end_src
+
+#+RESULTS:
+: 5002.499800099941
+: 5002.499999999999
+: 0.5
+: 5002.499800099941
+
+Remarks:
+1. condition number is high because eigenvectors point almost to the same direction.
+2. if the discrepancy in the off diagonal increases the condition number also increases, but the eigenvalues stay the same.
+   
+** Gram matrix
+
+#+begin_src python
+G = A.T @ A
+eigval, eigvec = np.linalg.eig(G)
+print('Gram matrix: ', G)
+print('eigenvalues: ', eigval)
+print('square route of eigenvalues: ', np.sqrt(eigval))
+print('eigenvectors: ', eigvec)
+print('eigenvectors orthogonal? ', eigvec[:, 0].T @ eigvec[:, 1] == 0)
+print('determinant A: ', np.linalg.det(A))
+print('determinant G: ', np.linalg.det(G))
+_, singval, _ = np.linalg.svd(A)
+print('singular values: ', singval, np.isclose(singval, np.sqrt(eigval), atol=1e-8))
+
+fig, ax = plt.subplots()
+ax.arrow(*[0, 0], *eigvec[:, 0], color='k', width=.02, length_includes_head=True)
+ax.arrow(*[0, 0], *eigvec[:, 1], color='k', width=.02, length_includes_head=True)
+ax.axis('scaled')
+
+fig, ax = plt.subplots()
+ax.arrow(*[0, 0], *G[:, 0], color='k', width=.02, length_includes_head=True)
+ax.arrow(*[0, 0], *G[:, 1], color='k', width=.02, length_includes_head=True)
+ax.axis('scaled')
+#+end_src
+
+#+RESULTS:
+:RESULTS:
+: Gram matrix:  [[    1   100]
+:  [  100 10004]]
+: eigenvalues:  [    0. 10005.]
+: square route of eigenvalues:  [  0.02  100.025]
+: eigenvectors:  [[-1.   -0.01]
+:  [ 0.01 -1.  ]]
+: eigenvectors orthogonal?  True
+: determinant A:  2.0
+: determinant G:  4.000000000000628
+: singular values:  [100.025   0.02 ] [False False]
+#+attr_org: :width 259
+[[file:./jupyter/b9b76a34195945c9389dc8ee18ec09dd9262683f.png]]
+#+attr_org: :width 64
+[[file:./jupyter/b6a5f3e7bddaae8987d9c4e4f280b6deaf05f984.png]]
+:END:
+
+
+Remarks:
+1. Gram matrix will have columns pointing to almost the same direction, just because of the scale.
+   1. not singular, determinant different from 0.
+   2. columns of $A$ almost pointing in the same direction because of scale will make columns of Gram almost linearly dependent.
+
+
+* Block diagonal one block almost singular
+** Blocks
+A is almost singular, column almost linear dependent, determinant close to 0, one eigenvalue close to 0.
+
+#+name: blocks
+#+begin_src python
+import numpy as np
+
+# columns almost ld
+A = np.array([[2, 2], [2, 2 + 1e-3]])
+C = np.array([[1, 0], [0, 3]])
+print(A)
+#+end_src
+
+#+RESULTS: blocks
+: [[2.    2.   ]
+:  [2.    2.001]]
+
+
+** Eigenvalues of sub blocks
+
+#+name: eigenvalues
+#+begin_src python
+<<blocks>>
+print('eigvals(A)', np.linalg.eigvals(A))
+print('cond(A)', np.linalg.cond(A))
+print('eigvals(C)', np.linalg.eigvals(C))
+print('cond(C)', np.linalg.cond(C))
+#+end_src
+
+#+RESULTS: eigenvalues
+: eigvals(A) [4.99937500e-04 4.00050006e+00]
+: cond(A) 8002.000375028448
+: eigvals(C) [1. 3.]
+: cond(C) 3.0
+
+#+RESULTS:
+
+** Block diagonal
+Condition of the system is the condition of the worst block.
+Eigenvalues of the system is the eigenvalues of the individual blocks.
+Conditioned determined by the singular values, maximum and minimum.
+
+#+begin_src python
+<<blocks>>
+K = np.block([[A, np.zeros((2, 2))],
+              [np.zeros((2, 2)), C]])
+print(K)
+print(np.linalg.cond(K))
+print(np.linalg.eigvals(K))
+#+end_src
+
+#+RESULTS:
+: [[2.    2.    0.    0.   ]
+:  [2.    2.001 0.    0.   ]
+:  [0.    0.    1.    0.   ]
+:  [0.    0.    0.    3.   ]]
+: 8002.000375028448
+: [4.99937500e-04 4.00050006e+00 1.00000000e+00 3.00000000e+00]
+
+* Block diagonal one block almost singular the other ill condition from large eigenvalue
+** Blocks
+A is almost singular, column almost linear dependent, determinant close to 0, one eigenvalue close to 0.
+
+#+name: blocks-ill
+#+begin_src python
+import numpy as np
+
+# columns almost ld
+A = np.array([[2, 2], [2, 2 + 1e-3]])
+C = np.array([[1, 0], [0, 1e3]])
+#+end_src
+
+#+RESULTS: blocks-ill
+
+
+
+** Eigenvalues of sub blocks
+
+#+begin_src python
+<<blocks-ill>>
+print('eigvals(A)', np.linalg.eigvals(A))
+print('cond(A)', np.linalg.cond(A))
+print('eigvals(C)', np.linalg.eigvals(C))
+print('cond(C)', np.linalg.cond(C))
+#+end_src
+
+#+RESULTS:
+: eigvals(A) [4.99937500e-04 4.00050006e+00]
+: cond(A) 8002.000375028448
+: eigvals(C) [   1. 1000.]
+: cond(C) 1000.0
+
+
+
+** Block diagonal
+
+Condition of the system increased with other block ill-conditioned.
+Eigenvalues of the system is the eigenvalues of the individual blocks.
+
+#+begin_src python
+<<blocks-ill>>
+K = np.block([[A, np.zeros((2, 2))],
+              [np.zeros((2, 2)), C]])
+print(K)
+print(np.linalg.cond(K))
+print(np.linalg.eigvals(K))
+print(np.linalg.eigvals(K).max() / np.linalg.eigvals(K).min())
+#+end_src
+
+#+RESULTS:
+: [[   2.       2.       0.       0.   ]
+:  [   2.       2.001    0.       0.   ]
+:  [   0.       0.       1.       0.   ]
+:  [   0.       0.       0.    1000.   ]]
+: 2000250.0312492996
+: [4.99937500e-04 4.00050006e+00 1.00000000e+00 1.00000000e+03]
+: 2000250.0312490538
+
+
+* Block system non symmetric
+** A ill-condition and B1 and B2 regular -> K ill
+
+1. A block is almost singular and not symmetric.
+   1. singular values not equal eigenvalues.
+   2. one singular value close to 0.
+2. if B1 and B2 are zeros, the singular values are the one from the block diagonals.
+
+
+#+begin_src python
+import numpy as np
+np.set_printoptions(formatter={'float': lambda x: "{0:.1e}".format(x)})
+
+A = np.array([[2, 6], [1, 3 + 1e-3]])
+print('cond(A)', np.linalg.cond(A))
+
+C = np.array([1e2])
+B1 = np.array([[1], [2]])
+print('norm(B1)', np.linalg.norm(B1, ord='fro'))
+B2 = np.array([[3, 4]])
+
+K = np.block([[A, B1], [B2, C]])
+print(K)
+print('cond(K)', np.linalg.cond(K))
+#+end_src
+
+#+RESULTS:
+: cond(A) 25003.000460000192
+: norm(B1) 2.23606797749979
+: [[2.0e+00 6.0e+00 1.0e+00]
+:  [1.0e+00 3.0e+00 2.0e+00]
+:  [3.0e+00 4.0e+00 1.0e+02]]
+: cond(K) 4605.811462320399
+
+** A ill-condition, B2=0 and B1 with large numbers -> K very ill
+
+1. A block is almost singular and not symmetric.
+   1. singular values not equal eigenvalues.
+   2. one singular value close to 0.
+2. if B1 and B2 are zeros, the singular values are the one from the block diagonals.
+
+
+#+begin_src python
+import numpy as np
+np.set_printoptions(formatter={'float': lambda x: "{0:.1e}".format(x)})
+
+A = np.array([[2, 6], [1, 3 + 1e-3]])
+print('cond(A)', np.linalg.cond(A))
+
+C = np.array([1e2])
+B1 = np.array([[1e2], [2e3]])
+print('norm(B1)', np.linalg.norm(B1, ord='fro'))
+B2 = np.array([[0, 0]])
+
+K = np.block([[A, B1], [B2, C]])
+print(K)
+print('cond(K)', np.linalg.cond(K))
+#+end_src
+
+#+RESULTS:
+: cond(A) 25003.000460000192
+: norm(B1) 2002.4984394500786
+: [[2.0e+00 6.0e+00 1.0e+02]
+:  [1.0e+00 3.0e+00 2.0e+03]
+:  [0.0e+00 0.0e+00 1.0e+02]]
+: cond(K) 123839076.31555964
+
+** A, C, B1 regular, B2=0 -> K ok
+
+#+begin_src python
+import numpy as np
+np.set_printoptions(formatter={'float': lambda x: "{0:.1e}".format(x)})
+
+A = np.array([[2, 6], [1, 5]])
+print('cond(A)', np.linalg.cond(A))
+
+C = np.array([10])
+B1 = np.array([[1], [2]])
+print('norm(B1)', np.linalg.norm(B1, ord='fro'))
+B2 = np.array([[0, 0]])
+
+K = np.block([[A, B1], [B2, C]])
+print(K)
+print('cond(K)', np.linalg.cond(K))
+#+end_src
+
+#+RESULTS:
+: cond(A) 16.439169677079597
+: norm(B1) 2.23606797749979
+: [[ 2  6  1]
+:  [ 1  5  2]
+:  [ 0  0 10]]
+: cond(K) 21.45191594806952
+
+** A, C regular, B1 large, B2=0 -> K ill
+
+#+begin_src python
+import numpy as np
+np.set_printoptions(formatter={'float': lambda x: "{0:.1f}".format(x)})
+
+A = np.array([[2, 6], [1, 5]])
+print('cond(A)', np.linalg.cond(A))
+
+C = np.array([10])
+B1 = np.array([[1e6], [2e6]])
+print('norm(B1)', np.linalg.norm(B1, ord='fro'))
+B2 = np.array([[0, 0]])
+
+K = np.block([[A, B1], [B2, C]])
+print(K)
+print('cond(K)', np.linalg.cond(K))
+print('det(K)', np.linalg.det(K))
+#+end_src
+
+#+RESULTS:
+: cond(A) 16.439169677079597
+: norm(B1) 2236067.9774997896
+: [[2.0 6.0 1000000.0]
+:  [1.0 5.0 2000000.0]
+:  [0.0 0.0 10.0]]
+: cond(K) 425734659202.5614
+: det(K) 40.000000000000014
+
+** A, C identity, B1 large, B2=0 -> K ill
+
+Non singular but condition is large.
+Same effect of large off-diagonal in comparison with other entries.
+Makes the Gram matrix have very large and very small eigenvalues, but still non singular (determinant is non zero).
+
+Triangular with identity block diagonal, yield unity eigenvalues.
+
+#+begin_src python
+import numpy as np
+np.set_printoptions(formatter={'float': lambda x: "{0:.1e}".format(x)})
+
+A = np.array([[1, 0], [0, 1]])
+print('cond(A)', np.linalg.cond(A))
+
+C = np.array([1])
+B1 = np.array([[1e2], [0]])
+print('norm(B1)', np.linalg.norm(B1, ord='fro'))
+print('sing(B1)', np.linalg.svd(B1)[1])
+B2 = np.array([[0, 0]])
+
+K = np.block([[A, B1], [B2, C]])
+print(K)
+print('cond(K)', np.linalg.cond(K))
+print('det(K)', np.linalg.det(K))
+print('eigvals(K)', np.linalg.eigvals(K), 'UNITY eigvals, but BAD condition!')
+print('sing(K)', np.linalg.svd(K)[1])
+#+end_src
+
+#+RESULTS:
+#+begin_example
+cond(A) 1.0
+norm(B1) 100.0
+sing(B1) [1.0e+02]
+[[1.0e+00 0.0e+00 1.0e+02]
+ [0.0e+00 1.0e+00 0.0e+00]
+ [0.0e+00 0.0e+00 1.0e+00]]
+cond(K) 10001.999900019995
+det(K) 1.0
+eigvals(K) [1.0e+00 1.0e+00 1.0e+00]
+sing(K) [1.0e+02 1.0e+00 1.0e-02]
+#+end_example
+
+
+** A, C identity
+
+Non singular but condition is large.
+Same effect of large off-diagonal in comparison with other entries.
+Makes the Gram matrix have very large and very small eigenvalues, but still non singular (determinant is non zero).
+
+#+begin_src python
+import numpy as np
+np.set_printoptions(formatter={'float': lambda x: "{0:.1e}".format(x)})
+
+A = np.array([[1, 0], [0, 1]])
+print('cond(A)', np.linalg.cond(A))
+
+C = np.array([1])
+B1 = np.array([[10], [0]])
+print('norm(B1)', np.linalg.norm(B1, ord='fro'))
+print('sing(B1)', np.linalg.svd(B1)[1])
+B2 = np.array([[0, 0]])
+
+K = np.block([[A, B1], [B2, C]])
+print(K)
+print('cond(K)', np.linalg.cond(K))
+print('det(K)', np.linalg.det(K))
+print('sing(K)', np.linalg.svd(K)[1])
+#+end_src
+
+#+RESULTS:
+: cond(A) 1.0
+: norm(B1) 10.0
+: sing(B1) [1.0e+01]
+: [[ 1  0 10]
+:  [ 0  1  0]
+:  [ 0  0  1]]
+: cond(K) 101.99019513592782
+: det(K) 1.0
+: sing(K) [1.0e+01 1.0e+00 9.9e-02]
+
+* Block system with scaling issue
+
+
+#+begin_src python
+import numpy as np
+np.set_printoptions(formatter={'float': lambda x: "{0:.1e}".format(x)})
+
+
+b = np.array([2e9, 3e9, 1e-6])
+A = np.array([[2e9, 0], [0, 3e9]])
+print('cond(A)', np.linalg.cond(A))
+print('sing(A)', np.linalg.svd(A)[1], 'large singular values')
+print('norm(A)', np.linalg.norm(A), 'LARGE NORM')
+
+C = np.array([1e-6])
+B1 = np.array([[1e8], [3e6]])
+B2 = np.array([[0, 0]])
+
+K = np.block([[A, B1], [B2, C]])
+print(K, 'Large A, small C')
+print('cond(K)', np.linalg.cond(K), 'BAD! ratio between very large and very small')
+print('sol Kx=b', np.linalg.solve(K, b))
+
+B1 = np.array([[0], [0]])
+B2 = np.array([[0, 0]])
+MA = np.array([[2e-9, 0], [0, 3e-9]])
+MC = np.array([1e6])
+MK = np.block([[MA, B1], [B2, MC]])
+
+print('SCALED cond(K)', np.linalg.cond(MK @ K), 'GOOOOD')
+print('sol Kx=b', np.linalg.solve(MK @ K, MK @ b))
+#+end_src
+
+#+RESULTS:
+#+begin_example
+cond(A) 1.4999999999999993
+sing(A) [3.0e+09 2.0e+09] large singular values
+norm(A) 3605551275.4639893 LARGE NORM
+[[2.0e+09 0.0e+00 1.0e+08]
+ [0.0e+00 3.0e+09 3.0e+06]
+ [0.0e+00 0.0e+00 1.0e-06]] Large A, small C
+cond(K) 3003750662187218.0 BAD! ratio between very large and very small
+sol Kx=b [9.5e-01 1.0e+00 1.0e+00]
+SCALED cond(K) 9.011999000969464 GOOOOD
+sol Kx=b [9.5e-01 1.0e+00 1.0e+00]
+#+end_example
+
+* Scaling changes eigenvalues/singular values?
+Yes.
+Permutation does not change.
+
+#+begin_src python
+import numpy as np
+np.set_printoptions(formatter={'float': lambda x: "{0:.1e}".format(x)})
+
+a1, a2 = 2e9, 3e9
+b = np.array([a1, a2])
+A = np.array([[a1, 0], [0, a2]])
+M = np.array([[1/a1, 0], [0, 1/a2]])
+print('sol Ax=b', np.linalg.solve(A, b))
+
+print('eig(A)', np.linalg.eigvals(A), 'large eigenvalues')
+print('eig(MA)', np.linalg.eigvals(M@A), 'scaling changed the eigenvalues')
+
+print('sing(A)', np.linalg.svd(A)[1])
+print('sing(MA)', np.linalg.svd(M@A)[1], 'singular values changed!')
+print('sol MAx=Mb', np.linalg.solve(M@A, M@b))
+#+end_src
+
+#+RESULTS:
+: sol Ax=b [1.0e+00 1.0e+00]
+: eig(A) [2.0e+09 3.0e+09] large eigenvalues
+: eig(MA) [1.0e+00 1.0e+00] scaling changed the eigenvalues
+: sing(A) [3.0e+09 2.0e+09]
+: sing(MA) [1.0e+00 1.0e+00] singular values changed!
+: sol MAx=Mb [1.0e+00 1.0e+00]
+
+* Plot system with small numbers
+
+#+header: :var fname="figure/test.svg"
+#+header: :epilogue plt.savefig(fname)
+#+header: :return fname :results file value
+#+begin_src python
+import matplotlib.pyplot as plt
+import figtex; figtex.style()
+import numpy as np
+np.set_printoptions(formatter={'float': lambda x: "{0:.1e}".format(x)})
+np.random.seed(2)
+np.set_printoptions
+A = np.random.random((4, 4)) + 1
+A[1:3, 1:3] = 1e-6
+print(A)
+plt.spy(A, precision=1e-6)
+plt.spy(np.where(A <=1e-6, A, 0), alpha=.5)
+#+end_src
+
+#+RESULTS:
+[[file:figure/test.svg]]
+
+
+#+begin_src python
+import numpy as np
+np.set_printoptions(formatter={'float': lambda x: "{0:.1e}".format(x)})
+np.random.seed(2)
+np.set_printoptions
+A = np.random.random((4, 4)) + 1
+A[1:3, 1:3] = 1e-6
+print(np.where(A <= 1e-6, 0, A))
+
+#+end_src
+
+#+RESULTS:
+: [[1.4e+00 1.0e+00 1.5e+00 1.4e+00]
+:  [1.4e+00 0.0e+00 0.0e+00 1.6e+00]
+:  [1.3e+00 0.0e+00 0.0e+00 1.5e+00]
+:  [1.1e+00 1.5e+00 1.2e+00 1.8e+00]]
+
+* References
+
+- [[https://blogs.mathworks.com/cleve/2017/07/17/what-is-the-condition-number-of-a-matrix/][What is the Condition Number of a Matrix? » Cleve’s Corner: Cleve Moler on Ma...]]

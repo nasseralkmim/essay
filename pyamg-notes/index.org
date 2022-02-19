@@ -1,0 +1,146 @@
+#+title: PyAmg notes
+#+date: <2021-05-15 Sat>
+#+lastmod: 2021-09-15 13:40:51
+#+author: Nasser Alkmim
+#+email: nasser.alkmim@gmail.com
+#+draft: t
+#+toc: t
+#+tags[]: python numerical-analysis
+* Introduction
+** Installation
+As easy as =pip install pyamg=.
+** Testing
+From the home page example:
+
+#+begin_src python
+import pyamg
+import numpy as np
+A = pyamg.gallery.poisson((500,500), format='csr')  # 2D Poisson problem on 500x500 grid
+ml = pyamg.ruge_stuben_solver(A)                    # construct the multigrid hierarchy
+print(ml)                                           # print hierarchy information
+b = np.random.rand(A.shape[0])                      # pick a random right hand side
+x = ml.solve(b, tol=1e-10)                          # solve Ax=b to a tolerance of 1e-10
+print("residual: ", np.linalg.norm(b-A*x))          # compute norm of residual vector
+#+end_src
+
+#+RESULTS:
+#+begin_example
+multilevel_solver
+Number of Levels:     9
+Operator Complexity:  2.199
+Grid Complexity:      1.667
+Coarse Solver:        'pinv2'
+  level   unknowns     nonzeros
+    0       250000      1248000 [45.48%]
+    1       125000      1121002 [40.85%]
+    2        31372       280840 [10.23%]
+    3         7875        70363 [ 2.56%]
+    4         1955        17621 [ 0.64%]
+    5          508         4824 [ 0.18%]
+    6          122         1240 [ 0.05%]
+    7           30          270 [ 0.01%]
+    8            8           58 [ 0.00%]
+residual:  1.7663185707792206e-08
+#+end_example
+** Tutorial
+
+[[https://github.com/pyamg/pyamg/wiki/Tutorial][Tutorial · pyamg/pyamg Wiki · GitHub]]
+** Methods available
+1. AMG smoothers (relaxation)
+   1. Jacobi
+   2. Gauss-Seidel
+   3. SOR
+   4. Polynomial
+   5. Krylov
+2. Krylov solvers
+   1. GMRES, FGMRS
+   2. CG, CGNE, CGNR, BicGCstab
+   3. minimum residual
+   4. steepest descent
+* AMG information
+:PROPERTIES:
+:header-args:python: :session amg-info
+:END:
+** Example problem
+
+From [cite:@bertacciniIterativeMethodsPreconditioning2018].
+
+Remarks:
+1. airfoil problem matrix FEM discretization.
+2. matrix is 191x191 and 191 nodes, 1 DOF per node.
+   1. good for visualizing the coarsening process.
+
+#+begin_src python
+import numpy as np
+np.random.seed(10)
+import matplotlib.pyplot as plt
+import matplotlib.tri as tri
+from scipy.io import loadmat
+plt.style.use('ggplot')
+from scipy.sparse import csr_matrix, linalg as sla
+
+data = loadmat('unit_square.mat')
+
+fig, ax = plt.subplots(ncols=2, figsize=(8, 6))
+A = data['A']
+ax[0].spy(A, marker='.', markersize=3)
+ax[0].set_title(f'Sparsity pattern of $A$ {A.shape}', fontsize=9)
+
+nodes = data['vertices'][:A.shape[0]]
+elements = data['elements']
+triangulation = tri.Triangulation(x=nodes[:, 0],
+                                  y=nodes[:, 1],
+                                  triangles=elements)
+ax[1].triplot(triangulation, marker='o', markersize=4)
+ax[1].set_title(f'Mesh {nodes.shape[0]} nodes', fontsize=9)
+ax[1].set_aspect('equal')
+#+end_src
+
+#+RESULTS:
+[[file:./jupyter/e8938e312e70bc68e4570bb54934971a7ce7a605.png]]
+
+** Coarsening type
+
+Remarks:
+1. =keep= argument to keep extra arguments like "strength of connections" and "splitting".
+   1. =splitting= indicates if a node is going to the coarse mesh (1) or not (0)
+   2. =AggOp= is a matrix where each column represents a coarse grid node.
+      1. each column has a mask to specify the nodes that are part of the aggregate set.
+
+#+header:  :var folder="/home/nasser/SeaDrive/My Libraries/PhD/writings/images"
+#+header:  :var folder2="/home/nasser/SeaDrive/My Libraries/PhD/writings/phd-notes/img"
+#+begin_src python
+import figtex; figtex.style()
+import pyamg
+fs = 380 / 72.27
+fig, ax = plt.subplots(ncols=2, figsize=(fs, fs))
+
+ml_classic = pyamg.ruge_stuben_solver(csr_matrix(A), max_levels=2, keep=True)
+splitting = ml_classic.levels[0].splitting
+
+ax[0].set_aspect('equal')
+ax[0].set_title(f'Ruge Stuben {len([x for x in splitting if x == 1])} C nodes', fontsize=8)
+ax[0].scatter(nodes[:, 0][splitting == 1],
+              nodes[:, 1][splitting == 1],
+              label='coarse', marker='*',
+              s=15, c='C1')
+ax[0].triplot(triangulation, linewidth=.8, zorder=0)
+ax[0].legend()
+
+ml_agg = pyamg.smoothed_aggregation_solver(csr_matrix(A), max_levels=2, keep=True)
+aggregates = ml_agg.levels[0].AggOp
+for num, agg in enumerate(aggregates.T):
+    mask = np.squeeze(agg.toarray())
+    ax[1].scatter(nodes[:, 0][mask == 1],
+                  nodes[:, 1][mask == 1],
+                  marker=f'${num}$', s=55)
+ax[1].triplot(triangulation, linewidth=.5, zorder=0)
+ax[1].set_aspect('equal')
+ax[1].set_title(f'Aggregation {aggregates.shape[1]} C nodes', fontsize=8)
+fig.savefig(f'{folder}/classic-aggregation.pdf',
+            bbox_inches='tight')
+#+end_src
+
+#+RESULTS:
+[[file:./jupyter/14b74c409c58ec4b6737a2428de2e733a3e8103d.png]]
+

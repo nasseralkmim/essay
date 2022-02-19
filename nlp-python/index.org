@@ -1,0 +1,57 @@
+#+options: ':nil *:t -:t ::t <:t H:3 \n:nil ^:t arch:headline
+#+options: author:t broken-links:nil c:nil creator:nil
+#+options: d:(not "LOGBOOK") date:t e:t email:nil f:t inline:t num:t
+#+options: p:nil pri:nil prop:nil stat:t tags:t tasks:t tex:t
+#+options: timestamp:t title:t toc:t todo:t |:t
+#+title: NLP with Python
+#+date: <2020-12-09 Wed>
+#+author: Nasser Alkmim
+#+email: nasser.alkmim@gmail.com
+#+language: en
+#+select_tags: export
+#+exclude_tags: noexport
+#+creator: Emacs 27.1 (Org mode 9.3.7)
+#+tags[]: machine-learning natural-language-processing
+#+toc: t
+* Introduction
+This is an attempt to compile different sources of informations about Natural Language processing with python.
+* Techiniques used in NLP
+*** Tokenization
+Converts text into segments (n-grams) that could represent a word, two words or more.
+During this step, usually it is performed some kind of *vocabulary reduction* such as normalization, stemming, lemmatization and removing stop words.
+***** Tools
+1. NLTK: string processing library, built by academics.
+2. spaCy: better choice for app developers.
+*** One-hot encoding
+One-hot encoding is a rudimentary way to convert a word into a integer number representation.
+*** TF-IDF
+TF-IDF stands for /term frequency times inverse document frequency/.
+This is a method for representing a word using information about the importance of that word.
+The inverse document frequency is a form of normalizing the frequency of a word across multiple documents.
+*** Word vectors
+Numerical representation of word semantics using real numbers.
+Also known as /word embeddings/.
+It can capture the *abstraction behind the word*, what it means, such as its category (is it a person, a place, an animal, etc).
+
+***** Tools
+
+1. Word2vec is capable of learning a word meaning by processing a corpus of *unlabeled* data.
+2. TensorFlow has a word2vec family of methods to generate word embeddings.
+* Applications of NLP
+*** Information extraction
+Convert unstructured text in structure knowledge base.
+It can be used to extract a variety of information such as:
+
+1. named entities such as places, dates, prices, and so on.
+2. relations (part of speech)
+3. keywords
+   
+***** Tools
+1. Google date parser: =dateutil.parser.parse=
+2. POS tagging: NLTK or spaCy (faster and more accurate)
+*** Text classification
+Classify a text according to some category.
+This is done generally by training a neural network with labeled data.
+***** Tools
+1. Keras for building the neural network
+

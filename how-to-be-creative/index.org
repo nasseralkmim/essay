@@ -1,0 +1,35 @@
+#+title: How to be creative
+#+date: <2021-07-19 Mon>
+#+lastmod: 2021-08-03 18:39:40
+#+author: Nasser Alkmim
+#+draft: t
+#+toc: t
+#+tags[]: essays
+How analogy making is the mechanism for creativity.
+* Analogy in physics
+
+#+begin_quote
+The history of physics shows us that the search for analogies between two distinct categories of phenomena has perhaps been the surest and most fruitful method of all the procedures put into play in the construction of physical theories.
+
+-- Duhem (The Aim and Structure of Physical Theory, 1977)
+#+end_quote
+
+
+#+begin_quote
+Scientific activity is strongly based on the use of analogies. We use them, more
+or less consciously, because they are like roads already traced on the land that we are investigating. Analogies are a fundamental tool for knowledge because they allow us to explore a new field using the established knowledge of another field; we need only find the homologous entities of the two fields.
+
+-- Tonti (2013)
+#+end_quote
+
+#+begin_quote
+Analogies have another important merit: when dealing with a set of abstract notions, one may find an analogy with a set of concrete notions; in this way, the abstract notions can be more easily understood by referring to the concrete ones. The understanding of abstract notions is greatly facilitated by a well-chosen analogy!
+
+-- Tonti (2013)
+#+end_quote
+
+* References
+
+- Tonti, Enzo. The Mathematical Structure of Classical and Relativistic Physics. Modeling and Simulation in Science, Engineering and Technology. New York, NY: Springer New York, 2013. https://doi.org/10.1007/978-1-4614-7422-7.
+- Douglas Hofstadter and Emmanuel Sander. Surfaces and Essences. 2011.
+  

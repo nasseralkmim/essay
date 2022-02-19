@@ -1,0 +1,16 @@
+#+title: PhD workflow
+#+date: <2021-09-27 Mon>
+#+lastmod: 2021-09-27 09:19:24
+#+author: Nasser Alkmim
+#+draft: t
+#+toc: t
+#+tags[]: essays
+* Introduction
+Working with uncertainty.
+* Time management
+* Two types of learning
+Learning from experiments and analysis.
+Learning by doing.
+
+Learning from consolidated knowledge (books).
+Learning by studying/reading.

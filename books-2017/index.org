@@ -1,0 +1,58 @@
+#+TITLE:       2017 Books review
+#+AUTHOR:      Nasser Alkmim
+#+EMAIL:       nasser.alkmim@gmail.com
+#+DATE:        2018-04-02
+#+URI:         /notes/%y/%m/%d/2017-books-review
+#+TAGS[]:        books
+#+LANGUAGE:    en
+#+OPTIONS:     H:3 num:nil toc:nil \n:nil ::t |:t ^:nil -:nil f:t *:t <:t
+#+DESCRIPTION: books review
+#+toc: t
+* Books list
+
+#+begin_export html
+<img src="https://images-na.ssl-images-amazon.com/images/I/41%2BlolL22gL._SL200_.jpg" style="display: revert; max-width: fit-content;">
+<img src="https://images-na.ssl-images-amazon.com/images/I/41OKpWydb-L._SL200_.jpg" style="display: revert; max-width: fit-content;">
+<img src="https://images-na.ssl-images-amazon.com/images/I/419QSJTZ%2BbL._SL200_.jpg" style="display: revert; max-width: fit-content;">
+<img src="https://images-na.ssl-images-amazon.com/images/I/41w4yuUG1mL._SL200_.jpg" style="display: revert; max-width: fit-content;">
+<img src="https://images-na.ssl-images-amazon.com/images/I/41RtytNpsfL._SL200_.jpg" style="display: revert; max-width: fit-content;">
+<img src="https://images-na.ssl-images-amazon.com/images/I/41usQnvp5iL._SL200_.jpg" style="display: revert; max-width: fit-content;">
+<img src="https://images-na.ssl-images-amazon.com/images/I/41079pBDabL._SL200_.jpg" style="display: revert; max-width: fit-content;">
+<img src="https://images-na.ssl-images-amazon.com/images/I/51nkVaXEUSL._SL200_.jpg" style="display: revert; max-width: fit-content;">
+<img src="https://images-na.ssl-images-amazon.com/images/I/41MLwBkcIKL._SL200_.jpg" style="display: revert; max-width: fit-content;">
+<img src="https://images-na.ssl-images-amazon.com/images/I/51KR7%2BS1TRL._SL200_.jpg" style="display: revert; max-width: fit-content;">
+
+#+end_export
+
+* Antifragile
+Livro essencial para todos.
+A maneira como o Taleb escreve é muito interessante e me agrada muito.
+O livro te explica como certas circunstâncias podem ser favorecidas quando um agente stressor ocorre.
+Essa ideia é aplicada em finanças e também nos mais diversos expectros da vida.
+Meu capitulo favorito foi sobre "ensinando pássaros a voar" que trata a ciência, pelo menos a ciência do séc XIX, como uma atividade assimétrica, ou seja, através do "thinkering", ou experimentos que custam pouco (pequeno downside) mas que tem grande potencial (upside), a ciência era feita de forma eficiênte de baixo para cima (bottom up).
+A ideia de que uma teoria matemática positiva sobre os fenômenos é formulada inicialmente através da racionalidade para em seguida ser aplicada é uma inversão que é popularizada no sistema educacional, quando na verdade, o que acontece é uma série de experimentos estilo "thinkering" são feitos até se observar padrões que representam conclusões empíricas.
+É claro que a ciência moderna, hard science, consegue a partir de um modelo matemático concluir sobre a natureza da física natural, o que me vem a mente é a descoberta de partícula sub atômicas que foram previstas matematicamente anteriormente a sua comprovação experimental.
+* Sapiens
+Livro muito bem escrito que flui de forma fácil.
+Discorre sobre temas interessantes da história da humanidade.
+Achei interessante a parte sobre o surgimento de entidades abstratas na comunidade humana e nossa capacidade de compreendê-las.
+* Capital in the twenty-first century
+Livro que parece uma dissertação, li algumas partes.
+* Black swan
+Outro do Taleb, agora sobre eventos imprevisíveis de proporções também desconhecidas.
+* Think, fast and slow
+Esse livro contém um apanhado das conclusões mais relevantes sobre o comportamento humano decorrentes de experimentos controlados.
+Considero essencial pois é interessante ter noção de como alguns viéses podem nos influênciar.
+* Tipping point
+Horrível.
+* The art of thinking clearly
+Livro que resume bem, com exemplos, a ciência comportamental.
+Leitura rápida que tem muito a nos instruir.
+
+* Bold
+Livro sobre tendências para empreendedores modernos.
+* Rational optimist
+Livro estilo o Sapiens mas com o viés mais liberal.
+Também flui bem e é bem agradável de ler.
+* Who owns the world?
+Anti americanismo.

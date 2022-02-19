@@ -1,0 +1,320 @@
+#+title: Org-mode workflow for exploratory analysis of data
+#+date: <2021-09-22 Wed>
+#+lastmod: 2021-10-25 10:11:20
+#+author: Nasser Alkmim
+#+draft: t
+#+toc: t
+#+tags[]: tools workflow emacs org-mode latex
+* Introduction
+I use =org-mode= as a *analysis and processing tool* where I can combine all the steps to perform an "exploratory analysis of data".
+
+[[http://orgmode.org][Org-mode]] is software that ships with Emacs.
+What is so great about it?
+It is a markup language that has some neat features when inside Emacs.
+The list of features is extremely large and I am always amazed by its capabilities.
+For me, however, the most impressive feature is: writing and running code inside of it.
+
+
+* Why org-mode?
+
+Flexible.
+
+Increase productivity.
+
+Gives power to the user.
+
+Transferable skills.
+
+Robust and durable format.
+* Reducing overhead with org-mode
+** Folder organization
+:PROPERTIES:
+:header-args: :var folder="special-data"
+:END:
+Folder organization with section header arguments and header variables.
+
+Add this under the section heading.
+#+begin_example
+:PROPERTIES:
+:header-args: :var folder="special-data"
+:END:
+#+end_example
+
+Then in a shell block, we can
+#+begin_src sh
+mkdir $folder
+#+end_src
+
+#+RESULTS:
+
+We then, can use this folder name inside a python block to save some data.
+
+#+begin_src python
+import numpy as np
+data = np.arange(10)
+np.save(f'{folder}/important-data', data)
+#+end_src
+
+#+RESULTS:
+
+** Consistent information with inline source blocks
+Using header variables and inline source blocks.
+
+* Workflow
+
+I tried different workflows in the past.
+Right now I do:
+
+1. write description, objectives and learning milestones.
+2. run experiments with python code blocks or shell blocks.
+3. save the results to a file.
+4. process the data and plot with Python's Matplotlib.
+5. analyze and conclude.
+
+The /learning milestones/ in the first point represents the question: "What am I going to learn?" or "What am I trying to learn?".
+This is a concept that I first heard of in the book "The lean start up", and it is a way to measure progress.
+It works really well in this context because the learning can be materialized and registered with org-mode. 
+
+The main benefits are that this evidence is reproducible, auditable and shareable.
+You can run and rerun the whole thing together to enforce consistency; you can trace back your steps and see exactly what you did; and you can easily share a html page or a pdf. 
+
+* Technicalities
+** Session or no session?
+
+Use-cases:
+1. single block that is used multiple times.
+   1. alternative: named block and noweb reference.
+2. use a variable in multiple blocks.
+   1. alternative:
+      1. if is contained in a section, session is fine.
+      2. if not, use named block and just noweb reference.
+
+Negative points of session:
+1. creates a messy web of dependencies between blocks and you have to be careful with the namespace of the running REPL to avoid unintended behavior like rewriting a variable value.
+
+*** Example noweb for imports
+
+First create a block with imports with a name:
+
+#+begin_example
+#+name: import
+#+begin_src python
+import numpy as np
+#+end_src
+#+end_example
+
+#+name: import
+#+begin_src python :noweb yes
+import numpy as np
+#+end_src
+
+#+RESULTS: import
+
+
+Then use it with noweb reference.
+#+begin_example
+#+begin_src python :noweb yes :exports both
+<<import>>
+print(np.array(1))
+#+end_src
+#+end_example
+
+Which results in:
+#+begin_src python :noweb yes :exports both
+<<import>>
+print(np.array(1))
+#+end_src
+
+#+RESULTS:
+: 1
+
+Notice that above the =<<import>>= is shown, this is because the Hugo org conversion is not the same as the default html export , see [[https://github.com/niklasfasching/go-org][GitHub - niklasfasching/go-org: Org mode parser with html & pretty printed or...]].
+In the default html export the noweb reference syntax is not shown in the block that it is used.
+You can even control if the reference should expand the original code.
+_This is good for avoid repetition,_ but it is a behavior that can be controlled with a header argument.
+
+** Tangle or no tango?
+
+For data analysis with python I don't see much advantage of tangle.
+
+Tangle might be useful for literate development of a design prototype or equivalent.
+
+** What figure format?
+
+SVG if the goal is to just html export.
+I use html export if I want to quick present some results to a colleague through the local network. 
+
+PDF is the goal is to generate a latex/beamer document.
+
+** Where to save figures?
+
+Folder specified in the heading properties with =header-args: :var folder="folder-name"=
+
+File name can be specified in the header properties or in the block.
+
+** Use variables from previous blocks?
+
+Lets say you do a calculation in multiple blocks,
+
+#+name: A
+#+begin_src python :exports both
+calc_A = 6
+print(calc_A)
+#+end_src
+
+#+RESULTS: A
+: 6
+
+
+#+name: B
+#+begin_src python :exports both :results scalar
+calc_B = 8
+print(calc_B)
+#+end_src
+
+#+RESULTS: B
+: 8
+
+
+Then you want to create a summary table with those results.
+You can do with a noweb reference:
+
+#+begin_src python :exports both
+<<A>>
+<<B>>
+import pandas as pd
+print(type(calc_A))
+df = pd.DataFrame({'A': [calc_A], 'B': [calc_B]})
+print(df)
+#+end_src
+
+#+RESULTS:
+: 6
+: 8
+: <class 'int'>
+:    A  B
+: 0  6  8
+
+Notice that since we =print(calc_A)= in the original block, this is repeated here.
+As an alternative we can pass a header argument with the blocks names.
+
+#+begin_example
+#+begin_src python :var calc_A=A calc_B=B
+#+end_example
+
+#+begin_src python :var calc_A=A calc_B=B :exports both
+import pandas as pd
+df = pd.DataFrame({'A': [calc_A], 'B': [calc_B]})
+print(type(calc_A))
+print(df)
+#+end_src
+
+#+RESULTS:
+: <class 'str'>
+:      A    B
+: 0  6\n  8\n
+
+Not the results from the block is interpreted as a string.
+
+** Don't repeat yourself
+
+Instead of copying the contents of a block, better to give it a name and use noweb.
+
+** Noweb or block calls.
+*** Noweb references
+
+Good:
+1. centralize function into one block.
+
+
+Create a function in a block, repeat that function block in others.
+
+#+name: plotting-function
+#+begin_src python
+import matplotlib.pyplot as plt
+def plot_graph(x, y, **kwargs):
+    """Plot"""
+    fig, ax = plt.subplots(figsize=(4, 3), constrained_layout=True)
+    ax.plot(x, y, **kwargs)
+    ax.set_xlabel('$x$')
+#+end_src
+
+Use a function as part of the other block.
+
+
+#+header: :var figure="noweb-test.svg"
+#+header: :var folder="."
+#+header: :epilogue fname=f'{folder}/{figure}';plt.savefig(fname)
+#+header: :return fname :results file value
+#+begin_src python
+<<plotting-function>>
+import numpy as np
+x = np.arange(10)
+y = x**2
+plot_graph(x, y)
+#+end_src
+
+#+RESULTS:
+[[file:./noweb-test.svg]]
+
+*** Block call
+:PROPERTIES:
+:header-args: :var folder="block-call"
+:END:
+
+
+Good:
+1. use case: when analysis is repetitive and just need to change the folder.
+2. plotting with consistent file names based on heading (folder for instance).
+   1. this folder contains the data with consistent name as well.
+
+Bad:
+1. needs care with naming variables in heading.
+2. all data must be available on each folder.
+3. need to create folder automatically
+
+Create folder:
+#+begin_src sh
+mkdir $folder
+#+end_src
+
+save data on the folder:
+
+#+begin_src python
+import numpy as np
+x = np.arange(10)
+y = x**2
+np.save(f'{folder}/y', y)
+np.save(f'{folder}/x', x)
+#+end_src
+
+
+#+RESULTS:
+
+Create the "reusable block" with the consistent file names: =x.npy= and =y.npy=.
+
+
+#+header: :var figure="block-call-test.svg"
+#+header: :epilogue fname=f'{folder}/{figure}';plt.savefig(fname)
+#+header: :return fname :results file value   
+#+name: plotting-block
+#+begin_src python
+import matplotlib.pyplot as plt
+import numpy as np
+x = np.load(f'{folder}/x.npy')
+y = np.load(f'{folder}/y.npy')
+fig, ax = plt.subplots(figsize=(4, 3), constrained_layout=True)
+ax.plot(x, y)
+ax.set_xlabel('$x$')
+#+end_src
+
+Then, just call the block in a heading with folder variable that has the same data.
+
+#+begin_example
+#+call: plotting-block()
+#+end_example
+
+#+call: plotting-block()
+
+#+RESULTS:
+[[file:block-call/block-call-test.svg]]

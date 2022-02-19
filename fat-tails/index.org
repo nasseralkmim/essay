@@ -1,0 +1,28 @@
+#+options: ':nil *:t -:t ::t <:t H:3 \n:nil ^:t arch:headline
+#+options: author:t broken-links:nil c:nil creator:nil
+#+options: d:(not "LOGBOOK") date:t e:t email:nil f:t inline:t num:t
+#+options: p:nil pri:nil prop:nil stat:t tags:t tasks:t tex:t
+#+options: timestamp:t title:t toc:t todo:t |:t
+#+title: Fat tails and Gaussian fallacies
+#+date: <2020-12-12 Sat>
+#+author: Nasser Alkmim
+#+email: nasser.alkmim@gmail.com
+#+language: en
+#+select_tags: export
+#+exclude_tags: noexport
+#+creator: Emacs 27.1 (Org mode 9.3.7)
+#+tags[]: finance statistics portugues
+#+toc: t
+#+draft: t
+
+Por que quando lidamos com problemas que envolvem fat tails as estatísticas da distribuição normal (média, variância) não fazem sentido?
+* Eventos extremos e eventos medíocres
+
+* Fat tails
+
+
+
+
+* References
+
+   

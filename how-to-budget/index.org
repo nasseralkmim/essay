@@ -1,0 +1,124 @@
+#+title: How to budget
+#+date: <2021-12-18 Sa>
+#+author: Nasser Alkmim
+#+toc: t
+#+tags[]: finance how-to 
+#+lastmod: 2021-12-31 17:12:33
+* Introduction
+Now that the new year is approaching, we have a perfect time for getting our personal finances in order.
+
+In this post I go over how I use google sheets to set up a simple yet effective /budget system/.
+I would like to emphasize the /system/, it's not just a tool to keep track of expenses but also a way of thinking.
+
+I did not use any template to build it.
+I just used my use case and a couple of guidelines to create it.
+It has been working well for me and I would like to share to maybe inspire you as well.
+
+Here is the basic structure of it,
+
+#+DOWNLOADED: screenshot @ 2021-12-18 10:47:49
+[[file:images/Budgeting_guidelines/2021-12-18_10-47-48_screenshot.png]]
+
+It has *three* main sections, dark blue background.
+Income and expenses are the basic from a standard budget.
+The planned section is an extra which I will explain later.
+
+* Budget guidelines
+
+My guidelines for the budgeting are basically /simple & easy/.
+I'm lazy, and I want something sustainable for the long run.
+
+* How it works
+
+It is easy: income - expenses, done.
+The part of income and expense is standard.
+One particularity of the expenses that might not be intuitive is that investments are in it.
+
+The planned section I got the idea from YNAB.
+I have never used YNAB but I know they have something in this sense.
+My idea is simply separate part of the budget now as a "virtual expense" to use as "extra income" later.
+I will try to explain this better with some schemes;
+
+
+* Regular expenses
+
+Regular expenses are kept in a separate spreadsheet with a simple layout.
+Just date, category and value (and observation in case a want to remember later).
+I like to separate this data input to avoid clutter.
+The spreadsheet is accessible with my cellphone, so I can register expenses on it.
+
+Then in the budget statement I collect the categories for the month with this =sumifs= formula.
+
+#+begin_example
+=SUMIFS(log!$C$2:$C$344, # sum range
+            log!$B$2:$B$344,budget!$A9, # match a criteria 
+            log!$A$2:$A$344,"<="&L$1, # within a month
+            log!$A$2:$A$344,">"&EDATE(L$1, -1)) # within the month
+#+end_example
+
+Update:
+Since I learn the query function in google sheets I have been using it whenever I find a chance.
+
+The formula now looks like,
+#+begin_example
+QUERY(log!$A:$C,"select sum(C) where B contains '"&$A9&"' and month(A)+1="&MONTH(K$1)&" and year(A)="&YEAR(K$1)&" label sum(C) ''")
+#+end_example
+Just sum when it matches the category and check the month and year.
+Very clean.
+
+
+Looks like this:
+
+#+DOWNLOADED: screenshot @ 2021-12-18 19:51:02
+#+attr_html: :width 350px
+[[file:images/Regular_expenses/2021-12-18_19-51-02_screenshot.png]]
+
+Grey cells are automatic and white cell manually added.
+
+* Planned expenses
+
+Let's say in June you have a surplus, so you decide to save up for a that big purchase you plan doing later.
+Then, the budget for this month would look like this,
+
+
+#+DOWNLOADED: screenshot @ 2021-12-18 19:11:43
+#+attr_html: :width 200px
+[[file:images/Planned_expenses/2021-12-18_19-11-42_screenshot.png]]
+
+Now in July, you decided to purchase that expensive thing you have been dreaming about it.
+The virtual expense now turns into an "extra income".
+
+
+#+DOWNLOADED: screenshot @ 2021-12-18 19:14:45
+#+attr_html: :width 450px
+[[file:images/Planned_expenses/2021-12-18_19-14-45_screenshot.png]]
+
+Honestly, feels good to have an expense not affecting your usual budget.
+Let's see how it looks in the spreadsheet, in January:
+
+Entries:
+1. got 1000;
+2. spent 500 and invested 250;
+3. 250 was directed to this special thing that costs 1000;
+
+
+#+DOWNLOADED: screenshot @ 2021-12-18 19:28:59
+#+attr_html: :width 250px
+[[file:images/Planned_expenses/2021-12-18_19-28-59_screenshot.png]]
+
+Repeating this for the next 4 months, when we want to finally make that big purchase.
+We then entry the "extra income" to help with our purchase.
+With this, *our monthly budget is green and balanced even with a expense larger than our income for the month*.
+Our saving rate still intact as well.
+
+#+DOWNLOADED: screenshot @ 2021-12-18 19:35:19
+#+attr_html: :width 550px
+[[file:images/Planned_expenses/2021-12-18_19-35-19_screenshot.png]]
+
+* Conclusion
+
+With those concepts of "virtual expense" and "extra income" one can easily keep track of planned purchases.
+The budget tool is simple with just bare bone functionality, nothing complex.
+It is concise, every month in a column which makes easier to see evolution through time.
+And finally, I think is sustainable for the long run.
+

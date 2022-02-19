@@ -1,0 +1,8 @@
+#+title: National debt
+#+date: <2021-03-01 Mon>
+#+author: Nasser Alkmim
+#+email: nasser.alkmim@gmail.com
+#+draft: t
+#+tags[]: economics
+* References
+1. [[https://www.stlouisfed.org/on-the-economy/2021/march/servicing-national-debt][Servicing the National Debt | St. Louis Fed]]

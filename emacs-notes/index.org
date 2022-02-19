@@ -1,0 +1,1387 @@
+#+title: Emacs Notes
+#+date: <2021-01-04 Mon>
+#+lastmod: 2021-10-27 08:35:20
+#+author: Nasser Alkmim
+#+email: nasser.alkmim@gmail.com
+#+toc: t
+#+draft: t
+#+tags[]: emacs tools 
+* Introduction
+
+Build emacs inside windows subsystem for linux (wsl).
+The main advantage is that emacs is considerably faster when using LSP.
+
+
+* WSL
+** Shortcut
+Using GWSL, very easy and nice to set up.
+It just works.
+
+
+*** Old <2021-06-29 Tue>
+Followed this steps for creating a taskbar shortcut:
+1. rename =.bat= to =.exe=
+2. right click on the =.exe= and create the shortcut
+3. change the shortcut icon
+4. add the shortcut to taskbar
+5. rename back the =.exe= to =.bat=
+6. change target of shortcut to =.bat= instead of =.exe= (shif-right click on the taskbar icon, then properties)
+   
+*** Old <2021-05-09 Sun>                                           :noexport:
+One =.bat= file that starts the vcxsrv is it nor already running and calls the power shell script that starts emacs. 
+
+#+begin_src bat
+@echo off
+
+TASKLIST | FINDSTR vcxsrv || start "" "C:\Program Files\VcXsrv\vcxsrv.exe" :0 -multiwindow -clipboard -wgl -ac
+
+@rem Just run the PowerShell script.
+
+powershell -NoProfile -ExecutionPolicy Bypass -Command "& './wsl-emacs.ps1'"
+#+end_src
+
+One power shell script, provided by the Hubisan repository.
+Just added the keyboard layout and key chord to switch.
+
+#+begin_src powershell
+# WSL2 - Launch Emacs
+
+# Get the IP to use from wsl and set to a variable.
+$wslip = wsl -d Ubuntu-20.04 bash -c 'ip route | awk ''/default via /'' | cut -d'' '' -f3'
+
+# Run Emacs
+wsl -d Ubuntu-20.04 bash -c "export DISPLAY=$wslip`:0.0 export LIBGL_ALWAYS_INDIRECT=1 && setxkbmap -layout 'br,us' -option grp:shifts_toggle && setsid emacs"
+#+end_src
+
+Then, a =.vbs= file that launches the bat script.
+
+#+begin_src vbs
+If WScript.Arguments.Count <= 0 Then
+    WScript.Quit
+End If
+
+bat = Left(WScript.ScriptFullName, InStrRev(WScript.ScriptFullName, "\")) & WScript.Arguments(0) & ".bat"
+arg = ""
+
+If WScript.Arguments.Count > 1 Then
+    arg = WScript.Arguments(1)
+End If
+
+CreateObject("WScript.Shell").Run """" & bat & """ """ & arg & """", 0, False
+#+end_src
+
+And finally a shortcut to this vbs with target the =.bat= script
+
+=C:\Windows\System32\wscript.exe C:\Users\nasse\OneDrive\emacs-wsl\run-emacs-wsl-2\launcher.vbs "wsl-emacs"=
+
+*** Old <2021-03-13 Sat>                                           :noexport:
+I had to use two files:
+
+first one is a =.vsb= with
+#+begin_example
+If WScript.Arguments.Count <= 0 Then
+    WScript.Quit
+End If
+
+bat = Left(WScript.ScriptFullName, InStrRev(WScript.ScriptFullName, "\")) & WScript.Arguments(0) & ".bat"
+arg = ""
+
+If WScript.Arguments.Count > 1 Then
+    arg = WScript.Arguments(1)
+End If
+
+CreateObject("WScript.Shell").Run """" & bat & """ """ & arg & """", 0, False
+#+end_example
+
+and the second a =.bat= script.
+
+
+#+begin_example
+u/ECHO OFF
+TASKLIST | FINDSTR XWwin || START /B C:\cygwin64\bin\run.exe --quote /usr/bin/bash.exe -l -c "XWin :0 -listen tcp -multiwindow -clipboard -wgl -ac"
+wsl zsh -c "export DISPLAY=$( awk '/nameserver/ { print $2 }' /etc/resolv.conf ):0; export LIBGL_ALWAYS_INDIRECT=1; eval $(dbus-launch); export DBUS_SESSION_BUS_ADDRESS; setxkbmap -layout "br,us" -option grp:shifts_toggle; setsid emacs;"
+#+end_example
+
+Notice:
+1. keyboard layout set to br and us with two shifts as toggle shortcut.
+
+Finally the shortcut to the =.vbs=
+
+#+begin_example
+C:\Windows\System32\wscript.exe C:\Users\nasse\Documents\emacs-wsl-shortcut\bat-launcher.vbs ""script"
+#+end_example
+
+
+** Paths
+
+[[https://docs.microsoft.com/en-us/windows/wsl/interop][Windows interoperability with Linux | Microsoft Docs]]
+
+Works inside wsl:
+1. notepad.exe C:\\temp\\foo.txt
+2. notepad.exe "C:\temp\foo.txt"
+
+** Hugo
+
+I had problems with the Ubunto 20.04 version of hugo.
+The solution is to just use the windows version of Hugo and call it within wsl with =hugo.exe= instead of just =hugo=.
+
+
+** LaTeX
+:PROPERTIES:
+:ID:       4554c33e-27d2-4c4b-9a4a-973db7cdf118
+:END:
+:BACKLINKS:
+[2021-07-19 Mon 22:54] <- [[file:/mnt/c/Users/c8441205/OneDrive/nasser-website/content/notes/emacs-latex-setup/index.org::*AUCTeX][AUCTeX]]
+:END:
+[[id:1101f3db-6a0c-477d-8c4e-fc7c684db4d2][AUCTeX]]
+*** Installing texlive
+TeX Live is a easy way to have TeX programs, macro packages and fonts to produce documents with LaTeX macros.
+
+#+begin_src sh
+sudo apt install tex-common texlive-base texlive-latex-recommended \
+                 texlive-latex-extra texlive-fonts-recommended latex-cjk-all
+#+end_src
+
+#+RESULTS:
+
+*** Installing biber for biblatex
+To install biblatex we need =sudo apt install biber=.
+
+*** Installing Zathura for PDF viewer
+<2021-09-03 Fri> Okular is as fast as Zathura, easy setup and it has javascript support for showing gifs.
+
+<2021-05-13 Thu> I'm using Zathura now, the forward/inverse works out of the box.
+
+To view pdf using Windows SumatraPDF add folder with =SumatraPDF.exe= on windows $PATH (environment variables) and this to =init.el=.
+
+#+begin_src emacs-lisp
+(setq TeX-view-program-list
+	  '(("Sumatra PDF" ("\"SumatraPDF.exe\" -reuse-instance"
+			    (mode-io-correlate " -forward-search %b %n ") " %o"))))
+    (assq-delete-all 'output-pdf TeX-view-program-selection)
+    (add-to-list 'TeX-view-program-selection '(output-pdf "Sumatra PDF"))
+#+end_src
+
+To get inverse search using =wsl emacsclient -n +%l "$(wslpath '%f')"=  on SumatraPDF options.
+
+*** Font support
+To get the fonts that I use =sudo apt install texlive-fonts-extra=.
+
+*** Algorithms rendering support
+
+To use algorithmicx package I install =sudo apt install texlive-science=.
+
+*** Beamer
+It is included in =texlive-latex-recommended=
+
+*** What is =texmf=?
+Stands for tex and metafont.
+Each =texmf= directory follows a "TeX directory Structure".
+
+[[https://tex.stackexchange.com/questions/420620/what-is-texmf-and-what-is-its-relation-to-tex#:~:text=a%20TeX%20Distribution.-,texmf%20stands%20for%20TeX%20and%20Metafont.,installed%20year%20(here%202017).][texlive - What is texmf, and what is its relation to TeX? - TeX - LaTeX Stack...]]
+
+*** Check texlive =texmf-local= folder
+
+#+begin_src shell
+kpsewhich --var-value TEXMFLOCAL
+#+end_src
+
+#+RESULTS:
+: /usr/local/share/texmf
+
+
+Tex Live has its own texmf, which is the =texmf-dist=.
+The "dist" contains the packages of the distribution.
+
+#+begin_src shell
+cd /usr/share/texlive/ 
+ls -la | grep texmf
+#+end_src
+
+#+RESULTS:
+: drwxr-xr-x  21 root root    4096 May  7 16:40 texmf-dist
+
+*** Where local packages should be?
+Create it if it does no exist.
+This folder should have the same structure TDS.
+
+#+begin_src shell
+cd ~/texmf/tex/latex
+ls
+#+end_src
+
+#+RESULTS:
+: uibklatex
+
+This to install personal university theme.
+
+
+[[https://tex.stackexchange.com/questions/8357/how-to-have-local-package-override-default-package][installing - How to have local package override default package - TeX - LaTeX...]]
+
+*** What is XeTeX?
+
+XeTeX is Unicode TeX engine that can access system fonts directly.
+
+To get the command =xelatex= we need to install
+
+#+begin_src shell
+sudo apt install texlive-xetex
+#+end_src
+
+To make AUCTeX use =xetex= as TeX engine we can use:
+
+#+begin_src emacs-lisp
+(setq-default TeX-engine 'xetex)
+#+end_src
+
+Or a better option is set a local variable in each tex file.
+
+*** Difference between =latex-mode=, =tex-mode= and =LaTeX-mode=?
+
+The =AUCTeX= package provides the mode =LaTeX-mode=.
+This major mode substitutes the =tex-mode= and =latex-mode=.
+
+[[https://www.gnu.org/software/auctex/manual/auctex.html#Modes-and-Hooks][AUCTeX 12.3]]
+
+*** What is a TeX engine?
+
+Binaries, programs, that process TeX input.
+Example:
+1. pdfTeX :: default of most system, it includes the =latex= and =pdflatex= commands.
+2. XeTeX :: can access system fonts and works with native UTF-8 input.
+3. LuaTeX :: does all and provides access to internals with Lua language.
+   
+*** What is UTF-8 input?
+Unicode transformation format 8 bit.
+Is a standards that connects symbols to binary code, an encoding.
+
+*** What is MiKTeX and TeX Live?
+Both are TeX distributions.
+It contains a collection of TeX related binaries.
+
+** Emacs on Windows
+
+<2021-05-24 Mon>: Using emacs built from source with WSL2.
+
+1. [[https://www.gnu.org/software/emacs/download.html][GNU Emacs download - GNU Project]]
+2. create a variable HOME to =c:/Users/<name>/= so emacs can find the appropriate =.emacs.d= folder
+3. download all-the-icons =M-x all-the-icons-install-fonts= font and manually install them
+
+*** Hunspell
+
+1. hunspell download here [[https://sourceforge.net/projects/ezwinports/files/][ezwinports - Browse Files at SourceForge.net]]
+   1. put bin folder in the path
+
+1.Dictionaries in [[https://www.freeoffice.com/en/download/dictionaries][www.freeoffice.com - Dictionaries.]]
+   1. put the dictionary with correct naming into installation folder of hunspell =/share/hunspell= folder
+   2. =hunspell -D= shows the list of available dictionaries
+
+*** Org Jupyter
+It seems that the package can not unzip the zmq requirement.
+
+So I had to manually go into my straight build of zmq and unpack the =emacs-zmq.dll= into the =\build\zmq\= folder.
+
+** WSL hacks
+*** DONE Org babel shell command and =.bashrc= aliases
+
+Need to pass explicitly the interactive flag =-i= to the block so it can pick the aliases in the =.bashrc= file.
+
+[[https://emacs.stackexchange.com/questions/46190/how-to-get-bash-source-code-blocks-to-execute-profile-bashrc][org mode - How to get bash source code blocks to execute .profile / .bashrc -...]]
+
+*** DONE LaTeX forward search does not work properly with =Suamtra.exe= in windows
+Update <2021-05-18 Tue>: Using zathura from wsl which works out of the box and is great.
+
+It opens the pdf but not at the location.
+Probably a problem with windows/wsl path conversions.
+
+*** DONE Bibtex actions
+Update <2021-05-18 Tue>: Uninstalled =selectrum= and installed =vertico= and now it works as supposed.
+Not sure what happened.
+
+It seems that the minibuffer is not expanding correctly to fit the options available.
+
+Probably a problem with Vcxsrv and its GUI.
+
+*** DONE Bibtex actions open pdf
+Update <2021-05-18 Tue>: using =wsl-path.el= =wsl-path-activate= and adding a custom function to open pdf with windows default pdf viewer (xodo in my case).
+
+#+begin_src emacs-lisp
+(setq bibtex-completion-pdf-open-function
+	(lambda (fpath)
+	  ;; (call-process "cmd.exe" nil 0 nil (concat "/C start " fpath))
+	  (shell-command (concat
+			  "cmd.exe /C start \"\" "
+			  (shell-quote-argument fpath)))
+	  ))
+#+end_src
+
+
+Update <2021-05-13 Thu>: to open with default windows applications we can use from wsl =cmd.exe /C start=. 
+But still, the helm-bibtex function can not properly check if the file exists with the windows path.
+
+Problem: (f-exists?) does not recognize windows path in Zotero entry.
+
+Wsl utils command =wslview= can be an option. 
+Install with =sudo apt install wslu=.
+[[https://github.com/wslutilities/wslu][GitHub - wslutilities/wslu: A collection of utilities for Windows 10 Linux Su...]].
+
+works from wsl:
+1. =wslview "PMNHILH2/Pawlowski et al. - 2006 - Globalization Techniques for Newton–Krylov Methods.pdf"= relative path
+2. =wslview "C:/Users/nasse/Zotero/storage/PMNHILH2/Pawlowski et al. - 2006 - Globalization Techniques for Newton–Krylov Methods.pdf"= absolute path with windows style in quotes
+3. =wslview C:\\Users\\nasse\\Zotero\\storage\\PMNHILH2\\Pawlowski\ et\ al.\ -\ 2006\ -\ Globalization\ Techniques\ for\ Newton–Krylov\ Methods.pdf= absolute path without quotes with =\= escaping \, and spaces. This is the Zotero way to store file path but it does not escape spaces (bibtex-action does that).
+4. (f-exists? "C:/Users/nasse/Zotero/storage/PMNHILH2/Pawlowski et al. - 2006 - Globalization Techniques for Newton–Krylov Methods.pdf")nil 
+5. (f-exists? "C:\\Users\\nasse\\Zotero\\storage\\PMNHILH2\\Pawlowski et al. - 2006 - Globalization Techniques for Newton–Krylov Methods.pdf")nil
+   1. _this works on emacs on windows..._ *that's the problem...*
+6. (f-exists? "C:\\Users\\nasse\\Zotero\\storage\\PMNHILH2\\Pawlowski\ et\ al.\ -\ 2006\ -\ Globalization\ Techniques\ for\ Newton–Krylov\ Methods.pdf")nil
+7. (f-exists? "/C:\\Users\\nasse\\Zotero\\storage\\PMNHILH2\\Pawlowski et al. - 2006 - Globalization Techniques for Newton–Krylov Methods.pdf")nil
+8. (f-exists? "/mnt/c/Users/nasse/Zotero/storage/PMNHILH2/Pawlowski et al. - 2006 - Globalization Techniques for Newton–Krylov Methods.pdf")t
+
+*** DONE Inverse search from SumatraPDF to emacs
+
+[[https://github.com/sumatrapdfreader/sumatrapdf/issues/1861][sumatrapdfreader/sumatrapdf#1861 Inverse search with WSL]]
+
+using =wsl emacsclient -n +%l "$(wslpath '%f')"= on sumatra inverse search command-line
+
+*** DONE Hugo
+
+Update (<2021-04-16 Fri>): discovered that I can use windows programs within wsl2 by just calling with the suffix =.exe=.
+Update: for now I'm writing my posts with standard windows emacs.
+
+Apt in wsl2 has only an old version of hugo.  
+This version does not properly process org-mode dates format, so I was getting 01/01/0001 as a date.
+
+I had to manually download hugo [[https://gohugo.io/getting-started/installing/#binary-cross-platform][Install Hugo | Hugo]] binary and put it in =usr/local/bin=.
+
+Also, another problem, it seems that when =hugo server= it does not detect changes to update the html rendering.
+[[https://github.com/microsoft/WSL/issues/4739][microsoft/WSL#4739 {WSL2} File changes made by Windows apps on Windows filesy...]]
+I don't have a solution for this yet.
+
+Trying the solution in here [[https://medium.com/@heberleh/wsl-2-installation-and-changes-c01e3cbe205a][WSL 2 installation and changes. Problems and solutions before and after… | by...]]
+
+*** DONE Org-download not getting clipboard from windows
+
+Update (<2021-04-16 Fri>): Just discovered that to run windows command in wsl we just need to add =.exe= to the windows program.
+So I'm using standard Imagemagick from windows [[https://imagemagick.org/script/download.php#windows][ImageMagick - Download]].
+
+I also had to change the variable =(setq org-download-screenshot-file "./tmp/screenshot.png")= so we can create an image with the =convert.exe= and then access it with =org-download-image= to generate an org link.
+A minor inconvenience is that a =tmp/= folder is created and I don't want to write a function to delete it.
+
+
+1. [[https://github.com/microsoft/WSL/issues/4440][microsoft/WSL#4440 WSL2 clipboard not shared between Linux and Windows]]
+
+
+
+*** DONE Emacs jupyter
+<2021-06-23 Wed> the package exec-path-from-shell add the appropriate paths to emacs =exec-path= variable so it can find jupyter in the user binaries folder.
+
+
+In the terminal:
+
+#+begin_src shell
+which jupyter
+#+end_src
+
+is installed in the user binaries folder =/home/nasser/.local/bin=
+
+Which is not inside =exec-path= variable.
+#+begin_src emacs-lisp
+(print exec-path)
+#+end_src
+
+#+RESULTS:
+| /usr/local/sbin/ | /usr/local/bin/ | /usr/sbin/ | /usr/bin/ | /sbin/ | /bin/ | /usr/games/ | /usr/local/games/ | /mnt/c/SIMULIA/Commands/ | /mnt/c/Program Files/Microsoft MPI/Bin/ | /mnt/c/Program Files/ImageMagick-7.0.11-Q16-HDRI/ | /mnt/c/WINDOWS/system32/ | /mnt/c/WINDOWS/ | /mnt/c/WINDOWS/System32/Wbem/ | /mnt/c/WINDOWS/System32/WindowsPowerShell/v1.0/ | /mnt/c/Program Files/PuTTY/ | /mnt/c/WINDOWS/System32/OpenSSH/ | /mnt/c/ProgramData/chocolatey/bin/ | /mnt/c/Program Files/PowerShell/7/ | /mnt/c/Users/c8441205/AppData/Local/SumatraPDF/ | /mnt/c/Program Files/dotnet/ | /mnt/c/Program Files/ParaView 5.9.1-Windows-Python3.8-msvc2017-64bit/bin/ | /mnt/c/Users/c8441205/AppData/Local/Microsoft/WindowsApps/ | /usr/local/libexec/emacs/28.0.50/x86_64-pc-linux-gnu/ |
+
+
+Added with =(add-to-list 'exec-path "/home/nasser/.local/bin")=.
+
+#+begin_src emacs-lisp
+(add-to-list 'exec-path "~/.local/bin")
+(print exec-path)
+#+end_src
+
+#+RESULTS:
+| ~/.local/bin | /usr/local/sbin | /usr/local/bin | /usr/sbin | /usr/bin | /sbin | /bin | /usr/games | /usr/local/games | /mnt/c/SIMULIA/Commands | /mnt/c/Program Files/Microsoft MPI/Bin/ | /mnt/c/Program Files/ImageMagick-7.0.11-Q16-HDRI | /mnt/c/WINDOWS/system32 | /mnt/c/WINDOWS | /mnt/c/WINDOWS/System32/Wbem | /mnt/c/WINDOWS/System32/WindowsPowerShell/v1.0/ | /mnt/c/Program Files/PuTTY/ | /mnt/c/WINDOWS/System32/OpenSSH/ | /mnt/c/ProgramData/chocolatey/bin | /mnt/c/Program Files/PowerShell/7/ | /mnt/c/Users/c8441205/AppData/Local/SumatraPDF | /mnt/c/Program Files/dotnet/ | /mnt/c/Program Files/ParaView 5.9.1-Windows-Python3.8-msvc2017-64bit/bin | /mnt/c/Users/c8441205/AppData/Local/Microsoft/WindowsApps | /usr/local/libexec/emacs/28.0.50/x86_64-pc-linux-gnu |
+
+#+begin_src shell
+jupyter --version
+#+end_src
+
+#+RESULTS:
+
+I also was getting error for emacs-jupyter not finding python (=apply: Searching for program: No such file or directory, python=).
+Emacs-jupyter was not finding python, even though I could call =python3= in the wsl terminal.
+It seems that emacs-jupyter (=jupyter-locate-python=) looks for python only at =jupyter --path=.
+
+More specifically emacs-jupyter looks at =/usr/local/bin/= and my python3 was installed =which python3= at =/usr/bin/=.
+So I had to create a symbolic link =sudo ln -s /usr/bin/python3 /usr/local/bin/python=.
+Then it worked.
+
+*** DONE Treemacs =visit-node-in-external-application=
+Update: <2021-05-08 Sat> Using bash from wsl. Set up a desktop application with =/usr/bin/sh= and set it as default for xdg-open.
+
+
+This is a reason for me to keep standard emacs on windows.
+
+When I call this function in a =.sh= file it opens as a text in another emacs instance.
+However I want it to just run, currently I have to call =treemacs-run-shell-command-for-current-node= and manually type the filename =./script.sh=.
+
+For instance, in windows I just go to =deploy.sh= on treemacs and hit =o x= to run the script.
+
+Can use =wsl-open= to fix that.
+[[https://github.com/4U6U57/wsl-open][GitHub - 4U6U57/wsl-open: Open files with xdg-open on Bash for Windows in Win...]]
+wsl-open will open script with git bash from windows git installation.
+
+
+Change the default application that runs shell scripts (application/x-shellscript) for the =wsl-open=.
+Use =xdg-mime query filetype file.sh= to discover the filetype.
+And use =xdg-mime query default <new filetype>= to discover which application is the default for it.
+Currently is =emacs.desktop=, which opens the shell script in another emacs instance.
+I created a =wsl-open.desktop= inside =~/.local/share/applications= with 
+
+#+begin_example
+[Desktop Entry]
+Name=wsl-open
+Exec=/usr/local/bin/wsl-open
+Type=Application
+#+end_example
+
+and set as default with
+
+#+begin_src sh
+xdg-mime query default application/x-sh
+xdg-mime default bash.desktop application/x-sh
+xdg-mime query default application/x-sh
+#+end_src
+
+#+RESULTS:
+: bash.desktop
+
+Now when I open a shell script with xdg-open (=x o= in treemacs) it runs the script just like in windows.
+
+*** DONE vterm $PATH variable and emacs =exec-path=
+<2021-06-23 Wed> It is necessary the default flag =-i= for interactive.
+
+vterm $PATH does not reproduce the same (exec-path) as emacs,
+
+#+begin_src emacs-lisp
+(exec-path)
+#+end_src
+
+#+RESULTS:
+| ~/.local/bin | /usr/local/sbin | /usr/local/bin | /usr/sbin | /usr/bin | /sbin | /bin | /usr/games | /usr/local/games | /mnt/c/SIMULIA/Commands | /mnt/c/Program Files/Microsoft MPI/Bin/ | /mnt/c/Program Files/ImageMagick-7.0.11-Q16-HDRI | /mnt/c/WINDOWS/system32 | /mnt/c/WINDOWS | /mnt/c/WINDOWS/System32/Wbem | /mnt/c/WINDOWS/System32/WindowsPowerShell/v1.0/ | /mnt/c/Program Files/PuTTY/ | /mnt/c/WINDOWS/System32/OpenSSH/ | /mnt/c/ProgramData/chocolatey/bin | /mnt/c/Program Files/PowerShell/7/ | /mnt/c/Users/c8441205/AppData/Local/SumatraPDF | /mnt/c/Program Files/dotnet/ | /mnt/c/Program Files/ParaView 5.9.1-Windows-Python3.8-msvc2017-64bit/bin | /mnt/c/Users/c8441205/AppData/Local/Microsoft/WindowsApps | /usr/local/libexec/emacs/28.0.50/x86_64-pc-linux-gnu |
+
+In vterm, with =echo $PATH= I get,
+
+#+begin_example
+/usr/local/go/bin:/home/nasser/miniconda3/condabin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usoft
+MPI/Bin/:/mnt/c/Program Files/ImageMagick-7.0.11-Q16-HDRI:/mnt/c/WINDOWS/system32:/mnt/c/ram
+Files/PuTTY/:/mnt/c/WINDOWS/System32/OpenSSH/:/mnt/c/ProgramData/chocolatey/bin:/mnt/c/Pronet/:/mnt/c/Program
+Files/ParaView
+5.9.1-Windows-Python3.8-msvc2017-64bit/bin:/mnt/c/Users/c84
+#+end_example
+
+If I activate the package =exec-path-from-shell=, I get:
+
+#+begin_src 
+/usr/local/go/bin:/home/nasser/miniconda3/condabin:/home/nasser/.local/bin:/usr/local/go/bin:/home/nasser/miniconda3/condabin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/local/games:/mnt/c/SIMULIA/Commands:/mnt/c/Program
+Files/Microsoft MPI/Bin/:/mnt/c/Program
+Files/ImageMagick-7.0.11-Q16-HDRI:/mnt/c/WINDOWS/system32:/mnt/c/WINDOWS:/mnt/c/WINDOWS/System32/Wbem:/mnt/c/WINDOWS/System32/WindowsPowerShell/v1.0/:/mnt/c/Program
+Files/PuTTY/:/mnt/c/WINDOWS/System32/OpenSSH/:/mnt/c/ProgramData/chocolatey/bin:/mnt/c/Program
+Files/PowerShell/7/:/mnt/c/Users/c8441205/AppData/Local/SumatraPDF:/mnt/c/Program
+Files/dotnet/:/mnt/c/Program Files/ParaView
+5.9.1-Windows-Python3.8-msvc2017-64bit/bin:/mnt/c/Users/c8441205/AppData/Local/Microsoft/WindowsApps:/snap/bin:/home/nasser/go/bin:/home/nasser/go/bin
+#+end_src
+
+Which includes =~/.local/bin=.
+
+
+
+* Fonts
+<2021-06-04 Fri> using default.
+
+Download the =.ttf= font file, move them to =~/.fonts/= and =fc-cache -f -v= to rebuild font cache.
+
+* Keymaps
+** Concepts
+*** What are key bindings?
+A map between keys to commands.
+*** What are keymaps?
+A storage with record of key bindings.
+This record allows emacs to know which command to call for each key pressed by the user.
+
+For example, a key-command in the =current-global-map= is available to be used in all parts of Emacs.
+
+_Every major mode and minor mode potentially can have a keybinding._
+When a mode is loaded, if it has a keymap, its keymap overrides the global map.
+So, If a chord is in both global and mode specific map, emacs will call the command from the mode specific map.
+
+
+*** What is a prefix key?
+A key bound to a keymap is a prefix key.
+Because this key will be added to others to form a complete key.
+
+So, =C-l= is bound to =lsp-command-map=, and this keymap has multiple keybindings also bound to other keymaps.
+
+Load =lsp= and run that to see:
+#+begin_src emacs-lisp
+(describe-keymap lsp-command-map)
+#+end_src
+
+A sequence of chords forms a complete key.
+
+*** What happens when a mode is activated?
+It might override custom key-bindings.
+
+*** Which keymap is activated?
+Primary keymaps are activated.
+Meaning that they are in use for finding keybindings.
+
+At all times, _global map_ is activated.
+When a major mode is loaded (?), it activates a _local keymap_. 
+If a minor mode is activated and it has a keymap defines, then a _minor mode keymap_ is also activated.
+
+Keymaps have a hierarchy.
+Minor mode keymaps shadow local keymap and the local keymap shadows the global map.
+
+Evil mode puts its keymaps at the top.
+
+*** What are global, major and minor?
+Major mode key bindings override global.
+Minor model override major mode and global.
+
+Major mode define "local keymaps".
+
+Local keymap can redefine a key by defining it as a "prefix keymap".
+
+*** =define-key= concepts
+
+Form:
+
+#+begin_src emacs-lisp
+(define-key <keymap> <key> <definition>)
+#+end_src
+
+Remarks:
+1. The definition can be a command or a keymap or a string.
+2. A key bound to a keymap is a prefix.
+
+   (require 'org)
+   (evil-define-key 'normal org-mode-map "g l" lsp-mode-map)
+   
+   
+*** Minor mode conflict
+
+If two minor modes define the same keybindings, the one earlier in the (minor-mode-map-alist) takes priority.
+
+*** Minor mode keymap activation?
+It is activated when the mode is enabled.
+
+*** When keybindings are active?
+When the module that defines them is first loaded (by using =require=).
+
+Or when the mode is launched using a hook.
+
+** Evil keymaps
+*** What are states?
+Evil define states as global keymaps.
+States represent: insert, normal, visual and others.
+*** What is the difference between =define-key= and =evil-global-set-key=
+
+Standard emacs:
+
+#+begin_src emacs-lisp
+(define key evil-normal-state-map (kbd "chord") 'some-function)
+#+end_src
+
+Evil:
+#+begin_src emacs-lisp
+(evil-global-set-key 'normal (kbd "chord") 'some-function)
+#+end_src
+
+The state keymap is predefined as a parameter ='normal=.
+*** Global maps in evil?
+Evil has a global map for each state.
+
+*** What is =evil-define-key=?
+
+It is a macro to add state bindings to ordinary keymaps.
+
+#+begin_src emacs-lisp
+(evil-define-key 'normal foo-map "a" 'bar)
+#+end_src
+
+Binds =a= to =bar= in normal state when foo-map is active.
+
+Multiple states with a quoted list ='(normal visual)=.
+
+Multiple bindings with key-function par =("a" 'bar "b" 'foo)=.
+
+If =foo-map= has not been initialized the macro adds an entry yo =after-load-function=.
+
+Keymap can be a quoted symbol: ='global= to add to the global keymap or ='local= to the current buffer.
+
+
+
+** General
+*** What is it?
+General interface for key definitions that works with =evil-mode= and is integrated in =use-package=.
+
+The interface is accessed with =general-define-key=.
+*** What is the difference between =general-define-key= and =general-def=?
+
+=general-define-key= uses keyword arguments for clarity.
+
+=general-def= is a wrapper for the =general-define-key= that improves brevity of the command, but also accepts keywords if needed.
+So, positional arguments are optional but not required.
+
+*** Difference between =evil-define-key= and =general-def=?
+Similar syntax.
+
+*** What is =general-describe-keybindings=?
+
+Describe all keybindings.
+
+*** How can =general-describe-keybindings= be useful?
+
+Order of presentation of the keybindings is based on keymaps, from
+1. buffer local
+2. global
+3. evil keybindings
+4. others
+   
+within each keymap, the keybindings are presented in the order they were created.
+
+*** Autoloaded keymaps
+If you want to create an "autoload" for keymap.
+Bind a key to a keymap that has not been loaded yet.
+
+I use that to bind a key in =LaTeX-mode-map= to a =preview-map= keymap.
+So before latex is loaded this binding try to find the keymap which is not loaded yet (preview-map is loaded with latex).
+
+#+begin_src emacs-lisp
+(unless
+      (fboundp 'LaTeX-mode)
+    (autoload #'LaTeX-mode "latex" nil t))
+#+end_src
+
+#+begin_src emacs-lisp
+(general-def 'normal LaTeX-mode-map "g p"
+    '(:keymap preview-map)
+    :package 'latex)
+#+end_src
+
+*** Bind keys to a keymap that has not been loaded?
+
+If a keymap does not exist, =evil-define-key= will defer the keybinding automatically bu suing an =eval-after-load= expression.
+=general-def= also does that.
+
+=evil-define-key*= does not defer a keybinding.
+Which can be accomplished with =:demand= in the =use-package= with =:general=.
+
+
+Package =biblio= has not been loaded yet.
+It will =autoload= when one of its functions are called.
+
+Package =ebib-biblio= has a function that integrates into =biblio=.
+I want to assign a keybinding to one of =biblio= keymaps, before loading it.
+
+
+** Helper function
+
+=C-h m= shows the modes and their keymaps.
+
+=C-u M-x apropos-variable RET -mode-map$ RET= shows all known _mode_ maps.
+
+=describe-keymap= also useful to see which key is defined in a specific map.
+Alternatively, =which-key-show-keymap= shows the keymap keys as a pop up.
+
+
+** Errors
+*** Key sequence <prefix> <key> starts with non-prefix key <prefix>
+Means that =<prefix>= is bound to a command and can't be used as a prefix.
+
+Check what the "non-prefix" key is bound with =C-h k=.
+
+** References
+
+1. [[https://github.com/syl20bnr/spacemacs/wiki/Keymaps-guide][Keymaps guide · syl20bnr/spacemacs Wiki · GitHub]]
+2. [[https://github.com/noctuid/evil-guide][GitHub - noctuid/evil-guide: Draft of a guide for using emacs with evil]]
+
+
+* Build emacs
+** List of packages requires
+
+
+#+begin_src shell
+sudo apt install -y \
+     make \
+     automake \
+     gcc \
+#+end_src
+
+
+
+** Configuring
+
+=./configure= with additional options.
+1. prefix: location for install architecture-independent files
+   1. good to separate to see what was added on top by the user
+2. native compilation: emacs lisp native compile support
+3. gnutils
+4. imagemagick
+5. cairo: vector graphics library with cross-device output support
+6. jpeg: image support
+7. png: image support
+8. rsvg: image support for svg (need to install librsvg2-devel)
+9. tiff: image support
+10. wide-int
+11. xft
+12. xml2 - for eww
+13. xpm
+
+#+begin_src shell
+./configure \
+--with-native-compilation  \
+--with-gnutls \
+--with-imagemagick \
+--with-cairo \
+--with-jpeg \
+--with-png \
+--with-rsvg \
+--with-tiff \
+--with-wide-int \
+--with-xft \
+--with-xml2 \
+--with-xpm \
+prefix=/usr/local
+#+end_src
+
+
+Summary at the end contains the what was configured.
+
+#+begin_example
+  Where should the build process find the source code?    .
+  What compiler should emacs be built with?               gcc -g3 -O2
+  Should Emacs use the GNU version of malloc?             no
+    (The GNU allocators don't work with this system configuration.)
+  Should Emacs use a relocating allocator for buffers?    no
+  Should Emacs use mmap(2) for buffer allocation?         no
+  What window system should Emacs use?                    x11
+  What toolkit should Emacs use?                          GTK2
+  Where do we find X Windows header files?                Standard dirs
+  Where do we find X Windows libraries?                   Standard dirs
+  Does Emacs use -lXaw3d?                                 no
+  Does Emacs use -lXpm?                                   yes
+  Does Emacs use -ljpeg?                                  yes
+  Does Emacs use -ltiff?                                  yes
+  Does Emacs use a gif library?                           yes -lgif
+  Does Emacs use a png library?                           yes -lpng16 -lz
+  Does Emacs use -lrsvg-2?                                yes
+  Does Emacs use cairo?                                   yes
+  Does Emacs use -llcms2?                                 yes
+  Does Emacs use imagemagick?                             yes
+  Does Emacs use native APIs for images?                  no
+  Does Emacs support sound?                               yes
+  Does Emacs use -lgpm?                                   no
+  Does Emacs use -ldbus?                                  no
+  Does Emacs use -lgconf?                                 no
+  Does Emacs use GSettings?                               yes
+  Does Emacs use a file notification library?             yes -lglibc (inotify)
+  Does Emacs use access control lists?                    no
+  Does Emacs use -lselinux?                               yes
+  Does Emacs use -lgnutls?                                yes
+  Does Emacs use -lxml2?                                  yes
+  Does Emacs use -lfreetype?                              yes
+  Does Emacs use HarfBuzz?                                yes
+  Does Emacs use -lm17n-flt?                              no
+  Does Emacs use -lotf?                                   no
+  Does Emacs use -lxft?                                   no
+  Does Emacs use -lsystemd?                               no
+  Does Emacs use -ljansson?                               yes
+  Does Emacs use the GMP library?                         yes
+  Does Emacs directly use zlib?                           yes
+  Does Emacs have dynamic modules support?                yes
+  Does Emacs use toolkit scroll bars?                     yes
+  Does Emacs support Xwidgets?                            no
+  Does Emacs have threading support in lisp?              yes
+  Does Emacs support the portable dumper?                 yes
+  Does Emacs support legacy unexec dumping?               no
+  Which dumping strategy does Emacs use?                  pdumper
+  Does Emacs have native lisp compiler?                   yes
+#+end_example
+
+obs:
+1. if it fails to create =./config.status=, try calling =sudo=
+
+** Make
+
+#+begin_src shell
+neofetch
+#+end_src
+
+#+RESULTS:
+#+begin_example
+[?25l[?7l[0m[31m[1m            .-/+oossssoo+/-.
+        `:+ssssssssssssssssss+:`
+      -+ssssssssssssssssssyyssss+-
+    .ossssssssssssssssss[37m[0m[1mdMMMNy[0m[31m[1msssso.
+   /sssssssssss[37m[0m[1mhdmmNNmmyNMMMMh[0m[31m[1mssssss/
+  +sssssssss[37m[0m[1mhm[0m[31m[1myd[37m[0m[1mMMMMMMMNddddy[0m[31m[1mssssssss+
+ /ssssssss[37m[0m[1mhNMMM[0m[31m[1myh[37m[0m[1mhyyyyhmNMMMNh[0m[31m[1mssssssss/
+.ssssssss[37m[0m[1mdMMMNh[0m[31m[1mssssssssss[37m[0m[1mhNMMMd[0m[31m[1mssssssss.
++ssss[37m[0m[1mhhhyNMMNy[0m[31m[1mssssssssssss[37m[0m[1myNMMMy[0m[31m[1msssssss+
+oss[37m[0m[1myNMMMNyMMh[0m[31m[1mssssssssssssss[37m[0m[1mhmmmh[0m[31m[1mssssssso
+oss[37m[0m[1myNMMMNyMMh[0m[31m[1msssssssssssssshmmmh[0m[31m[1mssssssso
++ssss[37m[0m[1mhhhyNMMNy[0m[31m[1mssssssssssss[37m[0m[1myNMMMy[0m[31m[1msssssss+
+.ssssssss[37m[0m[1mdMMMNh[0m[31m[1mssssssssss[37m[0m[1mhNMMMd[0m[31m[1mssssssss.
+ /ssssssss[37m[0m[1mhNMMM[0m[31m[1myh[37m[0m[1mhyyyyhdNMMMNh[0m[31m[1mssssssss/
+  +sssssssss[37m[0m[1mdm[0m[31m[1myd[37m[0m[1mMMMMMMMMddddy[0m[31m[1mssssssss+
+   /sssssssssss[37m[0m[1mhdmNNNNmyNMMMMh[0m[31m[1mssssss/
+    .ossssssssssssssssss[37m[0m[1mdMMMNy[0m[31m[1msssso.
+      -+sssssssssssssssss[37m[0m[1myyy[0m[31m[1mssss+-
+        `:+ssssssssssssssssss+:`
+            .-/+oossssoo+/-.[0m
+[20A[9999999D[43C[0m[1m[31m[1mnasser[0m@[31m[1mlt135-c842[0m 
+[43C[0m-----------------[0m 
+[43C[0m[31m[1mOS[0m[0m:[0m Ubuntu 20.04.2 LTS on Windows 10 x86_64[0m 
+[43C[0m[31m[1mKernel[0m[0m:[0m 5.4.72-microsoft-standard-WSL2[0m 
+[43C[0m[31m[1mUptime[0m[0m:[0m 23 mins[0m 
+[43C[0m[31m[1mPackages[0m[0m:[0m 1675 (dpkg)[0m 
+[43C[0m[31m[1mShell[0m[0m:[0m bash 5.0.17[0m 
+[43C[0m[31m[1mResolution[0m[0m:[0m 4096x1440[0m 
+[43C[0m[31m[1mTheme[0m[0m:[0m Adwaita [GTK3][0m 
+[43C[0m[31m[1mIcons[0m[0m:[0m Adwaita [GTK3][0m 
+[43C[0m[31m[1mTerminal[0m[0m:[0m emacs[0m 
+[43C[0m[31m[1mCPU[0m[0m:[0m AMD Ryzen 5 PRO 4650U with Radeon Graphics (10) @ 2.095GHz[0m 
+[43C[0m[31m[1mMemory[0m[0m:[0m 298MiB / 11978MiB[0m 
+
+[43C[30m[40m   [31m[41m   [32m[42m   [33m[43m   [34m[44m   [35m[45m   [36m[46m   [37m[47m   [m
+[?25h[?7h
+#+end_example
+
+=make -j <#processors>= I have currently 12 processors cores (=neofetch=).
+Use =sudo= if need extra permissions.
+
+=make clean= removes files produced by the build process in the current configuration.
+After =make clean= can rebuild with =make= and make sure that all built products are from coherent sources.
+
+
+=make distclean= removes Makefiles and other generated files.
+Returns to the "freshly unpacked source distribution"
+
+*** Error: texinfo-loaddef
+[[https://yhetil.org/emacs-devel/83o8dodw3a.fsf@gnu.org/T/][textmodes/makeinfo.el:71:1: Error: Cannot open load file: No such file or dir...]]
+
+- =sudo make -C lisp autoloads-force=
+- =sudo make -j12= again
+
+
+
+** Git workflow
+*** Update remote (github repository)
+#+begin_src shell
+cd ~/emacs
+git remote update
+#+end_src
+
+#+RESULTS:
+: Fetching origin
+
+*** Check status with remote
+
+#+begin_src shell
+cd ~/emacs
+git status -uno
+#+end_src
+
+#+RESULTS:
+: On branch master
+: Your branch is behind 'origin/master' by 19 commits, and can be fast-forwarded.
+:   (use "git pull" to update your local branch)
+: 
+: nothing to commit (use -u to show untracked files)
+
+*** Check commits from master branch
+
+#+begin_src shell
+cd ~/emacs
+git show-branch *master
+#+end_src
+
+#+RESULTS:
+#+begin_example
+,* [master] Fix filling of overlong first lines in Python doc strings
+ ! [refs/remotes/origin/master] Improve previous frames.texi change
+--
+ + [refs/remotes/origin/master] Improve previous frames.texi change
+ + [refs/remotes/origin/master^] Specify which Gsetting font names are used in the manual
+ + [refs/remotes/origin/master~2] Fix previous admin/emake change
+ + [refs/remotes/origin/master~3] Adjust admin/emake filters
+ + [refs/remotes/origin/master~4] Continue checking the same line when hitting SPC in ispell
+ + [refs/remotes/origin/master~5] Fix looking-at-p example in shortdoc.el
+ + [refs/remotes/origin/master~6] Mention the -e switch in an ange-ftp doc string
+ + [refs/remotes/origin/master~7] Fix nnimap lexical conversion problem
+ + [refs/remotes/origin/master~8] * lisp/emacs-lisp/byte-opt.el (byte-compile-inline-expand): Silence warnings
+ + [refs/remotes/origin/master~9] * lisp/progmodes/sql.el: Turn `sql-*-statement-starters' to defvars.
+ + [refs/remotes/origin/master~10] ; * src/character.c (lisp_string_width): Another defensive fix.
+ + [refs/remotes/origin/master~11] * src/character.c (lisp_string_width): Fix a typo in recent change.
+ + [refs/remotes/origin/master~12] Fix resolution of symlinks during dumping
+ + [refs/remotes/origin/master~13] ; * etc/tutorials/TUTORIAL.sv: Fix typo in last change.
+ + [refs/remotes/origin/master~14] * src/character.c (lisp_string_width): Fix last change.
+ + [refs/remotes/origin/master~15] Fix lexing of numbers with trailing decimal point and exponent
+ + [refs/remotes/origin/master~16] Don't propagate lexical variables into inlined functions
+ + [refs/remotes/origin/master~17] * src/character.c (lisp_string_width): Add missing type checks.
+ + [refs/remotes/origin/master~18] A better fix for 'string-width'
+,*+ [master] Fix filling of overlong first lines in Python doc strings
+#+end_example
+
+** Update emacs
+
+=git pull= to download updates from remote.
+
+=sudo make -j12= to build and =sudo make install=
+
+To check build date.
+
+#+begin_src emacs-lisp
+(emacs-version)
+#+end_src
+
+#+RESULTS:
+: GNU Emacs 28.0.50 (build 3, x86_64-pc-linux-gnu, GTK+ Version 2.24.32, cairo version 1.16.0)
+:  of 2021-06-04
+
+
+
+** Debuging emacs
+<2021-07-20 Tue> Use GWSL, easier to open emacs.
+To open emacs on wsl.
+
+#+begin_src shell
+export DISPLAY=$(ip route | awk '/^default/{print $3; exit}'):0.0
+export LIBGL_ALWAYS_INDIRECT=1
+setsid emacs -q
+#+end_src
+
+Inside emacs.
+<2021-05-28 Fri> I think it needs to add melpa repository.
+
+#+begin_example
+M-x package-initialize
+M-x package-install RET embark
+#+end_example
+
+* Managing packages
+** What is a package?
+
+A package is represented as a "feature", which contains a collection of functions and variables.
+The package file should =provide= the feature.
+
+When you want to use the functions and variables provided you =require= the feature.
+** What is the difference between =load=, =require= and =autoload=?
+
+=load= is a command that _evaluates_ a _complete_ *file*.
+Thus all functions and variables in the file are _installed_.
+Which means that the are available.
+
+=autoload= makes the function available without evaluating its definition.
+The installation of the function, and hence loading the file that contains it, is _deferred until the function is first called_.
+
+=autoload= is make Emacs starts quicker.
+
+** What does it means to "load" a package?
+
+When you =require= the package you "load" it to emacs interpreter so you can use all its definitions.
+A package is called "feature" and usually it is in a file with the same name.
+
+The =use-package= keyword =:demand= is necessary to load a package /when automatic defer is on/.
+
+#+begin_src emacs-lisp
+(use-package xxxx
+  :demand)
+#+end_src
+
+With straight and "always defer", this will load the package.
+The macro expands to:
+
+#+begin_src emacs-lisp
+(progn
+  (straight-use-package 'xxxx)
+  (require 'xxxx nil nil))
+#+end_src
+
+When you call =require= it searches the file name in the =load-path=.
+
+** What does "=autoload"= means, what is the difference with =require=?
+
+When you =autoload= a function means that _when the function is called_ it will *automatically* =require= the the file where the function was defined (the package).
+
+Thus, =autoload= is a form of defer loading a file for when the function in it are used.
+Whereas =require= loads them directly.
+
+** What is =straight=?
+Package manager alternative [[eww:https://www.gnu.org/software/emacs/manual/html_node/emacs/Packages.html][package.el]].
+
+Straight, differently from =package.el=, allows getting package from multiple sources (repositories).
+
+It also allows local development on the packages and keep tracking of versions.
+
+
+** What =straight-use-package= does?
+
+Register, clone, build and activate a package and its dependencies.
+
+1. register the package recipe.
+2. clone the repository if it is missing locally.
+3. build and activate a package means to create the symlinks and autoloads.
+
+So it does not "load" a package, no =require=.
+
+** What does "register" a package mean in straight?
+
+It gets the "recipe" for a package in the "configured recipe repositories"
+Or if a custom recipe is provided it uses that to obtain the package.
+
+** What is a "package recipe" in straight? 
+Instructions for obtaining a package.
+
+"recipe repositories" are implemented as regular packages.
+
+** What does "build" a package in straight mean?
+For straight, _build_ means _creating a symbolic links_ between the "packages directory" and the local package repository directory.
+
+Straight also byte-compile the package files and generate autoloads for them.
+
+For instance, the local repo is in =~/.emacs.d/straight/repos/= and we can check the package version.
+
+#+begin_src shell
+cd ~/.emacs.d/straight/repos/
+ls -la | grep use-package
+cd use-package
+git describe
+#+end_src
+
+#+RESULTS:
+: drwxr-xr-x   4 nasser nasser  4096 May 28 09:10 use-package
+: 2.4.1-14-ga7422fb
+
+Then straight creates a "build" folder with symbolic links to the repository files,
+
+#+begin_src shell
+cd ~/.emacs.d/straight/build/use-package
+ls -Gg | sed -re 's/^[^ ]* //' | grep '\->'
+#+end_src
+
+#+RESULTS:
+: 1    72 Jul 15 09:12 use-package-bind-key.el -> /home/nasser/.emacs.d/straight/repos/use-package/use-package-bind-key.el
+: 1    68 Jul 15 09:12 use-package-core.el -> /home/nasser/.emacs.d/straight/repos/use-package/use-package-core.el
+: 1    71 Jul 15 09:12 use-package-delight.el -> /home/nasser/.emacs.d/straight/repos/use-package/use-package-delight.el
+: 1    72 Jul 15 09:12 use-package-diminish.el -> /home/nasser/.emacs.d/straight/repos/use-package/use-package-diminish.el
+: 1    70 Jul 15 09:12 use-package-ensure.el -> /home/nasser/.emacs.d/straight/repos/use-package/use-package-ensure.el
+: 1    68 Jul 15 09:12 use-package-jump.el -> /home/nasser/.emacs.d/straight/repos/use-package/use-package-jump.el
+: 1    68 Jul 15 09:12 use-package-lint.el -> /home/nasser/.emacs.d/straight/repos/use-package/use-package-lint.el
+: 1    63 Jul 15 09:12 use-package.el -> /home/nasser/.emacs.d/straight/repos/use-package/use-package.el
+: 1    65 Jul 15 09:12 use-package.texi -> /home/nasser/.emacs.d/straight/repos/use-package/use-package.texi
+
+Then straight also byte-compile those files, 
+
+#+begin_src shell
+cd ~/.emacs.d/straight/build/use-package
+ls | grep .elc
+#+end_src
+
+#+RESULTS:
+: use-package-bind-key.elc
+: use-package-core.elc
+: use-package-delight.elc
+: use-package-diminish.elc
+: use-package-ensure.elc
+: use-package-jump.elc
+: use-package-lint.elc
+: use-package.elc
+
+Straight also automatically create autoloads,
+
+#+begin_src shell
+cd ~/.emacs.d/straight/build/use-package
+head -10 use-package-autoloads.el
+#+end_src
+
+#+RESULTS:
+#+begin_example
+;;; use-package-autoloads.el --- automatically extracted autoloads  -*- lexical-binding: t -*-
+;;
+;;; Code:
+
+
+;;;### (autoloads nil "use-package-bind-key" "use-package-bind-key.el"
+;;;;;;  (0 0 0 0))
+;;; Generated autoloads from use-package-bind-key.el
+
+(autoload 'use-package-autoload-keymap "use-package-bind-key" "\
+#+end_example
+
+** How does straight "load" a package?
+
+It adds the /package directory/ to the load path and evaluate the autoloads file.
+
+For instance, it adds the "build" folder for this package into the =load-path= so emacs can find the =.el= file.
+
+#+begin_src emacs-lisp
+(car load-path)
+#+end_src
+
+#+RESULTS:
+: /home/nasser/.emacs.d/straight/build/highlight-indent-guides
+
+It does not "require" the package file, it just adds it to the load-path so it can be required.
+This is good because when the file is required, the interpreter goes over the file, reads it, and make its definitions available.
+Which takes time!
+
+Straight automatically provides autoloads to the package.
+This means that you can use use the functions in this autoload file, when you do that, then the packages file is "required".
+
+** Where straight keeps the local repository?
+
+In the repo folder.
+
+** Where does straight puts the built packages?
+
+In the build folder.
+
+** How to update a package?
+
+=straight-pull-all= Try to pull all packages from their primary remotes.
+This will get the latest version from the package source.
+
+** What =use-package= does?
+It is a macro for organizing packages.
+
+** Difference between =autoload= and =activate=?
+Activate means that the autoload file was loaded.
+The autoload file contains the function that will properly load the package when its functions are called.
+
+** What is the difference between configured, initialized and declared?
+
+Configured, the package was _loaded_ (the file was read and its definition and declarations are usable).
+If a package is at this stage, =use-package= =:config= was processed.
+
+Initialized, the package configuration from the =:init= block was processed but the package itself was not necessarily loaded.
+Load status is unknown.
+
+Declared means that the =use-package= declaration was seen.
+
+
+* Python
+** Pyvenv
+
+Emacs python virtual environment support for emacs.
+
+Change the python virtualenv with =pyvenv-activate=.
+
+** Dap mode
+1. need to require the specific python debugger
+2. Need to install the python debugger =debugpy= which is a successor to =ptvsd=.
+3. when using a specific environment, need to enable environment =pyvenv-activate= (emacs package)
+*** Specific environment
+
+After running =pyvev-activate= the python interpreter will be called from the specified environment.
+For instance, activate the =edelweissfe= environment
+
+#+begin_src shell
+which python
+#+end_src
+
+#+RESULTS:
+: /home/nasser/miniconda3/envs/edelweissFE/bin/python
+
+*** Launcher file
+The =args= are passed to the python call.
+
+In this case we want to run the debugger in the =edelweissfe.py= with this argument.
+
+#+begin_src json
+{
+    "name": "Python :: edelweiss",
+    "type": "python",
+    "request": "launch",
+    "args": [
+	"testfiles/LinearElasticIsotropic/test.inp"
+    ],
+}
+#+end_src
+
+** Flycheck
+
+Python checker is executed directly =python3 -c ...= with =python3= as the default.
+
+Make sure that the checker is also installed in the specific virtual environment.
+It is useful to add the checker to the =requirements.txt= when setting up an environment.
+
+For [[https://github.com/microsoft/pyright][GitHub - microsoft/pyright: Static type checker for Python]] the default command =pyright= should be installed.
+Pyright can check type annotations PEP 484.
+
+** Syspath
+*** Shell
+From the shell,
+#+begin_src shell
+python -c "import sys; print(sys.path)"
+#+end_src
+
+#+RESULTS:
+: ['', '/usr/lib/python38.zip', '/usr/lib/python3.8', '/usr/lib/python3.8/lib-dynload', '/home/nasser/.local/lib/python3.8/site-packages', '/mnt/c/Users/c8441205/OneDrive/Academy/Projects/package', '/usr/local/lib/python3.8/dist-packages', '/usr/lib/python3/dist-packages']
+
+We can see the default location pointing to the conda environment.
+This because conda default environment is loaded with the shell, configured in the =.bashrc= file.
+*** Change conda environment within emacs shell
+
+With =conda.el= package 
+
+Getting the error: =conda--get-path-prefix: Error: executing command ""/home/nasser/.anaconda3/bin/conda" ..activate "bash" "/home/nasser/miniconda3/envs/edelweissFE/"" produced error code 127=
+
+*** Jupyter default kernel
+Using the default jupyter python kernel,
+
+#+begin_src python
+import sys
+print(sys.path)
+#+end_src
+
+#+RESULTS:
+: ['/mnt/c/Users/c8441205/OneDrive/nasser-website/content/notes/python-notes', '/usr/lib/python38.zip', '/usr/lib/python3.8', '/usr/lib/python3.8/lib-dynload', '', '/home/nasser/.local/lib/python3.8/site-packages', '/mnt/c/Users/c8441205/OneDrive/Academy/Projects/package', '/usr/local/lib/python3.8/dist-packages', '/usr/lib/python3/dist-packages', '/home/nasser/.local/lib/python3.8/site-packages/IPython/extensions', '/home/nasser/.ipython']
+
+We can see the default =/usr/lib/python3.8/site-packages.=
+
+*** Jupyter kernel with conda virtual environment
+If we use a different kernel with a conda virtual environment in jupyter,
+
+#+begin_src python :kernel edelweissFE
+import sys
+print(sys.path)
+#+end_src
+
+#+RESULTS:
+
+** Lsp
+
+*** What are workspace?
+
+From the LSP protocol, the project is initialized with a set of workspace folders where lsp-mode stores in the session file.
+
+* C++
+** Debugger
+*** Dap-mode
+Need to load (require) dap for specific debugger, for instance dap-cpptools.
+
+And the binary should be compiled before running the debugger.
+*** Debugger programs
+**** GDB
+GDB is the standard debugger for GNU.
+Works for many programming languages.
+
+Need to install =gdp=, which is the debugger program.
+
+
+#+begin_src shell
+sudo apt install gdb
+#+end_src
+
+Need a =./launch.json= on the route of the project.
+
+1. if =gdb= is not on path, need to add manually with "miDebuggerPath:" key.
+2. "program" specify the path to the executable.
+3. "cwd" sets the current directory of the application launched by the debugger.
+4. "args" is a JSON array of commands to pass to the program.
+5. "environment" to add environment variables. (?)
+6. "MIMode indicates the debugger that will be connected.
+7. "stopAtEntry" debugger should stop or not at the entry point, default is false.
+8. "request" launch the program or attach to an already running instance.
+9. "external console" if true it will spawn a external console with =lldb-mi=, otherwise use the integrated terminal.
+
+10. [[https://code.visualstudio.com/docs/cpp/launch-json-reference][Configure launch.json for C/C++ debugging in Visual Studio Code]]
+**** LLDB
+LLDB is Apple's replacement for GDB.
+It is part of the LLVM project.
+
+
+[[https://stackoverflow.com/questions/9707883/gdb-vs-lldb-debuggers][xcode - GDB Vs LLDB debuggers - Stack Overflow]]
+
+* Org
+** Straight and org
+
+Emacs ships with obsolete version of org.
+
+At emacs installation folder =~/emacs/lisp/org/org.el= you can see the version of org that emacs ships with.
+Right now is 9.4.4.
+
+From straight we get 9.4.6.
+
+using the following guarantees that we will use the newer version of =org= even if you don't use it.
+
+#+begin_src emacs-lisp
+(straight-register-package 'org)
+(straight-register-package 'org-contrib)
+#+end_src
+
+=org-contrib= (the newer =org-plus-contrib=) does not contain =org=, which means they are separate packages.
+* Packages
+** Embark
+*** Embark collect and macros
+I needed to delete a word from multiple files.
+Specifically, I needed delete the word 'draft' from the line with '#+tags[]: draft'.
+
+I used =consult-ripgrep= to search the word 'draft', collect all the results and created a macro to delete each.
+** Tramp
+*** Server with `fancy` prompt causing problems when connecting?
+
+Add this to the =/.bashrc= file in the server.
+The =tramp-terminal-type= variable is set to "dumb" (default).
+
+#+begin_src
+# For using tramp
+case "$TERM" in
+	"dumb")
+		PS1="> "
+esac
+#+end_src
+
+* Details
+*** Uninstalling zsh
+
+When I uninstalled zhs from wsl, it wouldn't start up again. 
+
+This blog post helped.
+[[https://blog.hildenco.com/2019/07/diagnozing-and-fixing-wsl.html][Diagnosing and Fixing WSL initialization issues | HildenCo Software]]
+
+I had to go to go to System32 folder, log in wsl as a root wit
+
+#+begin_src bash
+C:\Windows\System32>wsl -u root
+#+end_src
+
+then change the default shell to bash again.
+
+#+begin_src bash
+chsh -s /bin/bash name
+#+end_src
+
+
+* Elisp
+** Lisp
+http://blog.rongarret.info/2015/05/why-lisp.html
+
+Lisp is a different way of thinking about programming.
+
+Standard way: programs act on data.
+Programs are also data (e.g. for the compiler), but in this abstraction we have a distinction.
+
+In lisp there is interaction between describing what you want and actually running it.
+
+In lisp we represent code as data.
+
+* Terminal
+** Keybindings
+
+=C-m= is translated to =RET= correctly in the terminal.
+=M-RET= then can be accessed with =C-M-m.=
+

@@ -1,0 +1,169 @@
+#+title: Paraview notes
+#+date: <2021-06-02 Wed>
+#+author: Nasser Alkmim
+#+draft: t
+#+toc: t
+#+tags[]: tools paraview  
+Notes about paraview.
+* Concepts
+** Sources
+Algorithms with no input, just output.
+Reading a file for instance.
+** Sinks
+Algorithms with multiple inputs but no output.
+For example the algorithms used to render images from data.
+** Filters
+Intermediary algorithms with input and output.
+** Processing pipelines
+Connection of algorithms.
+** Pipeline browser
+Inspect the visualization pipeline.
+It shows the pipeline modules.
+** Property
+Is a parameter that affect a module behavior.
+** Properties panel
+Contains parameters for each processing module.
+It shows the properties for the selected module.
+** Multi-block dataset
+A tree of datasets where the leaf nodes are simple datasets.
+
+Multi-block datasets group datasets that are related.
+
+Can be an abstraction for multiple mesh domains.
+** Ensight format
+
+Ensight is a output file standard that /paraview/ is equipped to read.
+Stands for Engineering inSight.
+** Selecting data
+Select elements (cells, points) from datasets.
+** Spreadsheet view
+
+Instead of viewing just the rendered image.
+We can look it as table where point and elements are displayed together with their associated values.
+
+** Paraview fetch from server
+
+The method =paraview.servermanager.Fetch()= moves data from server to the client in a convenient way.
+
+** Numpy integration
+
+[[https://docs.paraview.org/en/latest/ReferenceManual/vtkNumPyIntegration.html][5. Using NumPy for processing data — ParaView Documentation 5.8.1 documentation]]
+
+Access and process data with =numpy= through the API =vtk.numpy_interface=.
+I think this is promising for automating data extraction with python.
+
+
+
+* Filters
+** Calculator
+Apply a formula to data.
+** Cell data to point data
+Converts data from element to nodes.
+** Warp by vector
+Displaces point coordinates along a vector attribute.
+Used to show the deformed shape.
+
+* Extracting data 
+** Plot selection over time
+
+Filter that plot change in attributes over time for selected set of cells or points.
+
+** Extract selection
+
+Filter that extract data for posterior usage.
+
+* Scripting
+** Why?
+To automate visualization.
+
+** =pvpython.exe=
+Calls the right python interpreter connected to the paraview server.
+
+Usually a good idea to create an alias for this python interpreter or add it to the path variable.
+
+#+begin_src shell
+cd "/mnt/c/Program Files/ParaView 5.9.1-Windows-Python3.8-msvc2017-64bit/bin/"
+ls -la | grep py
+#+end_src
+
+#+RESULTS:
+: -r-xr-xr-x 1 nasser nasser    22528 May 17 21:03 pvpython.exe
+: -r-xr-xr-x 1 nasser nasser  4205584 May 17 21:03 python38.dll
+
+#+begin_src shell
+pvpython -c "import sys; print(sys.version); print(sys.path[1:5])"
+#+end_src
+
+#+RESULTS:
+: 3.8.6 (tags/v3.8.6:db45529, Sep 23 2020, 15:52:53) [MSC v.1927 64 bit (AMD64)]
+: ['C:\\Program Files\\ParaView 5.9.1-Windows-Python3.8-msvc2017-64bit\\bin\\Lib\\site-packages', 'C:\\Program Files\\ParaView 5.9.1-Windows-Python3.8-msvc2017-64bit\\bin\\python38.zip', 'C:\\Program Files\\ParaView 5.9.1-Windows-Python3.8-msvc2017-64bit\\bin\\DLLs', 'C:\\Program Files\\ParaView 5.9.1-Windows-Python3.8-msvc2017-64bit\\bin\\lib']
+
+** =paraview.exe --script=<name>= 
+Call the executable with a script flag.
+Assuming that =paraview.exe= is in the path.
+
+** Trace
+
+Save the GUI commands to a python script.
+
+** Example
+:PROPERTIES:
+:header-args:python: :session paraview-example :tangle pvscript.py
+:END:
+;; Local Variables:
+;; eval: (add-hook 'after-save-hook #'org-babel-tangle)
+;; End:
+*** Open the file
+
+Open the /enSight/ case file with the =EnSightReader= function, or the =OpenDataFile= which automatically chooses the appropriate reader.
+
+#+begin_src python
+from paraview.simple import *
+reader = OpenDataFile('test.case')
+#+end_src
+
+
+*** EnSight data descriptors
+Data descriptors are the attributes of the reader that give the label of the data (point, cell).
+In this case the =reader.PointArrays= refers to 'displacement'.
+
+*** Friendly wrapper for data
+
+#+begin_src python :tangle no
+from paraview import servermanager as sm
+from paraview.vtk.numpy_interface import dataset_adapter as dsa
+
+data = sm.Fetch(reader)
+data = dsa.WrapDataObject(data)
+print(data.PointData['displacement'])
+#+end_src
+
+=WrapDataObject=:
+
+#+begin_example
+: This is a python friendly wrapper for vtkDataSetAttributes for composite
+:     datsets. Since composite datasets themselves don't have attribute data, but
+:     the attribute data is associated with the leaf nodes in the composite
+:     dataset, this class simulates a DataSetAttributes interface by taking a
+:     union of DataSetAttributes associated with all leaf nodes.
+#+end_example
+
+**** 
+
+#+begin_src python
+SaveData('point-data.csv', proxy=reader,
+ChooseArraysToWrite=1,
+    PointDataArrays=['displacement'])
+#+end_src
+
+*** Running
+
+Call =pvpython.exe= on the script.
+
+#+begin_src shell
+pvpython pvscript.py
+#+end_src
+
+#+RESULTS:
+
+

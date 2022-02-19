@@ -1,0 +1,11 @@
+#+title: Tether and elasticity of money
+#+date: <2021-06-08 Tue>
+#+author: Nasser Alkmim
+#+draft: t
+#+toc: t
+#+tags[]: crypto finance 
+Money as we know today assumes multiple valid forms.
+It can be gold, currency, securities.
+Ultimately it represents a means of settling transactions.
+* Why money is "elastic"?
+* Why liquidity matters?

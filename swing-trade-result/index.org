@@ -1,0 +1,118 @@
+#+options: ':nil *:t -:t ::t <:t H:3 \n:nil ^:t arch:headline
+#+options: author:t broken-links:nil c:nil creator:nil
+#+options: d:(not "LOGBOOK") date:t e:t email:nil f:t inline:t num:t
+#+options: p:nil pri:nil prop:nil stat:t tags:t tasks:t tex:t
+#+options: timestamp:t title:t toc:t todo:t |:t
+#+title: Resultado em operações de swing trade
+#+date: <2021-01-08 Fri>
+#+author: Nasser Alkmim
+#+email: nasser.alkmim@gmail.com
+#+language: en
+#+select_tags: export
+#+exclude_tags: noexport
+#+creator: Emacs 27.1 (Org mode 9.4.3)
+#+draft: t
+#+tags[]: python finance 
+#+toc: t
+* Objetivo
+* Preliminares
+
+#+begin_src jupyter-python
+import pandas as pd
+import matplotlib
+import matplotlib.pyplot as plt
+matplotlib.style.use('ggplot')
+#+end_src
+
+#+RESULTS:
+
+* Dados
+
+#+begin_src jupyter-python
+trades = pd.read_csv('trade_data.csv', sep=',',
+                     names=['date', 'type',
+                            'ticker', 'volume',
+                            'price'],
+                     decimal=',',
+                     parse_dates=['date'],
+                     infer_datetime_format=True)
+print(trades)
+print(trades.dtypes)
+#+end_src
+
+#+RESULTS:
+#+begin_example
+        date  type ticker  volume  price
+0 2020-10-03   Buy  PETR4      90  17.99
+1 2020-10-03   Buy  PETR4      90  17.59
+2 2020-11-03   Buy  PETR4      50  15.17
+3 2020-03-13   Buy  PETR4      50  14.24
+4 2020-03-16   Buy  PETR4      50  13.30
+5 2021-01-08  Sell  PETR4      90  31.30
+date      datetime64[ns]
+type              object
+ticker            object
+volume             int64
+price            float64
+dtype: object
+#+end_example
+
+* Total de cada transação e volume ajustado
+
+#+begin_src jupyter-python
+trades['vol adjusted'] = trades.apply(lambda row: -row['volume'] if row['type'] == 'Sell' else row['volume'], axis=1)
+trades['total'] = trades['vol adjusted'] * trades['price']
+print(trades)
+#+end_src
+
+#+RESULTS:
+#+begin_example
+        date  type ticker  volume  price   total  cum total  vol adjusted  \
+0 2020-10-03   Buy  PETR4      90  17.99  1619.1     1619.1            90   
+1 2020-10-03   Buy  PETR4      90  17.59  1583.1     3202.2            90   
+2 2020-11-03   Buy  PETR4      50  15.17   758.5     3960.7            50   
+3 2020-03-13   Buy  PETR4      50  14.24   712.0     4672.7            50   
+4 2020-03-16   Buy  PETR4      50  13.30   665.0     5337.7            50   
+5 2021-01-08  Sell  PETR4      90  31.30 -2817.0     8154.7           -90   
+
+   cum volume  
+0          90  
+1         180  
+2         230  
+3         280  
+4         330  
+5         240  
+#+end_example
+
+* Evolução do custo médio
+
+#+begin_src jupyter-python
+trades['cum total'] = trades['total'].cumsum()
+trades['cum volume'] = trades['vol adjusted'].cumsum()
+trades['avg price'] = trades['cum total'] / trades['cum volume']
+print(trades)
+trades['avg price'].plot(kind='bar')
+#+end_src
+
+#+RESULTS:
+:RESULTS:
+#+begin_example
+        date  type ticker  volume  price   total  cum total  vol adjusted  \
+0 2020-10-03   Buy  PETR4      90  17.99  1619.1     1619.1            90   
+1 2020-10-03   Buy  PETR4      90  17.59  1583.1     3202.2            90   
+2 2020-11-03   Buy  PETR4      50  15.17   758.5     3960.7            50   
+3 2020-03-13   Buy  PETR4      50  14.24   712.0     4672.7            50   
+4 2020-03-16   Buy  PETR4      50  13.30   665.0     5337.7            50   
+5 2021-01-08  Sell  PETR4      90  31.30 -2817.0     2520.7           -90   
+
+   cum volume  avg price  
+0          90  17.990000  
+1         180  17.790000  
+2         230  17.220435  
+3         280  16.688214  
+4         330  16.174848  
+5         240  10.502917  
+#+end_example
+[[file:./jupyter/ec8b9cd7f9edbaa44c03d942aa79298c0b3b3a8e.png]]
+:END:
+

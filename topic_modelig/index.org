@@ -1,0 +1,469 @@
+#+options: ':nil *:t -:t ::t <:t H:3 \n:nil ^:t arch:headline
+#+options: author:t broken-links:nil c:nil creator:nil
+#+options: d:(not "LOGBOOK") date:t e:t email:nil f:t inline:t num:t
+#+options: p:nil pri:nil prop:nil stat:t tags:t tasks:t tex:t
+#+options: timestamp:t title:t toc:t todo:t |:t
+#+title: Topic modeling
+#+date: <2020-12-11 Fri>
+#+author: Nasser Alkmim
+#+email: nasser.alkmim@gmail.com
+#+language: en
+#+select_tags: export
+#+exclude_tags: noexport
+#+creator: Emacs 27.1 (Org mode 9.3.7)
+#+toc: t
+#+tags[]: natural-language-processing data-analysis
+* Introduction
+Topic modeling is a form of semantic analysis, a step forwarding finding meaning from word counts.
+This analysis allows discovery of document topic without trainig data.
+It involves counting words and grouping similar word patterns to describe the data.
+
+* Latent Dirichlet Allocation
+
+Latent Dirichlet Allocation (LDA) is one topic modeling technique.
+It can infer the probability distribution of words for each topic, characterizing it.
+It also defines a distribution of topics through the documents.
+
+More information about the LDA model:
+1. [[https://papers.nips.cc/paper/2010/file/71f6278d140af599e06ad9bf1ba03cb0-Paper.pdf]]
+2. [[https://bookdown.org/Maxine/tidy-text-mining/latent-dirichlet-allocation.html]]
+   
+*** Gensim
+
+Gesim is library for topic modeling that has LDA algorithm implemented.
+
+*** pyLDAvis
+pyLDAvis is library that helps visualize LDA outputs.
+It can generate an interactive 
+
+* LDA procedure example
+*** Load the data
+
+I will use the data from portuguese blog posts from [[https://www.inf.pucrs.br/linatural/wordpress/recursos-e-ferramentas/blogset-br/][BLOGSET-BR]].
+I'm limiting the analysis to just 1000 blog posts in order to keep the code running fast in this notebook.
+
+#+begin_src python
+import pandas as pd
+
+posts_data = pd.read_csv('C:/Users/nasse/Desktop/blogset-br.csv/blogset-br.csv', header=None, nrows=1000)
+print(posts_data.shape)
+print(posts_data.head())
+#+end_src
+
+#+RESULTS:
+#+begin_example
+(1000, 9)
+                     0                    1                          2  \
+0  4513095612773714447  1000016902259367892  2012-01-27T13:30:00-02:00   
+1  4402618022359447709  1000016902259367892  2011-07-25T21:43:00-03:00   
+2  4903861431859076038  1000016902259367892  2011-10-06T23:39:00-03:00   
+3  5936720117277385447  1000016902259367892  2011-07-25T21:46:00-03:00   
+4  9035220881064614540  1000016902259367892  2011-05-04T00:09:00-03:00   
+
+                                 3  \
+0          Ombré nails  como fazer   
+1                   RISQUÉ - COLOR   
+2                      Risque Dogs   
+3  Risqué coleção nova da Penelope   
+4       Coleção 2011 MOHDA INVERNO   
+
+                                                   4                     5  \
+0                                                 \n  01861978533047910632   
+1    SÃAAAO MUITOO LINDOS AMEEI OOO MIRAGEM AZUL *-*  01861978533047910632   
+2  A Nova coleção da Risqué veeeeio ANIMAL hehe c...  01861978533047910632   
+3                                           esmaltes  01861978533047910632   
+4  A MOHDA nesse inverno enta trazendo para nos v...  01861978533047910632   
+
+         6  7    8  
+0  Daniela  1  NaN  
+1  Daniela  0  NaN  
+2  Daniela  3  NaN  
+3  Daniela  0  NaN  
+4  Daniela  0  NaN  
+#+end_example
+
+We are only interested in the blog content, so we drop all columns except the one with content which is the 4th column.
+
+#+begin_src python
+posts = posts_data[4].to_frame()
+posts.columns = ['content']
+print(posts.head())
+print(posts.columns)
+#+end_src
+
+#+RESULTS:
+:                                              content
+: 0                                                 \n
+: 1    SÃAAAO MUITOO LINDOS AMEEI OOO MIRAGEM AZUL *-*
+: 2  A Nova coleção da Risqué veeeeio ANIMAL hehe c...
+: 3                                           esmaltes
+: 4  A MOHDA nesse inverno enta trazendo para nos v...
+: Index(['content'], dtype='object')
+
+
+*** Preprocessing
+***** Lower case
+First step is to make every thing lower case using the vectorize string function in pandas.
+
+#+begin_src python
+posts['lower'] = posts['content'].str.lower() # 
+print(posts['lower'].head())
+#+end_src
+
+#+RESULTS:
+: 0                                                   \n
+: 1      sãaaao muitoo lindos ameei ooo miragem azul *-*
+: 2    a nova coleção da risqué veeeeio animal hehe c...
+: 3                                             esmaltes
+: 4    a mohda nesse inverno enta trazendo para nos v...
+: Name: lower, dtype: object
+
+***** Tokenize each post
+
+We then tokenize each post using spaCy by loading the model (português one), which can be downloaded with =python -m spacy download pt_core_news_sm=.
+
+#+begin_src python
+import spacy
+
+nlp = spacy.load('pt_core_news_sm')
+posts['tokens'] = posts['lower'].apply(nlp)
+print(posts['tokens'].head())
+#+end_src
+
+#+RESULTS:
+: 0                                                 (\n)
+: 1    (sãaaao, muitoo, lindos, ameei, ooo, miragem, ...
+: 2    (a, nova, coleção, da, risqué, veeeeio, animal...
+: 3                                           (esmaltes)
+: 4    (a, mohda, nesse, inverno, enta, trazendo, par...
+: Name: tokens, dtype: object
+
+Let's check the number of tokens in each post.
+We can see the average tokens for each post.
+A great part of those tokens are stopwords which does not contain much information, so we are removing them.
+
+#+begin_src python
+posts['num_tokens'] = posts['tokens'].apply(len)
+print(posts['num_tokens'].mean() )
+#+end_src
+
+#+RESULTS:
+: 287.099
+
+***** Removing punctuation
+Reduces the average tokens.
+
+#+begin_src python
+posts['tokens_nopunc'] = posts['tokens'].apply(lambda x: [tkn for tkn in x if not tkn.is_punct])
+print(posts['tokens_nopunc'].head())
+
+posts['num_tokens_nopunc'] = posts['tokens_nopunc'].apply(len)
+print(posts['num_tokens_nopunc'].mean() )
+#+end_src
+
+#+RESULTS:
+: 0                                                 [\n]
+: 1    [sãaaao, muitoo, lindos, ameei, ooo, miragem, ...
+: 2    [a, nova, coleção, da, risqué, veeeeio, animal...
+: 3                                           [esmaltes]
+: 4    [a, mohda, nesse, inverno, enta, trazendo, par...
+: Name: tokens_nopunc, dtype: object
+: 241.036
+
+***** Removing stopwords
+
+#+begin_src python
+print(list(nlp.Defaults.stop_words)[:20])
+#+end_src
+
+#+RESULTS:
+: ['momento', 'foram', 'geral', 'onde', 'tiveram', 'seus', 'oito', 'além', 'aqui', 'podem', 'aquelas', 'por', 'sétima', 'acerca', 'primeiro', 'nuns', 'estás', 'nossas', 'está', 'temos']
+
+Then we remove the stop words using the spaCy collection of stopwords, we can see that we reduced the average tokens to 63 per post.
+
+#+begin_src python
+def remove_stopwords(tokens):
+    tokens_nosw = []
+    for tkn in tokens:
+        if tkn.text.isspace():
+            continue            # remove empty space
+        if tkn.text not in nlp.Defaults.stop_words:
+            tokens_nosw.append(tkn)
+    return tokens_nosw
+
+posts['tokens_nosw'] = posts['tokens_nopunc'].apply(remove_stopwords)
+print(posts['tokens_nosw'].head())
+
+posts['num_tokens_nosw'] = posts['tokens_nosw'].apply(len)
+print(posts['num_tokens_nosw'].mean() )
+#+end_src
+
+#+RESULTS:
+: 0                                                   []
+: 1    [sãaaao, muitoo, lindos, ameei, ooo, miragem, ...
+: 2    [a, coleção, risqué, veeeeio, animal, hehe, co...
+: 3                                           [esmaltes]
+: 4    [a, mohda, inverno, enta, trazendo, viadas, es...
+: Name: tokens_nosw, dtype: object
+: 139.142
+
+***** Removing tokens with less the 4 letters
+
+Usually smaller words don't carry much information, so we remove then.
+
+#+begin_src python
+posts['tokens_clean'] = posts.tokens_nosw.apply(lambda x: [tkn for tkn in x if len(tkn) >4])
+print(posts.tokens_clean)
+
+
+posts['num_tokens_clean'] = posts['tokens_clean'].apply(len)
+print(posts['num_tokens_clean'].mean() )
+#+end_src
+
+#+RESULTS:
+#+begin_example
+0                                                     []
+1               [sãaaao, muitoo, lindos, ameei, miragem]
+2      [coleção, risqué, veeeeio, animal, cores, clar...
+3                                             [esmaltes]
+4      [mohda, inverno, trazendo, viadas, esmaltes, c...
+                             ...                        
+995    [apaixonada, esportes, adolescência, curtia, v...
+996    [enfim, dormir, acordar, trocar, noite, preocu...
+997         [http://www.youtube.com/watch?v=-_wr1hy-bka]
+998    [bullying, alguém, agride, humilha, xinga,&nbs...
+999    [mohandas, karamchand, gandhi, outubro, janeir...
+Name: tokens_clean, Length: 1000, dtype: object
+96.65
+#+end_example
+
+***** Removing empty posts
+
+Now creating a new Series pandas object.
+We filter the Series considering only entities with length greater than 0, then we call the attribute to convert each token into text.
+At the end we have a list of list of strings.
+
+#+begin_src python
+posts_clean = posts.tokens_clean[posts.tokens_clean.str.len() > 0].apply(lambda x: [tkn.text for tkn in x])
+print(posts_clean)
+
+print(type(posts_clean.tolist()[0]))
+print(type(posts_clean.tolist()[0][0]))
+#+end_src
+
+#+RESULTS:
+#+begin_example
+1               [sãaaao, muitoo, lindos, ameei, miragem]
+2      [coleção, risqué, veeeeio, animal, cores, clar...
+3                                             [esmaltes]
+4      [mohda, inverno, trazendo, viadas, esmaltes, c...
+5      [susseso, filme, riqué, cores, vibrante, fizer...
+                             ...                        
+995    [apaixonada, esportes, adolescência, curtia, v...
+996    [enfim, dormir, acordar, trocar, noite, preocu...
+997         [http://www.youtube.com/watch?v=-_wr1hy-bka]
+998    [bullying, alguém, agride, humilha, xinga,&nbs...
+999    [mohandas, karamchand, gandhi, outubro, janeir...
+Name: tokens_clean, Length: 927, dtype: object
+<class 'list'>
+<class 'str'>
+#+end_example
+
+***** Summary preprocessing DataFrame
+
+The full preprocess in the posts DataFrame, so we can visualiza each process.
+
+#+begin_src python
+pd.set_option('max_columns', None)
+print(posts.head())
+#+end_src
+
+#+RESULTS:
+#+begin_example
+                                             content  \
+0                                                 \n   
+1    SÃAAAO MUITOO LINDOS AMEEI OOO MIRAGEM AZUL *-*   
+2  A Nova coleção da Risqué veeeeio ANIMAL hehe c...   
+3                                           esmaltes   
+4  A MOHDA nesse inverno enta trazendo para nos v...   
+
+                                               lower  \
+0                                                 \n   
+1    sãaaao muitoo lindos ameei ooo miragem azul *-*   
+2  a nova coleção da risqué veeeeio animal hehe c...   
+3                                           esmaltes   
+4  a mohda nesse inverno enta trazendo para nos v...   
+
+                                              tokens  num_tokens  \
+0                                               (\n)           1   
+1  (sãaaao, muitoo, lindos, ameei, ooo, miragem, ...          10   
+2  (a, nova, coleção, da, risqué, veeeeio, animal...          27   
+3                                         (esmaltes)           1   
+4  (a, mohda, nesse, inverno, enta, trazendo, par...          49   
+
+                                       tokens_nopunc  num_tokens_nopunc  \
+0                                               [\n]                  1   
+1  [sãaaao, muitoo, lindos, ameei, ooo, miragem, ...                  7   
+2  [a, nova, coleção, da, risqué, veeeeio, animal...                 24   
+3                                         [esmaltes]                  1   
+4  [a, mohda, nesse, inverno, enta, trazendo, par...                 42   
+
+                                         tokens_nosw  num_tokens_nosw  \
+0                                                 []                0   
+1  [sãaaao, muitoo, lindos, ameei, ooo, miragem, ...                7   
+2  [a, coleção, risqué, veeeeio, animal, hehe, co...               19   
+3                                         [esmaltes]                1   
+4  [a, mohda, inverno, enta, trazendo, viadas, es...               26   
+
+                                        tokens_clean  num_tokens_clean  
+0                                                 []                 0  
+1           [sãaaao, muitoo, lindos, ameei, miragem]                 5  
+2  [coleção, risqué, veeeeio, animal, cores, clar...                12  
+3                                         [esmaltes]                 1  
+4  [mohda, inverno, trazendo, viadas, esmaltes, c...                17  
+#+end_example
+
+*** LDA with Gensim
+***** Prepare the corpus
+
+The =LdaModel= object from Gensim takes in a corpus as parameter.
+A corpus is a collection of =Documents= objects.
+A =Document= object is simply a string of text.
+This corpus is created from a list of documents with a list of tokens.
+
+The =Dictionary= class associates each word with a unique integer ID.
+This is dictionary defines a vocabulary.
+
+#+begin_src python
+from gensim.corpora import Dictionary
+docs = posts_clean.tolist()
+dictionary = Dictionary(docs)
+print(dictionary)
+#+end_src
+
+#+RESULTS:
+: Dictionary(34661 unique tokens: ['ameei', 'lindos', 'miragem', 'muitoo', 'sãaaao']...)
+
+***** Transform documents to vectorized form
+
+In this step we convert a document into a numeric form so the algorithm can manipulate it.
+This step is also known as bag-of-words representation of documents.
+This function =doc2bow()= creates a tuple for each word with =(word_id, word_frquency)=.
+
+
+#+begin_src python
+corpus = [dictionary.doc2bow(doc) for doc in docs]
+print(corpus[0], docs[0])
+print('Number of unique tokens:', len(dictionary))
+print('Number of posts:', len(corpus))
+#+end_src
+
+#+RESULTS:
+: [(0, 1), (1, 1), (2, 1), (3, 1), (4, 1)] ['sãaaao', 'muitoo', 'lindos', 'ameei', 'miragem']
+: Number of unique tokens: 34661
+: Number of posts: 927
+
+***** Training
+
+In this step we need a couple of parameters to be set.
+First the number of topics must be pre defined, I choose 10.
+Chunk size controls how many documents are processed at a time.
+Passes defined how often the model is trained on the corpus, same as 'epochs'.
+Iterations controls how often we repeat a particular loop over each document.
+
+#+begin_src python
+from gensim.models import LdaModel
+
+
+num_topics = 10
+chunksize = 2000
+passes = 20
+iterations = 400
+eval_every = None
+
+
+id2word = dictionary
+
+model = LdaModel(
+    corpus=corpus,
+    id2word=id2word,
+    chunksize=chunksize,
+    alpha='auto',
+    eta='auto',
+    iterations=iterations,
+    num_topics=num_topics,
+    passes=passes,
+    eval_every=eval_every
+)
+model.save(f'model_{len(corpus)}.gensim')
+#+end_src
+
+
+***** Training output
+We can print the top topics from a particular document.
+
+#+begin_src python
+from pprint import pprint
+topics = model.top_topics(corpus)
+pprint(topics[4])
+print(docs[4])
+#+end_src
+
+#+RESULTS:
+#+begin_example
+([(0.0030817974, 'pessoas'),
+  (0.0029705719, 'trabalho'),
+  (0.0019567062, 'empresa'),
+  (0.0019483563, 'social'),
+  (0.0018672714, 'ficar'),
+  (0.0018014798, 'melhor'),
+  (0.0017869751, 'paciente'),
+  (0.0017729151, 'download'),
+  (0.0015917295, 'estamos'),
+  (0.0014970169, 'mesma'),
+  (0.0014943925, 'muitas'),
+  (0.0014523969, 'coisas'),
+  (0.0014118261, 'alguém'),
+  (0.0013802068, 'sendo'),
+  (0.001359764, 'mundo'),
+  (0.0013132734, 'brasil'),
+  (0.0013105941, 'contas'),
+  (0.0013103066, 'médicos'),
+  (0.0012967874, 'carminha'),
+  (0.0012708729, 'marido')],
+ -5.887733908971602)
+['susseso', 'filme', 'riqué', 'cores', 'vibrante', 'fizerma', 'nbsp;as', 'cores', 'caxinha', 'linda', 'hortencia', 'obsessão', 'fluor', 'laranja', 'amarelo', 'cores', 'vivas', 'otimas', 'serem', 'usada', 'primaver/', 'verão', 'cores', 'coleções', 'coleções', 'passadas&nbsp', 'usaram', 'otima', 'opção', 'colocarem', 'merdaco', 'chamar', 'atenção', 'consumidoras', 'esmaltes.&nbsp']
+#+end_example
+
+
+*** Visualizing pyLDAvis
+
+This tools allows us to visualize the topics discovered, their importance, similarity between topics, and the relevant words of each topics.
+The relevance is computed with a weighted average of the *probability of the word given the topic* and this probability normalized by the probability of the term.
+If we adjust the slider on the top to 0, we are considering words that appeared mostly on a specific topic.
+
+
+#+begin_src python :exports code
+import pyLDAvis.gensim
+lda = LdaModel.load('model_927.gensim')
+lda_display = pyLDAvis.gensim.prepare(lda, corpus, dictionary, sort_topics=False) 
+pyLDAvis.save_html(lda_display, 'ldavis.html')
+#+end_src
+
+From the figure bellow we can see the 10 different topics, most of them clustered in top left corner.
+
+#+include: "ldavis.html" export html
+
+
+***** Analysis
+
+From the model results we can make some observations:
+
+1. The 4th topic is the most important across the 1000 posts analyzed. It mostly likely refers to *literature* or *culture* because of the relevant terms: Machado de Assis, Shakespeare, José Alencar, poemas.
+2. Topic 1 most likely refers to religion.
+3. Topics 3, 5, 6, 7, 8 and 9 are clustered in a region which indicates that they have a similar topic. My guess is posts about the current news.
+
+***** Points of improvements
+1. From the 4th topic we can see proper names separated, I could have used a POS tagging tool to join them in a single token.
+2. From the 2nd and 10th topics, we can see a couple of words that do not helps in the topic analysis and could be filtered out.
+3. Increase the data used for analysis.

@@ -1,0 +1,210 @@
+#+title: GIT notes
+#+date: <2021-06-04 Fri>
+#+lastmod: 2021-08-23 10:16:19
+#+author: Nasser Alkmim
+#+draft: t
+#+toc: t
+#+tags[]: tools git
+* Definitions
+** What is the difference between git and github?
+
+** What is upstream and origin when forking in Github?
+
+Origin is your fork, on your own github.
+Upstream refers to the original repository.
+
+When a repo is cloned, the remote default is =origin= which points to the clone address.
+To keep track of the original repository we need to set up another remote, usually called =upstream=.
+
+** What is rebase?
+
+Reapply commits on top of another base tip.
+
+** What is squashing?
+Join commits together.
+
+** What is the difference between squash and fixup?
+Squash will combine the message of the original and squash commit.
+Fixup will keep the original message.
+
+** Why use git stash?
+Keep the working directory clean.
+
+** What is a submodule?
+When you add another repository into an existing one.
+It allows to embed or include a repository as a subfolder in an existing repository.
+
+** Why when you close a repo with a submodule the submodule is not downloaded?
+If you wan the submodule as well, you need to explicitly tell git.
+
+If you are cloning for the first time, you can pass the =git clone --recursive <project>= flag.
+
+To tell an existing repo to also get the submodule we can use =git submodule init= then =git submodule update --init= (magit populate).
+
+** What are tags?
+** What is rebase?
+
+As the name suggests, it changes the base.
+*** Example
+
+1. =git pull origin master= get the updates from remote.
+2. =git checkout feature= go to feature branch, where new implementation commits exist.
+3. =git rebase master= rebase feature branch to include the updates from the remote on the history.
+4. =git push origin feature -f= rewrite the history of the remote feature branch.
+
+After rebasing, git will tell you:
+1. you have _local commits_ not on remote.
+2. you have _remote commits_ that are not in the local branch (because you rebase them).
+
+If you pull from remote feature branch, you will have the "old" commits and the new rebased version, which not what you want.
+This will create a new "merge commit".
+Not what you want because rebasing means change history to simulate a single branch (feature and origin/feature are just one branch, not two).
+
+Instead of pulling we can force push (to the origin/remote) to ignore the commits after rebase, just keep the rebase ones.
+
+** What is the difference between =--force= and =--force-with-lease=?
+
+=--force-with-lease= removes /some/ risk when working in a group.
+When you =pull=, =rebase= and =push -f= you rewrite the history, and if someone had =push= some commit in the meantime it would be lost, because you did not =pull= it.
+=--force-with-lease= will fail in this case, then you need to =pull= and =rebase= again.
+
+** What is =git pull --rebase= from remote do?
+When you pull you are synchronizing the remote "upstream" with your local repository.
+
+If you just =git pull=, it will create a merge commit.
+Which is the standard workflow "branch and merge".
+_When using a remote, the local and remote function as separate branches._
+
+With pull rebase the remote and local function as a single branch.
+Then, there is no merge, the =pull --rebase= will just add the remote commits before your local commits.
+
+Pull with rebase should be done when the changes do not need a separate branch.
+
+
+** What is =git reset=?
+:PROPERTIES:
+:ID:       2c07cb92-42d9-4682-a482-ea9cc6f40987
+:END:
+Takes the current branch and reset it to _point somewhere else_.
+It does not create new commits.
+It updates a branch [[id:604a6059-9293-4f27-85af-68136cf9687b][What is a branch?]].
+
+
+#+begin_src 
+- A - B - C (HEAD, master)
+#+end_src
+
+=git reset B= will:
+
+#+begin_src 
+- A - B (HEAD, master) # - C exists, but no branch points to it
+#+end_src
+
+Alternatively, if you =git checkout B=
+
+#+begin_src 
+- A - B (HEAD) - C (master)
+#+end_src
+
+This means that the _HEAD is in a detach state_.
+
+If you commit in this state, 
+
+#+begin_src 
+- A - B - C (master)
+       \
+        D (HEAD)
+#+end_src
+
+** What is a /branch/?
+:PROPERTIES:
+:ID:       604a6059-9293-4f27-85af-68136cf9687b
+:END:
+:BACKLINKS:
+[2021-08-23 Mon 08:57] <- [[id:2c07cb92-42d9-4682-a482-ea9cc6f40987][What is =git reset=?]]
+:END:
+A pointer to a commit.
+
+** What is /work tree/?
+
+** What is =HEAD=?
+
+=HEAD= is a pointer to the latest commit in the branch.
+New commits happen after that pointer.
+
+It is "what you current checked out".
+Could be a branch, in this case =HEAD= is in "attached mode".
+Or a specific commit, "detached mode".
+
+
+* Workflows
+** Add to =.gitignore= files already committed
+
+Add the pattern to =.gitignore=, removed from cached git with =git rm --cached <file>=.
+This does not delete the file on the system, it just remove from git cached information.
+** Adding changes to a previous commit
+
+If you want to add to the previous one, use =amend=.
+** Change a commit message that is not the last
+ Use rebase.
+** How to add staged changed to a random commit?
+
+Magit instant fixup is like extend but with any commit.
+It changed the commit and automatically rebase the commit history.
+** What is =git-blame=?
+It shows what revision and author last modified each line of a file.
+** When to merge develop into master?
+
+First merge the master into develop to check any conflict if someone else added to master.
+Then checkout master and merge develop.
+** What to do with unwanted commits (=reset=, =revert=, =rebase=)?
+
+Delete and remove from history with rebase.
+This is not good when multiple people work on the project.
+Should not rewrite history when there is a remote repository.
+
+Reset goes back in time.
+
+Revert undo effects of certain commits.
+It does not discard commits that come after.
+It does not delete any commits, it creates a new one with the reverse of a specified commit.
+** When to push to remote?
+
+** What is =git cherry-pick=?
+
+** Rebase commits that were already pushed to remote?
+
+1. pushed commits to remote
+2. rebase locally into a more clean history
+3. push force to remote
+
+** Why =fetch= instead of =pull=?
+=git fetch= first updates the "remote tracking branches".
+
+If you have local commits when you =fetch= there may be conflicts.
+Meaning they both have changes to the same part of the code.
+Fetching first allows you to solve a conflict without the need of network connectivity.
+
+If there are new commits locally and in the remote, a =git pull= will create a "merge commit".
+This can be avoided with the =--rebase= option, so we get a linear time line.
+This approach considers the remote and local as the same branch, not separate.
+
+* Guide lines
+** What tense to use in commit message?
+Past tense.
+Or present, but it should be consistent.
+** Should you add the name of the file in the commit?
+No.
+** Commit early and often?
+[[https://sethrobertson.github.io/GitBestPractices/][Commit Often, Perfect Later, Publish Once—Git Best Practices]]
+
+Commit often _locally_, then post process into concept-commits and then push.
+
+After pushing, post-production is not advisable because it changes the "shared history".
+
+While in post production of local changes, don't merge from remote.
+
+* References
+
+- [[https://git-scm.com/book/en/v2][Git - Book]]
+- [[https://sethrobertson.github.io/][Seth Robertson Project information]] 

@@ -1,0 +1,26 @@
+#+options: ':nil *:t -:t ::t <:t H:3 \n:nil ^:t arch:headline
+#+options: author:t broken-links:nil c:nil creator:nil
+#+options: d:(not "LOGBOOK") date:t e:t email:nil f:t inline:t num:t
+#+options: p:nil pri:nil prop:nil stat:t tags:t tasks:t tex:t
+#+options: timestamp:t title:t toc:t todo:t |:t
+#+title: Innsbruck - Efficiency and bureaucracy
+#+date: <2021-04-07 Wed>
+#+author: Nasser Alkmim
+#+email: nasser.alkmim@gmail.com
+#+language: en
+#+select_tags: export
+#+exclude_tags: noexport
+#+creator: Emacs 27.1 (Org mode N/A)
+#+tags[]:  innsbruck
+#+toc: t 
+#+draft: t
+* Efficiency
+I was impressed by the efficiency of two particular services that I've used. One of which was the supermarket and the other the post mail service.
+
+The affordable supermarket, Hoffer or Aldi, has impressive operations processes. Primo, they do not unpack all products into shelfs, they just open the boxes and pilled them up. This is way easier and faster than manually remove all items from boxes. Secondo, the cashier system operates as optimized as possible. There is no waste on packing for the costumer, the products just flow and you pay.
+
+Post office is not as dramatically efficient, but it uses technology to optimize the service speed.
+
+
+* Bureaucracy
+I had to deal with half-dozen bureaucratic steps. It requires a significant mental effort to go through all the requirements, then you have to physically present yourself and still have to pay for the service. I did not like it at all.

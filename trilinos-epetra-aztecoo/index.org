@@ -1,0 +1,465 @@
+#+title: Exploring Trilinos with Python - Epetra and AztecOO
+#+date: <2021-04-25 Sun>
+#+author: Nasser Alkmim
+#+tags[]: trilinos python 
+#+toc: t
+#+draft: t
+* Introduction
+This is an example from PyTrilinos tutorial with a more detailed and exploratory approach with steps outputs to help understand the program functionalities and dataflows.
+[[https://github.com/trilinos/Trilinos/blob/master/packages/PyTrilinos/example/exAztecOO.py.in][Trilinos/exAztecOO.py.in at master · trilinos/Trilinos · GitHub]].
+
+The problem involves solving a linear system $Ax=b$ derived from discretization of the Laplace partial differential equation.
+
+This exploratory example was run using emacs org-mode with jupyter-emacs package.
+I am using python version:
+
+#+begin_src sh
+python --version
+#+end_src
+
+#+RESULTS:
+: Python 3.8.5
+
+
+* Preliminaries
+
+#+begin_src python
+from PyTrilinos import Epetra, Galeri, AztecOO, version
+print(version())
+
+import matplotlib.pyplot as plt
+plt.style.use('bmh')
+import numpy as np
+#+end_src
+
+#+RESULTS:
+: Trilinos version: 13.1
+: PyTrilinos version: 12.13
+
+* Construct the problem
+We need the matrix $A$ and vector $b$, right hand side (RHS), of our problem.
+** Communicator
+
+The Epetra communicator object encapsulates _information and services_ for other Epetra classes to run on _serial or parallel_ computer.
+It contains information required to construct a =map= object which is _required_ for all other Epetra classes.
+
+#+begin_src python
+comm = Epetra.PyComm()      # Epetra communicator
+print(comm)
+print(comm.MyPID.__doc__)
+#+end_src
+
+#+RESULTS:
+: ::Processor 0 of 1 total processors.
+: 
+:         Return my process ID. In MPI mode returns the rank of the calling process.  In serial mode
+:            returns 0.
+:         
+
+** Map
+
+The =map= is a distribution of integer labels across processes.
+This object encapsulates information to help in parallel solvers.
+It contains global number of elements, local number of elements and global numbering of local elements.
+
+Here the Galeri package creates a map however there are other ways to create it.
+
+The linear map subdivides elements of the map linearly among the available processes.
+
+#+begin_src python
+nx, ny = 3, 3                   # problem size nx x ny nodes in Cartesian 2D
+galeri_params = {'n': nx * ny,
+                 'nx': nx,
+                 'ny': ny}
+map = Galeri.CreateMap('Linear', comm, galeri_params)
+print(map)
+#+end_src
+
+#+RESULTS:
+#+begin_example
+
+Number of Global Elements  = 9
+Number of Global Points    = 9
+Maximum of all GIDs        = 8
+Minimum of all GIDs        = 0
+Index Base                 = 0
+Constant Element Size      = 1
+
+Number of Local Elements   = 9
+Number of Local Points     = 9
+Maximum of my GIDs         = 8
+Minimum of my GIDs         = 0
+
+         MyPID           Local Index        Global Index  
+             0                 0                 0    
+             0                 1                 1    
+             0                 2                 2    
+             0                 3                 3    
+             0                 4                 4    
+             0                 5                 5    
+             0                 6                 6    
+             0                 7                 7    
+             0                 8                 8    
+#+end_example
+
+
+** $A$ matrix
+
+The matrix of our linear system comes from discretization of Laplace equation in 2D.
+Fortunately, Trilinos comes with a package that has function that we can use to create example matrices and vectors, the package is =Galeri=. 
+
+
+#+begin_src python
+A = Galeri.CreateCrsMatrix('Laplace2D', map, galeri_params)
+print(A)
+#+end_src
+
+#+RESULTS:
+#+begin_example
+
+Number of Global Rows        = 9
+Number of Global Cols        = 9
+Number of Global Diagonals   = 9
+Number of Global Nonzeros    = 33
+Global Maximum Num Entries   = 5
+
+Number of My Rows        = 9
+Number of My Cols        = 9
+Number of My Diagonals   = 9
+Number of My Nonzeros    = 33
+My Maximum Num Entries   = 5
+
+   Processor    Row Index    Col Index           Value     
+       0             0             0                       4    
+       0             0             1                      -1    
+       0             0             3                      -1    
+       0             1             0                      -1    
+       0             1             1                       4    
+       0             1             2                      -1    
+       0             1             4                      -1    
+       0             2             1                      -1    
+       0             2             2                       4    
+       0             2             5                      -1    
+       0             3             0                      -1    
+       0             3             3                       4    
+       0             3             4                      -1    
+       0             3             6                      -1    
+       0             4             1                      -1    
+       0             4             3                      -1    
+       0             4             4                       4    
+       0             4             5                      -1    
+       0             4             7                      -1    
+       0             5             2                      -1    
+       0             5             4                      -1    
+       0             5             5                       4    
+       0             5             8                      -1    
+       0             6             3                      -1    
+       0             6             6                       4    
+       0             6             7                      -1    
+       0             7             4                      -1    
+       0             7             6                      -1    
+       0             7             7                       4    
+       0             7             8                      -1    
+       0             8             5                      -1    
+       0             8             7                      -1    
+       0             8             8                       4    
+#+end_example
+
+** Visualization of $A$ sparse matrix
+
+We can visualize the sparse matrix by putting it back the condensed rows into a 2d numpy array.
+
+#+begin_src python
+print(A.ExtractGlobalRowCopy.__doc__)
+n_row, n_col = A.NumGlobalRows(), A.NumGlobalCols()
+A_sparse = np.zeros((n_row, n_col))
+for row in range(n_row):
+    value, col_id = A.ExtractGlobalRowCopy(row)
+    for v, col in zip(value, col_id):
+        A_sparse[row, col] = v
+fig, ax = plt.subplots(figsize=(8,8))
+ax.spy(A_sparse)
+#+end_src
+
+#+RESULTS:
+:RESULTS:
+: 
+:         ExtractGlobalRowCopy(self, int globalRow) -> (numpy.ndarray,numpy.ndarray)
+: 
+:           Returns a two-tuple of numpy arrays of the same size; the first is
+:           an array of integers that represent the nonzero columns on the
+:           matrix; the second is an array of doubles that represent the values
+:           of the matrix entries.  The input argument is a global row index.
+:         
+[[file:./jupyter/3f1170c5c8468bb4897a9d99e7099ae44fb9f051.png]]
+:END:
+
+
+** $b$ RHS vector
+Create b vector with same map that determined the layout of matrix rows and fill it with random values.
+
+#+begin_src python
+b = Epetra.Vector(map)
+b.Random()
+print(b)
+#+end_src
+
+#+RESULTS:
+: [ 0.14609411 -0.59633352 -0.57747566  0.36649935 -0.24548529  0.12870635
+:  -0.83239817 -0.11602075  0.03932   ]
+
+** $x$ solution vector
+
+#+begin_src python
+x = Epetra.Vector(map)
+x.PutScalar(0.0)
+print(x)
+#+end_src
+
+#+RESULTS:
+: [0. 0. 0. 0. 0. 0. 0. 0. 0.]
+
+
+* Solver
+** AztecOO solver object
+For solving the system $AX=b$ we need to create a solver object from =AztecOO= package which is also names =AztecOO=.
+This object takes Epetra matrix and vectors objects but it could also be constructed with a "linea problem instance" also from Epetra.
+
+
+#+begin_src python
+solver = AztecOO.AztecOO(A, x, b)
+print(solver.__doc__)
+print(dir(solver))
+#+end_src
+
+#+RESULTS:
+#+begin_example
+
+    AztecOO:  An object-oriented wrapper for Aztec. Currently it accepts a Petra matrix, initial guess and RHS as
+     separate arguments, or alternatively, accepts a Epetra_LinearProblem.
+     If constructed using a Epetra_LinearProblem, AztecOO will infer some
+     solver/preconditioner, etc., options and parameters. Users may override
+     these choices and manually choose from among the full set of Aztec options
+     using the SetAztecOption() and SetAztecParam() functions.
+
+     AztecOO will solve a linear systems of equations: :math:`AX=B`, using Epetra
+     objects and the Aztec solver library, where :math:`A` is an Epetra_Operator or Epetra_RowMatrix (note
+     that the Epetra_Operator class is a base class for Epetra_RowMatrix so that Epetra_RowMatrix *isa*
+     Epetra_Operator.) :math:`X` and :math:`B` are Epetra_MultiVector objects.
+
+     Warning: AztecOO does not presently support solution of more than one simultaneous right-hand-side.
+    
+['AdaptiveIterate', 'CheckInput', 'Condest', 'ConstructPreconditioner', 'DestroyPreconditioner', 'GetAllAztecOptions', 'GetAllAztecParams', 'GetAztecOption', 'GetAztecStatus', 'GetLHS', 'GetLabel', 'GetPrecMatrix', 'GetPrecOperator', 'GetProblem', 'GetRHS', 'GetUserMatrix', 'GetUserOperator', 'Iterate', 'NumIters', 'PrintLinearSystem', 'RecursiveResidual', 'ScaledResidual', 'SetAdaptiveParams', 'SetAllAztecOptions', 'SetAllAztecParams', 'SetAztecDefaults', 'SetAztecOption', 'SetAztecParam', 'SetErrorStream', 'SetLHS', 'SetLabel', 'SetMatrixName', 'SetOutputStream', 'SetParameters', 'SetPrecMatrix', 'SetPrecOperator', 'SetPreconditioner', 'SetProblem', 'SetRHS', 'SetScaling', 'SetStatusTest', 'SetUseAdaptiveDefaultsTrue', 'SetUserMatrix', 'SetUserOperator', 'SolveTime', 'TrueResidual', 'UnsetLHSRHS', '__class__', '__delattr__', '__dict__', '__dir__', '__doc__', '__eq__', '__format__', '__ge__', '__getattribute__', '__gt__', '__hash__', '__init__', '__init_subclass__', '__le__', '__lt__', '__module__', '__ne__', '__new__', '__reduce__', '__reduce_ex__', '__repr__', '__setattr__', '__sizeof__', '__str__', '__subclasshook__', '__swig_destroy__', '__weakref__', 'recursiveIterate', 'this', 'thisown']
+#+end_example
+** Solver options
+
+
+The default AztecOO options are:
+1. solution algorithm: =AZ_GMRES= generalized minimal residual
+2. preconditioner: =AZ_none= no preconditioner in the default
+3. residual expression for convergence check: =AZ_r0= $||r||_2 / ||r^{(0)}||_2$
+
+#+begin_src python
+print(solver.GetAllAztecOptions())
+#+end_src
+
+#+RESULTS:
+: [  1   0   0   0   1   1 500   1   0   0  30   0   0   1   0   0   0   0
+:    9   1   0   0   0   0   0   1  -4   0   0   0   0   0   0   0   0   0
+:    0   0   0   0   0   0   0   0   0   0   0]
+
+** Solver parameters
+
+#+begin_src python
+print(solver.CheckInput.__doc__)
+print(solver.CheckInput())
+#+end_src
+
+#+RESULTS:
+:  Prints a summary of solver parameters, performs simple sanity checks.
+: 0
+
+** Solving the system
+
+The method =Iterate= is modifies the solution stored in the variable =x= every time it runs.
+This method takes the maximum number of iterations and tolerance.
+
+#+begin_src python
+x.PutScalar(0.0)
+solver.Iterate(2, 1e-5)         # number of max iterations and tolerance
+print('solution: ', x)
+exact = np.linalg.inv(A_sparse) @ b
+print('exact soluction: ', exact)
+error = x - exact
+print('error norm: ', error.Norm2())
+Ax = Epetra.Vector(map)
+A.Multiply(False, x, Ax)
+residual = b - Ax
+print('residual: ', residual)
+print('residual norm: ', residual.Norm2(), type(residual))
+#+end_src
+
+#+RESULTS:
+: solution:  [ 0.02680169 -0.19547903 -0.17928597  0.04830349 -0.07719315 -0.00736351
+:  -0.20915358 -0.0863673   0.01118655]
+: exact soluction:  [-0.0374102  -0.26552884 -0.23264235 -0.03020605 -0.19572929 -0.08756488
+:  -0.25418408 -0.15413209 -0.05059424]
+: error norm:  [0.2212703]
+: residual:  [-0.10828818 -0.04409484 -0.06317433 -0.08625965 -0.17761903 -0.0871322
+:  -0.03384767 -0.04571172 -0.09915699]
+: residual norm:  [0.27804727] <class 'PyTrilinos.Epetra.Vector'>
+
+
+* Convergence analysis
+After experimenting with the libraries, let's try do some experiments.
+
+** Problem definition
+
+#+begin_src python
+def problem_setup(size):
+    comm = Epetra.PyComm()      # Epetra communicator
+    nx, ny = size, size
+    galeri_params = {'n': nx * ny,
+                     'nx': nx,
+                     'ny': ny}
+    map = Galeri.CreateMap('Linear', comm, galeri_params)
+    A = Galeri.CreateCrsMatrix('Laplace2D', map, galeri_params)
+    b = Epetra.Vector(map)
+    b.Random()
+    x = Epetra.Vector(map)
+    x.PutScalar(0.0)
+    return A, x, b, map
+#+end_src
+
+#+RESULTS:
+
+** Solver routine
+
+#+begin_src python
+def solver_routine(A, x, b, num_iter, map):
+    solver = AztecOO.AztecOO(A, x, b)
+    solver.Iterate(num_iter, 1e-5)         # number of max iterations and tolerance
+    Ax = Epetra.Vector(map)
+    A.Multiply(False, x, Ax)
+    residual = b - Ax
+    return residual.Norm2()[0]
+#+end_src
+
+#+RESULTS:
+
+** Analysis
+
+#+begin_src python
+A, x, b, map = problem_setup(100)
+residual = []
+num_iter = [5, 10, 15, 20, 50, 100, 200, 400]
+for ni in num_iter:
+    residual.append(solver_routine(A, x, b, ni, map))
+#+end_src
+
+#+RESULTS:
+
+** Visualizing
+
+#+begin_src python
+plt.figure(figsize=(10,8))
+plt.plot(num_iter, residual)
+plt.xlabel('Number of iterations')
+plt.ylabel('Residual Norm')
+#+end_src
+
+#+RESULTS:
+[[file:./jupyter/a1920bea8b21bff0f0310f378c0b09475a640de7.png]]
+
+* References
+
+1. [[https://docs.trilinos.org/dev/packages/epetra/doc/html/classEpetra__CrsMatrix.html][Epetra: Epetra_CrsMatrix Class Reference]]
+2. [[https://docs.trilinos.org/dev/packages/aztecoo/doc/html/classAztecOO.html][AztecOO: AztecOO Class Reference]]
+3. [[https://trilinos.github.io/pdfs/Trilinos10.12Tutorial.pdf]]
+4. [[https://github.com/trilinos/Trilinos/blob/master/packages/PyTrilinos/example/exAztecOO.py.in][Trilinos/exAztecOO.py.in at master · trilinos/Trilinos · GitHub]]
+5. [[https://trilinos.github.io/pdfs/AztecOOUserGuide.pdf]]
+
+
+* Epetra                                                           :noexport:
+The Epetra library provides the common math objects used by all Trilinos packages.
+** CRS matrix
+
+We can see that the $A$ matrix is  =CRSmatrix= object created with the Epetra library.
+
+#+begin_src python
+print(type(A))
+#+end_src
+
+#+RESULTS:
+: <class 'PyTrilinos.Epetra.CrsMatrix'>
+
+This object is a Compressed Row Sparse matrix which suitable for sparse point matrices.
+This matrix is accessed by its rows so it can be conveniently distributed across processes.
+This representation transforms the matrix, a 2-dimensional array, into three 1-dimensional arrays.
+The 1-dimensional arrays represent: nonzero values, and their location with row and column indexes on the other two arrays.
+
+**** Methods
+With the following methods
+
+#+begin_src python
+print(dir(A))
+#+end_src
+
+#+RESULTS:
+: ['Apply', 'ApplyInverse', 'ColMap', 'Comm', 'DistributedGlobal', 'DomainMap', 'ExpertExtractIndexOffset', 'ExpertExtractIndices', 'ExpertExtractValues', 'ExpertMakeUniqueCrsGraphData', 'ExpertStaticFillComplete', 'Export', 'Exporter', 'ExtractDiagonalCopy', 'ExtractGlobalRowCopy', 'ExtractMyRowCopy', 'FillComplete', 'Filled', 'Flops', 'FusedExport', 'FusedImport', 'GCID', 'GCID64', 'GRID', 'GRID64', 'GetFlopCounter', 'GetTracebackMode', 'GetTracebackStream', 'GlobalMaxNumEntries', 'Graph', 'HasNormInf', 'HaveColMap', 'Import', 'ImportMap', 'Importer', 'IndexBase', 'IndexBase64', 'IndicesAreContiguous', 'IndicesAreGlobal', 'IndicesAreLocal', 'InsertGlobalValues', 'InsertMyValues', 'InvColMaxs', 'InvColSums', 'InvRowMaxs', 'InvRowSums', 'LCID', 'LRID', 'Label', 'LeftScale', 'LowerTriangular', 'MakeDataContiguous', 'Map', 'MaxNumEntries', 'Multiply', 'Multiply1', 'MyGCID', 'MyGRID', 'MyGlobalRow', 'MyLCID', 'MyLRID', 'NoDiagonal', 'NormFrobenius', 'NormInf', 'NormOne', 'NumAllocatedGlobalEntries', 'NumAllocatedMyEntries', 'NumGlobalCols', 'NumGlobalCols64', 'NumGlobalDiagonals', 'NumGlobalDiagonals64', 'NumGlobalEntries', 'NumGlobalNonzeros', 'NumGlobalNonzeros64', 'NumGlobalRows', 'NumGlobalRows64', 'NumMyCols', 'NumMyDiagonals', 'NumMyEntries', 'NumMyNonzeros', 'NumMyRowEntries', 'NumMyRows', 'OperatorDomainMap', 'OperatorRangeMap', 'OptimizeStorage', 'Print', 'PutScalar', 'RangeMap', 'RemoveEmptyProcessesInPlace', 'ReplaceColMap', 'ReplaceDiagonalValues', 'ReplaceDomainMapAndImporter', 'ReplaceGlobalValues', 'ReplaceMyValues', 'ReplaceRowMap', 'ReportError', 'ResetFlops', 'RightScale', 'RowMap', 'RowMatrixColMap', 'RowMatrixImporter', 'RowMatrixRowMap', 'SYRK', 'Scale', 'SetFlopCounter', 'SetLabel', 'SetTracebackMode', 'SetUseTranspose', 'Solve', 'SortGhostsAssociatedWithEachProcessor', 'StaticGraph', 'StorageOptimized', 'SumIntoGlobalValues', 'SumIntoMyValues', 'TracebackMode', 'TransformToLocal', 'UnsetFlopCounter', 'UpdateFlops', 'UpperTriangular', 'UseTranspose', '__class__', '__delattr__', '__dict__', '__dir__', '__disown__', '__doc__', '__eq__', '__format__', '__ge__', '__getattribute__', '__getitem__', '__gt__', '__hash__', '__init__', '__init_subclass__', '__le__', '__lt__', '__module__', '__ne__', '__new__', '__reduce__', '__reduce_ex__', '__repr__', '__setattr__', '__setitem__', '__sizeof__', '__str__', '__subclasshook__', '__swig_destroy__', '__weakref__', 'this', 'thisown']
+
+**** Number of columns and rows
+
+#+begin_src python
+n_row, n_col = A.NumGlobalRows(), A.NumGlobalCols()
+print(n_row, n_col)
+#+end_src
+
+#+RESULTS:
+: 10000 10000
+
+**** Reconstructing sparse matrix
+
+#+begin_src python
+print(A.ExtractGlobalRowCopy.__doc__)
+print(A.ExtractGlobalRowCopy(0))
+A_sparse = np.zeros((n_row, n_col))
+for row in range(n_row):
+    value, col_id = A.ExtractGlobalRowCopy(row)
+    for v, col in zip(value, col_id):
+        A_sparse[row, col] = v
+print(A_sparse)
+#+end_src
+
+#+RESULTS:
+#+begin_example
+
+        ExtractGlobalRowCopy(self, int globalRow) -> (numpy.ndarray,numpy.ndarray)
+
+          Returns a two-tuple of numpy arrays of the same size; the first is
+          an array of integers that represent the nonzero columns on the
+          matrix; the second is an array of doubles that represent the values
+          of the matrix entries.  The input argument is a global row index.
+        
+(array([ 4., -1., -1.]), array([  0,   1, 100], dtype=int32))
+[[ 4. -1.  0. ...  0.  0.  0.]
+ [-1.  4. -1. ...  0.  0.  0.]
+ [ 0. -1.  4. ...  0.  0.  0.]
+ ...
+ [ 0.  0.  0. ...  4. -1.  0.]
+ [ 0.  0.  0. ... -1.  4. -1.]
+ [ 0.  0.  0. ...  0. -1.  4.]]
+#+end_example
+
+**** Visualizing sparse matrix
+
+#+begin_src python
+plt.spy(A_sparse)
+#+end_src
+
+#+RESULTS:
+:RESULTS:
+#+attr_org: :width 260
+[[file:./jupyter/5080ff57cd07a78f3510b25bf807aabf1dbb4c01.png]]
+:END:
+

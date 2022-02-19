@@ -1,0 +1,31 @@
+#+options: ':nil *:t -:t ::t <:t H:3 \n:nil ^:t arch:headline
+#+options: author:t broken-links:nil c:nil creator:nil
+#+options: d:(not "LOGBOOK") date:t e:t email:nil f:t inline:t num:t
+#+options: p:nil pri:nil prop:nil stat:t tags:t tasks:t tex:t
+#+options: timestamp:t title:t toc:t todo:t |:t
+#+title: Banks and finance in modern macroeconmics
+#+date: <2021-02-16 Tue>
+#+author: Nasser Alkmim
+#+email: nasser.alkmim@gmail.com
+#+language: en
+#+select_tags: export
+#+exclude_tags: noexport
+#+creator: Emacs 27.1 (Org mode 9.4.3)
+#+draft: t
+* Old view of banking
+
+*Discretionary* bank decision to expand its balance sheet and therefore expandid credit to entepreneurs with positive net present value projects.
+
+Sometimes these project may never yield returns and we have a break in the payments chain, causing a crisis.
+
+* New view of banking
+
+Banks as intermediaries that face daily liquidity constraints, or clearing constraint.
+
+This constraint is enforced by a reserve limitation that banks must follow.
+If a bank has to send reserves do another bank, its reserves decline.
+Then, in order to meet its requirements, the bank has to come up with additional reserves in the short-term money market.
+Ultimately, 
+
+* References
+1. [[https://journals.openedition.org/oeconomia/5624][Bruna Ingrao and Claudio Sardoni, Banks and Finance in Modern Macroeconomics,...]]

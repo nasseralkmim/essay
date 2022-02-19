@@ -1,0 +1,36 @@
+#+title: Workflow notes
+#+date: <2021-06-05 Sat>
+#+author: Nasser Alkmim
+#+draft: t
+#+toc: t
+#+tags[]: productivity
+* "TODO" lists
+** Start the TODO with a question
+Instantly knows what to look for.
+
+I prefer this one because it primes you better.
+It the TODO text you are know what to expect to accomplish.
+
+** Start the TODO item with a verb
+Instantly knows what action to take.
+It is effective but too general.
+Use it rarely.
+
+Use only when there is no known goal/objective.
+
+
+* Periodic reviews
+** Week reviews
+Micro goals and intentions for the week.
+
+Each end of the week you should reflect on it and iterate the process to improve or adapt.
+** Month reviews
+Medium term goals.
+
+Not too precise, but just to give you an idea of effort to results.
+** Year reviews
+
+Macro goals.
+
+Idealistic and just also to give an idea of effort and results.
+

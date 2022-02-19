@@ -1,0 +1,518 @@
+#+title: Trilinos notes
+#+date: <2021-04-18 Sun>
+#+author: Nasser Alkmim
+#+email: nasser.alkmim@gmail.com
+#+tags[]: tools trilinos 
+#+toc: t
+#+draft: t
+* Basics
+** What is Trilinos? Object oriented framework for solving math and engineering problems (linear system of equations). Can solve problems up to 2 billion unknowns.
+** What packages make Trilinos?
+Trilinos is made out of multiple packages.
+The packages can depend on each other.
+
+Documentation for each package can be found [[https://trilinos.github.io/packages.html][Packages | Trilinos]].
+
+The packages are divided in core "services", solvers, methods and discretization.
+**** Core
+****** Petra
+
+Common language for distributed _sparse_ linear algebra objects.
+Petra means foundation in greek.
+
+Epetra (essential petra) is the legacy version.
+Tpetra is the Templetade petra, next generation version.
+Tpetra allows multicore CPU and hybrid CPU/GPU.
+
+Typical construction sequence:
+
+1. =Construct Comm=
+2. =Construct Map= describe parallel layout
+   1. two maps define an export/import object
+3. =Construct= computationla object (matrix and vectors)
+****** Teuchos
+
+Teuchos is an utility package.
+It helps Trilinos work on many platforms as possible.
+**** Solvers
+****** AztecOO
+Iterative linear solver, e.g., CG and GMRES.
+****** Belos
+Next generation linear iterative solver.
+Improves on AztecOO by allowing control over data layout and kernels.
+Used for parallel solution schemes.
+****** ML preconditioners
+
+Multi-level preconditioners, also known as multigrid methods (algebraic, with or without somoothed aggregation).
+
+Can be used independent of other trilinos packages.
+Accept =Petra= objects, sparse matrices and dense vectors.
+****** MueLu
+
+Next generation version of ML.
+
+Decouple computational kernels from algorithms, facilitating development of new algorithms.
+Can exploit Tpetra features for parallel solution.
+****** Amesos
+
+Direct solver.
+****** ShyLU
+
+Subdomain solvers.
+****** Teko
+# Bui 2021 cites Teko
+
+Tool to automate construction of block preconditioners.
+Tailored for Navier-Stokes.
+
+Alternative to PETSc PCFieldsplit.
+
+**** Abstract solver interfaces
+****** Stratimikos
+
+Interface to many different packages.
+Can create and use linear solvers.
+
+Options are specified with =Teuchos::ParameterList=.
+Solver and options can change at run time.
+
+Run time differentiate "dynamic" from "static" linking.
+Dynamic linking occurs at runtime.
+** How to install?
+*** References
+- Bartlett, R. A. (). Trilinos Configure, Build, Test, and Install
+  Reference Guide. , (), 51.
+
+*** Download the source code
+
+You will need =git= for this step.
+To download just clone the repository to a directory =git clone https://github.com/trilinos/Trilinos=
+
+#+begin_src shell
+cd ~
+git clone https://github.com/trilinos/Trilinos
+#+end_src
+
+*** Requirements
+Instruction for Linux based systems.
+I use windows with Windows Subsystem for Linux (wsl) [[https://docs.microsoft.com/en-us/windows/wsl/install-win10][Install WSL on Windows 10 | Microsoft Docs]]
+
+1. CMake 3.17.1 or newer =sudo apt install cmake= (*)
+2. C and C++ compiler =sudo apt install gcc=
+3. Optionally a Fortran compiler =sudo apt install gfortran=
+4. Optionally an installation of MPI (***) =sudo apt install mpi=
+
+(*) One of the current requirements is Cmake 3.17.1 or newer, and the version in the Ubunto is 3.16.
+I followed the steps in this [[https://askubuntu.com/questions/355565/how-do-i-install-the-latest-version-of-cmake-from-the-command-line][software installation - How do I install the latest version of cmake from the...]].
+The =cmake -version= currently available is =3.20.1=.
+
+
+(***) MPI is a standardized API for parallel computing, [[https://www.open-mpi.org/faq/?category=general#what-is-mpi][FAQ: General information about the Open MPI Project]].
+
+*** Check required packages
+
+#+begin_src shell
+apt list --installed | egrep "gcc|gfortran|mpi|cmake"
+#+end_src
+
+#+RESULTS:
+#+begin_example
+cmake-data/focal,now 3.16.3-1ubuntu1 all [installed,automatic]
+cmake/focal,now 3.16.3-1ubuntu1 amd64 [installed]
+gcc-10-base/focal,now 10.3.0-1ubuntu1~20.04~2 amd64 [installed,automatic]
+gcc-10/focal,now 10.3.0-1ubuntu1~20.04~2 amd64 [installed]
+gcc-9-base/focal,now 9.3.0-25ubuntu1~20.04 amd64 [installed,automatic]
+gcc-9/focal,now 9.3.0-25ubuntu1~20.04 amd64 [installed,automatic]
+gcc/focal,now 4:9.3.0-1ubuntu2 amd64 [installed]
+gfortran-9/focal,now 9.3.0-25ubuntu1~20.04 amd64 [installed,automatic]
+gfortran/focal,now 4:9.3.0-1ubuntu2 amd64 [installed,automatic]
+lib32gcc-s1/focal,now 10.3.0-1ubuntu1~20.04~2 amd64 [installed,automatic]
+libgcc-10-dev/focal,now 10.3.0-1ubuntu1~20.04~2 amd64 [installed,automatic]
+libgcc-9-dev/focal,now 9.3.0-25ubuntu1~20.04 amd64 [installed,automatic]
+libgcc-s1/focal,now 10.3.0-1ubuntu1~20.04~2 amd64 [installed,automatic]
+libgccjit-9-dev/focal,now 9.3.0-25ubuntu1~20.04 amd64 [installed]
+libgccjit0/focal,now 10.3.0-1ubuntu1~20.04~2 amd64 [installed,automatic]
+libgfortran-9-dev/focal,now 9.3.0-25ubuntu1~20.04 amd64 [installed,automatic]
+libgfortran5/focal,now 10.3.0-1ubuntu1~20.04~2 amd64 [installed,automatic]
+libmpich-dev/focal,now 3.3.2-2build1 amd64 [installed,automatic]
+libmpich12/focal,now 3.3.2-2build1 amd64 [installed,automatic]
+libparams-validationcompiler-perl/focal,now 0.30-1 all [installed,automatic]
+mpich/focal,now 3.3.2-2build1 amd64 [installed]
+node-pumpify/focal,now 2.0.1-1 all [installed,automatic]
+#+end_example
+
+*** Configuration
+**** Introduction
+
+CMake is used to provide configuration of what to build in the form of a Makefile.
+It is recommended to create a separate folder from the source code to put the build files.
+The folder structure is assuming that trilinos in your ${HOME} directory:
+
+#+begin_example
+trilinos
+|   Trilinos <- source code
+|   build <- parallel build directory
+|   |   do_configure
+#+end_example
+
+#+begin_src shell
+cd ~/trilinos
+tree -L 1
+#+end_src
+
+#+RESULTS:
+
+The =do_configure= file contains the bash script that runs CMake with the specific configurations.
+This configurations are going to depend on the user's specific needs.
+
+
+**** Simple configuration
+This configuration does not enables any packages.
+
+1. =:BOOL=ON= is equivalent to ==ON=.
+2. =CMAKE_INSTALL_PREFIX= prefix for installing, where the files will be copied for usage.
+   1. from that prefix, the includes will be on =/include/=, libraries on =/lib/=, binaries in =/bin/= and example in =/example/=.
+   2. after build and test, the software will be installed (copied) to its destination folder.
+   3. the install directory is specified in the configuration step.
+   4. =CMakeCache.txt= can be viewed after configuring to check the folders.
+3. =BUILD_SHARED_LIBS= to whether generate or not dynamic shared libraries.
+4. =$TRILINOS_SOURCE= is the source location.
+   
+#+begin_src example
+#!/bin/bash
+
+TRILINOS_SOURCE=../Trilinos
+INSTALL_PATH=/usr/local
+
+cmake \
+  -D CMAKE_INSTALL_PREFIX=${INSTALL_PATH} \
+  -D CMAKE_BUILD_TYPE=RELEASE \
+  -D BUILD_SHARED_LIBS=ON \
+$EXTRA_ARGS \
+$TRILINOS_SOURCE
+#+end_src
+
+#+RESULTS:
+
+**** =CMakeCache.txt=
+This file contains cache variables with all configurations.
+Those are directories for packages and other definitions.
+
+To reconfigure from scratch one needs to delete =CMakeCache.txt= and the directory =CMakeFiles=.
+=rm -rf CMakeCache.txt CMakeFiles/=
+
+Every time a variable is removed from the configuration the cached version should be deleted.
+Or when you change the path for package.
+Also when you want to exclude one definition made before.
+
+**** Reconfiguring
+
+Pass the =--target clean= flag.
+
+=cmake --build <dir> --target clean=
+
+*** Ninja
+
+<2021-06-04 Fri> Did not work with python.
+
+Alternative to =Make=.
+Seems to be faster.
+
+CMake can generate Ninja files.
+
+
+*** Build
+
+After generating the build environment with CMake, we then build the targets with =make= org =make -j#= to use # CPU cores.
+
+=make help= will list all targets that are going to be built, the packages and other phony targets (all, clean, install, test).
+
+*** Install
+
+Finally we install with =make install=.
+The install directory should be specified /at configure time/ (when =cmake= was called) with the variable =CMAKE_INSTALL_PREFIX=.
+
+You can check this variable in the =CMakeCache.txt=
+
+*** Test
+
+Run =ctest= to check, if tests were enable to build.
+
+** Information about Trilinos
+
+Good source is the library of pdfs in [[https://github.com/trilinos/trilinos.github.io/tree/master/pdfs][trilinos.github.io/pdfs at master · trilinos/trilinos.github.io · GitHub]].
+
+* PyTrilinos
+** What is Pytrilinos?
+Python wrapper for trilinos packages.
+It is a trilinos package, meaning that is distributed and built with trilinos.
+It is also a python library, meaning that it can be imported in python with =from PyTrilinos import <package>=.
+** Why using python with Trilinos?
+Good to get familiarized with Trilinos multiple packages and tools.
+Also good for rapid prototyping algorithms?
+** Trilinos packages available in the python interface
+Teuchos, Epetra, Triutils, EpetraExt, AztecOO, Galeri, Amesos, Ifpack, Komplex, Anasazi, ML and NOX.
+
+** Extra dependencies
+
+I got errors saying that some dependences were missing.
+
+1. BLAS and LAPACK =sudo apt install libblas-dev liblapack-dev= (**)
+2. netcdf =sudo apt install libnetcdf-dev=
+3. for pytrilinos had to install SWIG =sudo apt install swig= (*)
+4. also had to install Boost =sudo apt install libboost-dev=
+5. Ninja build tool (instead of make) =sudo apt install ninja-build=
+
+(*) SWIG is a simplified wrapper and interface generator that connects C++ with python (and other languages).
+
+(**) BLAS and LAPACK are linear algebra software.
+
+Check requirements
+#+begin_src shell
+apt list --installed | egrep "blas|lapack|swig|boost|netcdf|ninja"
+#+end_src
+
+#+RESULTS:
+#+begin_example
+libblas-dev/focal,now 3.9.0-1build1 amd64 [installed]
+libblas3/focal,now 3.9.0-1build1 amd64 [installed,automatic]
+libboost-dev/focal,now 1.71.0.0ubuntu2 amd64 [installed]
+libboost1.71-dev/focal,now 1.71.0-6ubuntu6 amd64 [installed,automatic]
+liblapack-dev/focal,now 3.9.0-1build1 amd64 [installed]
+liblapack3/focal,now 3.9.0-1build1 amd64 [installed,automatic]
+libnetcdf-dev/focal,now 1:4.7.3-1 amd64 [installed]
+libnetcdf15/focal,now 1:4.7.3-1 amd64 [installed,automatic]
+ninja-build/focal,now 1.10.0-1build1 amd64 [installed]
+swig4.0/focal,now 4.0.1-5build1 amd64 [installed,automatic]
+swig/focal,now 4.0.1-5build1 all [installed]
+#+end_example
+
+** Configuring
+
+This configuration enables Pytrilinos.
+
+By default, this configuration enables all the required Trilinos packages which have a python interface.
+This includes AztecOO and ML.
+To avoid building all packages turn off =Trilinos_ENABLE_ALL_PACKAGES= and enable specific ones with =Trilinos_ENABLE_<package>=.
+
+The build time is considerable, and can be reduced with no tests or examples are build.
+The variables =Trilinos_ENABLE_TESTS= and =Trilinos_ENABLE_EXAMPLES= can be turned off to reduce build time.
+
+*** Python executable
+
+Need to specify the executable CMake was finding the miniconda3 python instead of the standard.
+=-D PYTHON_EXECUTABLE:FILEPATH=...=
+
+*** Python install path
+
+To direct the PyTrilinos files into a folder where python can find.
+
+#+begin_src shell
+python -m site
+#+end_src
+
+#+RESULTS:
+#+begin_example
+sys.path = [
+    '/mnt/c/Users/c8441205/OneDrive/nasser-website/content/notes/trilinos-notes',
+    '/usr/lib/python38.zip',
+    '/usr/lib/python3.8',
+    '/usr/lib/python3.8/lib-dynload',
+    '/home/nasser/.local/lib/python3.8/site-packages',
+    '/usr/local/lib/python3.8/dist-packages',
+    '/usr/lib/python3/dist-packages',
+]
+USER_BASE: '/home/nasser/.local' (exists)
+USER_SITE: '/home/nasser/.local/lib/python3.8/site-packages' (exists)
+ENABLE_USER_SITE: True
+#+end_example
+
+I'm using =-D PyTrilinos_INSTALL_PREFIX=/home/nasser/.local=.
+
+
+*** CMake configuration script
+CMake script file:
+
+#+begin_src bash
+#!/bin/bash
+
+TRILINOS_SOURCE=../Trilinos
+INSTALL_PATH=/usr/local
+
+cmake \
+  -D CMAKE_INSTALL_PREFIX=${INSTALL_PATH} \
+  -D CMAKE_BUILD_TYPE=RELEASE \
+  -D BUILD_SHARED_LIBS=ON \
+  -D Trilinos_ENABLE_TESTS=OFF \
+  -D Trilinos_ENABLE_ALL_PACKAGES=OFF\
+  -D Trilinos_ENABLE_PyTrilinos=ON \
+  -D PYTHON_EXECUTABLE=/usr/local/bin/python \
+  -D PyTrilinos_INSTALL_PREFIX=${HOME}/.local/lib/python3.8/site-packages \
+  -G Ninja \
+$EXTRA_ARGS \
+$TRILINOS_SOURCE
+#+end_src
+
+*** CMake output log
+
+#+begin_src shell
+cd ~/trilinos/build/CMakeFiles
+cat CMakeError.log
+#+end_src
+
+** Build
+
+Call =make -j12=.
+About 10min on 12 processors.
+
+#+begin_src shell
+neofetch
+#+end_src
+
+#+RESULTS:
+#+begin_example
+[?25l[?7l[0m[31m[1m            .-/+oossssoo+/-.
+        `:+ssssssssssssssssss+:`
+      -+ssssssssssssssssssyyssss+-
+    .ossssssssssssssssss[37m[0m[1mdMMMNy[0m[31m[1msssso.
+   /sssssssssss[37m[0m[1mhdmmNNmmyNMMMMh[0m[31m[1mssssss/
+  +sssssssss[37m[0m[1mhm[0m[31m[1myd[37m[0m[1mMMMMMMMNddddy[0m[31m[1mssssssss+
+ /ssssssss[37m[0m[1mhNMMM[0m[31m[1myh[37m[0m[1mhyyyyhmNMMMNh[0m[31m[1mssssssss/
+.ssssssss[37m[0m[1mdMMMNh[0m[31m[1mssssssssss[37m[0m[1mhNMMMd[0m[31m[1mssssssss.
++ssss[37m[0m[1mhhhyNMMNy[0m[31m[1mssssssssssss[37m[0m[1myNMMMy[0m[31m[1msssssss+
+oss[37m[0m[1myNMMMNyMMh[0m[31m[1mssssssssssssss[37m[0m[1mhmmmh[0m[31m[1mssssssso
+oss[37m[0m[1myNMMMNyMMh[0m[31m[1msssssssssssssshmmmh[0m[31m[1mssssssso
++ssss[37m[0m[1mhhhyNMMNy[0m[31m[1mssssssssssss[37m[0m[1myNMMMy[0m[31m[1msssssss+
+.ssssssss[37m[0m[1mdMMMNh[0m[31m[1mssssssssss[37m[0m[1mhNMMMd[0m[31m[1mssssssss.
+ /ssssssss[37m[0m[1mhNMMM[0m[31m[1myh[37m[0m[1mhyyyyhdNMMMNh[0m[31m[1mssssssss/
+  +sssssssss[37m[0m[1mdm[0m[31m[1myd[37m[0m[1mMMMMMMMMddddy[0m[31m[1mssssssss+
+   /sssssssssss[37m[0m[1mhdmNNNNmyNMMMMh[0m[31m[1mssssss/
+    .ossssssssssssssssss[37m[0m[1mdMMMNy[0m[31m[1msssso.
+      -+sssssssssssssssss[37m[0m[1myyy[0m[31m[1mssss+-
+        `:+ssssssssssssssssss+:`
+            .-/+oossssoo+/-.[0m
+[20A[9999999D[43C[0m[1m[31m[1mnasser[0m@[31m[1mlt135-c842[0m 
+[43C[0m-----------------[0m 
+[43C[0m[31m[1mOS[0m[0m:[0m Ubuntu 20.04.2 LTS on Windows 10 x86_64[0m 
+[43C[0m[31m[1mKernel[0m[0m:[0m 5.4.72-microsoft-standard-WSL2[0m 
+[43C[0m[31m[1mUptime[0m[0m:[0m 2 days, 41 mins[0m 
+[43C[0m[31m[1mPackages[0m[0m:[0m 1698 (dpkg)[0m 
+[43C[0m[31m[1mShell[0m[0m:[0m bash 5.0.17[0m 
+[43C[0m[31m[1mResolution[0m[0m:[0m 4096x1440[0m 
+[43C[0m[31m[1mTheme[0m[0m:[0m Adwaita [GTK3][0m 
+[43C[0m[31m[1mIcons[0m[0m:[0m Adwaita [GTK3][0m 
+[43C[0m[31m[1mTerminal[0m[0m:[0m emacs[0m 
+[43C[0m[31m[1mCPU[0m[0m:[0m AMD Ryzen 5 PRO 4650U with Radeon Graphics (12) @ 2.095GHz[0m 
+[43C[0m[31m[1mMemory[0m[0m:[0m 335MiB / 11978MiB[0m 
+
+[43C[30m[40m   [31m[41m   [32m[42m   [33m[43m   [34m[44m   [35m[45m   [36m[46m   [37m[47m   [m
+[43C[38;5;8m[48;5;8m   [38;5;9m[48;5;9m   [38;5;10m[48;5;10m   [38;5;11m[48;5;11m   [38;5;12m[48;5;12m   [38;5;13m[48;5;13m   [38;5;14m[48;5;14m   [38;5;15m[48;5;15m   [m
+
+
+
+
+
+[?25h[?7h
+#+end_example
+
+** Trilinos packages installed
+
+After building the project.
+The following packages are available in the build folder.
+
+#+begin_src shell
+cd ~/trilinos/build/packages
+ls
+#+end_src
+
+#+RESULTS:
+#+begin_example
+PyTrilinos
+amesos
+amesos2
+anasazi
+aztecoo
+belos
+common
+domi
+epetra
+epetraext
+galeri
+ifpack
+ifpack2
+isorropia
+kokkos
+kokkos-kernels
+komplex
+ml
+nox
+pamgen
+pliris
+rtop
+seacas
+shards
+shylu
+stk
+stratimikos
+teko
+teuchos
+thyra
+tpetra
+triutils
+xpetra
+zoltan
+zoltan2
+#+end_example
+
+** Installing
+=sudo make install= to install (copying to the right location).
+
+After configuration, build and installing you should have a bin, include and lib folder in the specified installation folder.
+
+#+begin_src shell
+cd /usr/local/lib
+ls | egrep "azt"
+#+end_src
+
+#+RESULTS:
+: libaztecoo.so
+: libaztecoo.so.13
+: libaztecoo.so.13.1
+: libstratimikosaztecoo.so
+: libstratimikosaztecoo.so.13
+: libstratimikosaztecoo.so.13.1
+
+In the lib folder there is a python folder with the python library files.
+
+** Testing
+We need to tell python where the package is located.
+This could be done with the CMake variable during build =PyTrilinos_INSTALL_PREFIX= and pointing it to local site-packages.
+If this variable is not specified the python installation is the same as others Trilinos packages.
+
+#+begin_src python :session testing-trilinos
+from PyTrilinos import Epetra
+#+end_src
+
+#+RESULTS:
+
+
+* Definitions
+** Framework, toolkit and ecosystem
+Frameworks are APIs (application programming interface), generally
+with a big scope. Toolkits are "plug-and-play" libraries, small scope
+and easy to insert on other applications. Ecosystem is everything.
+** Modern scientific design approach
+
+_Compose application within an ecosystem._
+
+
+Instead of developing an application.
+Applications with its own framework uses some libraries and usually have no intended reuse.
+** Interoperability versus dependence
+
+Trilinos packages have no explicit dependence on each other, but they often have to interact. 
+Trilinos =cmake= system allows Trilinos packages to interact with each other and at same time keep their independence.
+* References
+
+1. [[https://github.com/trilinos/trilinos.github.io/tree/master/pdfs][trilinos.github.io/pdfs at master · trilinos/trilinos.github.io · GitHub]]
+   

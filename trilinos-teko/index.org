@@ -1,0 +1,102 @@
+#+title: Trilinos Teko
+#+date: <2021-07-06 Tue>
+#+lastmod: 2021-08-03 18:40:57
+#+author: Nasser Alkmim
+#+draft: t
+#+toc: t
+#+tags[]: trilinos python
+Teko is a Trilinos package that implements "blocked" and "segregated" preconditioners for iterative solvers.
+* Preliminaries
+** Was it enabled during confiugre/build?
+
+#+begin_src shell
+cd ~/trilinos/build/packages
+ls | grep teko
+#+end_src
+
+
+#+RESULTS:
+: teko
+
+** Is it wrapped by Pytrilinos?
+
+#+begin_src python :session preliminar
+import PyTrilinos
+help(PyTrilinos)
+#+end_src
+
+#+RESULTS:
+#+begin_example
+Help on package PyTrilinos:
+
+NAME
+    PyTrilinos
+
+DESCRIPTION
+    PyTrilinos: A python interface to selected Trilinos packages.  This installation
+      of PyTrilinos was built with the following python-wrapped packages enabled:
+    
+        Teuchos
+        Epetra
+        TriUtils
+        Tpetra
+        Domi
+        EpetraExt
+        Isorropia
+        Pliris
+        AztecOO
+        Galeri
+        Amesos
+        IFPACK
+        Komplex
+        Anasazi
+        ML
+        NOX
+        LOCA
+
+PACKAGE CONTENTS
+    Amesos
+    Anasazi
+    AztecOO
+    Domi
+    Epetra
+    EpetraExt
+    Galeri
+    IFPACK
+    Isorropia (package)
+    Komplex
+    LOCA (package)
+    ML
+    NOX (package)
+    Pliris
+    PropertyBase
+    Teuchos (package)
+    Tpetra
+    TriUtils
+    _Amesos
+    _Anasazi
+    _AztecOO
+    _Domi
+    _Epetra
+    _EpetraExt
+    _Galeri
+    _IFPACK
+    _Komplex
+    _ML
+    _Pliris
+    _Tpetra
+    _TriUtils
+    typed_dict
+    typed_list
+    typed_tuple
+
+DATA
+    __all__ = ['Teuchos', 'Epetra', 'TriUtils', 'Tpetra', 'Domi', 'EpetraE...
+
+VERSION
+    12.13
+
+FILE
+    /home/nasser/.local/lib/python3.8/site-packages/PyTrilinos/__init__.py
+#+end_example
+

@@ -1,0 +1,353 @@
+#+title: amgcl notes
+#+date: <2021-07-21 Wed>
+#+lastmod: 2021-08-16 15:49:21
+#+author: Nasser Alkmim
+#+draft: t
+#+toc: t
+#+tags[]: c++ python amg numerical
+AMG is a header only C++ library for algebraic multigrid method with Krylov subspace methods also implemented.
+* Introduction
+** Requirements
+*** Boost
+This is required for runing python =setup.py=.
+
+1. =sudo apt install libboost-serialization-dev=
+2. =sudo apt install libboost-test-dev=
+3. =sudo apt install libboost-program-options-dev=
+
+Arch: =sudo pacman -S boost=.
+
+*** Eigen
+Header only as well.
+
+=cmake= and then =make install= will just copy the header to the =/include/= folder specified or system default =/usr/local/include/=.
+
+** Questions
+*** What is the problem with standard Numerical libraries?
+Users have to adopt the datatype provided by the library.
+*** How is "policy-based design" applied?
+Allows users to *compose* the solvers and preconditioners from the libraries components.
+* How to use it
+** Concepts
+*** What is policy-based desing?
+Public classes that allow compose customized methods.
+
+** Composing a solver
+
+#+begin_src C++ 
+#include <iostream>
+#include <vector>
+#include <amgcl/make_solver.hpp>
+#include <amgcl/solver/bicgstab.hpp>
+#include <amgcl/amg.hpp>
+#include <amgcl/coarsening/smoothed_aggregation.hpp>
+#include <amgcl/relaxation/spai0.hpp>
+#include <amgcl/adapter/crs_tuple.hpp>
+
+int poisson(
+    int n,
+    std::vector<int>    &ptr,
+    std::vector<int>    &col,
+    std::vector<double> &val,
+    std::vector<double> &rhs
+    )
+{
+    int    n2 = n * n;        // Number of points in the grid.
+    double h = 1.0 / (n - 1); // Grid spacing.
+
+    ptr.clear(); ptr.reserve(n2 + 1); ptr.push_back(0);
+    col.clear(); col.reserve(n2 * 5); // We use 5-point stencil, so the matrix
+    val.clear(); val.reserve(n2 * 5); // will have at most n2 * 5 nonzero elements.
+
+    rhs.resize(n2);
+
+    for(int j = 0, k = 0; j < n; ++j) {
+        for(int i = 0; i < n; ++i, ++k) {
+            if (i == 0 || i == n - 1 || j == 0 || j == n - 1) {
+                // Boundary point. Use Dirichlet condition.
+                col.push_back(k);
+                val.push_back(1.0);
+
+                rhs[k] = 0.0;
+            } else {
+                // Interior point. Use 5-point finite difference stencil.
+                col.push_back(k - n);
+                val.push_back(-1.0 / (h * h));
+
+                col.push_back(k - 1);
+                val.push_back(-1.0 / (h * h));
+
+                col.push_back(k);
+                val.push_back(4.0 / (h * h));
+
+                col.push_back(k + 1);
+                val.push_back(-1.0 / (h * h));
+
+                col.push_back(k + n);
+                val.push_back(-1.0 / (h * h));
+
+                rhs[k] = 1.0;
+            }
+
+            ptr.push_back(col.size());
+        }
+    }
+
+    return n2;
+}
+
+typedef amgcl::backend::builtin<double> Backend;
+
+// make the solver
+typedef amgcl::make_solver<
+  // AMG as preconditioner
+  amgcl::amg<
+    Backend,
+    amgcl::coarsening::smoothed_aggregation,
+    amgcl::relaxation::spai0
+  >,
+  // iterative solver
+  amgcl::solver::bicgstab<Backend>
+> Solver;
+
+int main () {
+  std::vector<int> ptr, col;
+  std::vector<double> val, rhs;
+  int n = poisson(10, ptr, col, val, rhs);
+}
+#+end_src
+
+#+RESULTS:
+
+* Python =pyamgcl=
+** Installation
+
++To install we need to make =pybind11= files available, _include_ it.+
+=amgcl= includes it as a git submodule.
++Just need to make sure to tell git to also clone the submodule.+
+Just =pip install -e .= in the folder where =setup.py= is enough to install the python library in the current =pip= environment.
+
+But to just use the python interface, we need to call  =pip install -e .=.
+This will  run the instruction in the =setup.py=.
+The =setup.py= has specific *build instruction* for =pybind11= and are passed with the =setup()= keyword =ext_modules=. 
+[[https://pybind11.readthedocs.io/en/stable/compiling.html#building-with-setuptools][Build systems — pybind11 documentation.]]
+
+
+** AMG as preconditioner of =scipy= GMRES
+
+#+begin_src python :session testing-amgcl
+import pyamgcl as amg
+import numpy as np
+from scipy.sparse import csr_matrix, random
+from scipy.sparse.linalg import gmres, spsolve
+np.set_printoptions(2, suppress=True)
+
+class gmres_counter:
+    def __init__(self, disp=True):
+        self._disp = disp
+        self.num_iter = 0
+        self.residual_norms = []
+    def __call__(self, rk=None):
+        self.num_iter += 1
+        self.residual_norms.append(rk)
+        if self._disp:
+            print(f'Iter {self.num_iter} \t residual = {str(rk)}')
+
+Ad = np.array([[1, 0, 0], [0, 2, 0], [0, 0, 3]])
+b = np.array([1, 4, 6])
+
+A = csr_matrix(Ad)
+
+x_sp = spsolve(A, b)
+
+counter_gmres = gmres_counter(disp=False)
+x_g, _ = gmres(A, b, maxiter=100, tol=1e-8, callback=counter_gmres)
+
+preconditioner = amg.amgcl(A)
+print('preconditioner \n', preconditioner)
+counter_pgmres = gmres_counter(disp=False)
+x_p, _ = gmres(A, b, M=preconditioner, maxiter=100, tol=1e-8, callback=counter_pgmres)
+
+print('sparse direct solver correct? ', np.allclose(A.dot(x_sp), b))
+print('GMRES correct? ', np.allclose(A.dot(x_g), b))
+print(counter_gmres.residual_norms)
+print('GMRES+AMG correct? ', np.allclose(A.dot(x_p), b))
+#+end_src
+
+#+RESULTS:
+#+begin_example
+preconditioner 
+ Number of levels:    1
+Operator complexity: 1.00
+Grid complexity:     1.00
+Memory footprint:    180.00 B
+
+level     unknowns       nonzeros      memory
+---------------------------------------------
+    0            3              3    180.00 B (100.00%)
+
+sparse direct solver correct?  True
+GMRES correct?  True
+[0.18894098351467173, 0.044355397126148, 4.143701944023365e-16]
+GMRES+AMG correct?  True
+#+end_example
+
+** Getting the number of iterations from =scipy= GMRES
+:PROPERTIES:
+:header-args:python: :session comparing-iterations
+:END:
+
+#+begin_src python
+import matplotlib.pyplot as plt
+import matplotlib
+matplotlib.style.use('ggplot')
+import numpy as np
+np.random.seed(2)
+from scipy.sparse.linalg import gmres, spsolve
+from scipy.sparse import random
+import pyamgcl as amg
+
+class gmres_counter:
+    def __init__(self, disp=True):
+        self._disp = disp
+        self.num_iter = 0
+        self.residual_norms = []
+    def __call__(self, rk=None):
+        self.num_iter += 1
+        self.residual_norms.append(rk)
+        if self._disp:
+            print(f'Iter {self.num_iter} \t residual = {str(rk)}')
+
+
+size = 100
+A = random(size, size, density=.9).tocsr()
+b = np.random.randn(size)
+
+counter = gmres_counter(disp=False)
+
+x, info = gmres(A, b, callback=counter, maxiter=150)
+print('Convergece tolerance achieved? ', info == 0) # >0 not converged
+print('GMRES converged? ', np.allclose(A @ x, b), f'in {counter.num_iter} iterations')
+print('Condition number: ', np.linalg.cond(A.todense()))
+
+fig, (ax1, ax2) = plt.subplots(1, 2)
+im = ax1.imshow(A.todense());ax1.set_title('Sparsity pattern')
+fig.colorbar(im, ax=ax1)
+ax2.plot(counter.residual_norms);ax2.set_xlabel('iteration');ax2.set_ylabel('residual norm')
+fig.tight_layout()
+
+x_exact = spsolve(A, b)
+print('\n Exact solver \n Matrix non singular? ', np.allclose(A @ x_exact, b))
+
+counter_p = gmres_counter(disp=True)
+preconditioner = amg.amgcl(A)
+x_p, info_p = gmres(A, b, M=preconditioner, callback=counter_p, maxiter=150)
+print('\n AMG preconditioner \n')
+print('P-GMRES converged? ', np.allclose(A @ x_p, b), f'in {counter_p.num_iter} iterations', counter_p.residual_norms)
+print('Convergece tolerance achieved? ', info_p == 0) # >0 not converged
+#+end_src
+
+#+RESULTS:
+:RESULTS:
+#+begin_example
+Convergece tolerance achieved?  False
+GMRES converged?  False in 150 iterations
+Condition number:  4364.657385891431
+
+ Exact solver 
+ Matrix non singular?  True
+Iter 1 	 residual = 1.3991325822435353e-11
+
+ AMG preconditioner 
+
+P-GMRES converged?  True in 1 iterations [1.3991325822435353e-11]
+Convergece tolerance achieved?  True
+#+end_example
+[[file:./jupyter/e3993af94a807a9a45ac019e9f6f0e33aa47a325.png]]
+:END:
+
+
+Remarks:
+1. Non singular matrix, but GMRES does not converges.
+2. Large condition number. 
+
+** =amgcl= GMRES implementation
+:PROPERTIES:
+:header-args:python: :session amgcl-gmres
+:END:
+
+[[https://amgcl.readthedocs.io/en/latest/components/iter_solvers.html#_CPPv4N5amgcl6solver5gmres6paramsE][Iterative Solvers — AMGCL 0.0.1 documentation]]
+
+#+begin_src python
+import numpy as np
+import pyamgcl as amg
+import scipy.sparse as sc
+
+Ad = np.array([[1, 0, 0], [0, 2, 0], [0, 0, 3]])
+b = np.array([1, 4, 6])
+A = sc.csr_matrix(Ad)
+
+p = amg.amgcl(A, prm={'class':'dummy'})
+print('Preconditioner?\n', p)
+solver = amg.solver(p,  prm={'type': 'gmres',
+                             'maxiter':200,
+			     'verbose': True})
+x = solver(b)
+print('Solution:', x)
+print('Number of iterations: ', solver.iters, solver.error)
+print('Converged? ', np.allclose(A @ x, b))
+#+end_src
+
+#+RESULTS:
+: Preconditioner?
+:  identity matrix as preconditioner
+:   unknowns: 3
+:   nonzeros: 3
+: 
+: Solution: [1. 2. 2.]
+: Number of iterations:  3 3.504202993407533e-16
+: Converged?  True
+
+
+
+** Multigrid parameters
+
+[[https://amgcl.readthedocs.io/en/latest/components/preconditioners.html#_CPPv4N5amgcl3amg6paramsE][Preconditioners — AMGCL 0.0.1 documentation]]
+
+#+begin_src python :session amg-params
+import numpy as np
+np.random.seed(2)
+np.set_printoptions(2, suppress=True)
+import pyamgcl as amg
+import scipy.sparse as sc
+from scipy.linalg import qr
+
+size = 10
+D = np.diag(np.arange(1, size+1))
+# orthonormal basis for random matrix
+U, _ = qr(np.random.rand(size, size))
+Ad = U.T @ D @ U
+A = sc.csr_matrix(Ad)
+b = np.random.rand(size)
+x_exact = sc.linalg.spsolve(A, b)
+
+p = amg.amgcl(A, prm={'coarsening.type': 'aggregation',
+                      'relax.type': 'chebyshev',
+		      'max_levels': 5})
+print('Preconditioner?\n', p)
+solver = amg.solver(p,  prm={'type': 'lgmres',
+                             'maxiter':200,
+			     'verbose': 'true'})
+x = solver(b)
+print('Number of iterations: ', solver.iters, solver.error)
+print('Converged? ', np.allclose(A @ x, b))
+#+end_src
+
+#+RESULTS:
+:RESULTS:
+# [goto error]
+:   File "<ipython-input-10-7f4b35b04b51>", line 17
+:     params = dict(coarsening.type='aggregation')
+:                   ^
+: SyntaxError: expression cannot contain assignment, perhaps you meant "=="?
+:END:

@@ -1,0 +1,88 @@
+#+title: Beer collection
+#+date: <2021-04-24 Sat>
+#+author: Nasser Alkmim
+#+email: nasser.alkmim@gmail.com
+#+tags[]: favorites beer 
+#+toc: t
+#+draft: t
+* Austria
+*** 5/5 Brewdog - Punk IPA
+Good one.
+
+#+DOWNLOADED: screenshot @ 2021-04-24 20:51:51
+#+attr_html: :style width: 120px
+[[file:Austria/2021-04-24_20-51-51_screenshot.png]]
+
+*** 4/5 Schleppe - No. 1 Pale Ale
+
+Good fresh hop, not too bitter, with a pungent after taste.
+This one is nice as a starter, but not for continuous drinking.
+
+
+#+DOWNLOADED: screenshot @ 2021-04-25 20:30:02
+#+attr_html: :style width: 120px
+[[file:Austria/2021-04-25_20-30-02_screenshot.png]]
+
+
+*** 3/5 Stiegl - Columbus
+Good value/quality ratio. 
+Pale ale with enjoyable taste, not too sharp hop flavor.
+
+
+#+DOWNLOADED: screenshot @ 2021-04-25 20:34:12
+#+attr_html: :style width: 120px
+[[file:Austria/2021-04-25_20-34-12_screenshot.png]]
+
+
+*** 1/5 Stiegl - Goldbrau
+Yellow and refreshing, not my particular kind of beer but can be a good choice on hot days.
+
+#+DOWNLOADED: screenshot @ 2021-04-24 20:04:04
+#+attr_html: :style width: 120px
+[[file:Austria/2021-04-24_20-04-04_screenshot.png]]
+
+
+
+* Definitions
+
+** Top-fermented
+
+Room temperature, the yeast rises to the top on a open kettle.
+
+** Bavaria beer
+
+The top-fermented with wheat malt.
+This is called Wheat beer (Weizen).
+Can be filtered or unfiltered.
+
+
+Bottom fermented, the Helle or Lager.
+
+Historically, this beer was produced during the winter.
+It was slow and cold process.
+
+"Marzen" comes from the fact the the beer was brewed in march and served during the year.
+It lasted longer because of "higher original gravity".
+
+
+
+** Bottom-fermented
+
+Colder temperatures make the yeast go the the bottom.
+
+* Words                                                            :noexport:
+Words to describe malt flavors: Malty, biscuity, breadlike, grainy, rich, deep, roasty, cereal, cookie-like, coffeeish, caramelly, toffee-like, molasses-like, malt complexity, smoky, sweet, autumnal, burnt cream, scalded milk, oatmeal, rustic, layered.
+
+Words to describe hop flavor and bitterness: Piney, citrusy, grapefruity, earthy, musty, spicy, sharp, bright, fresh, herbal, zippy, lemony, newly-mown lawn, aromatic, floral, springlike, brilliant, sprucelike, juniper-like, minty, pungent, elegant, grassy. 
+
+Words to describe fermentation flavors deriving from yeast: Fresh-baked bread, clovelike, bubblegum, yeasty, Belgiany, aromatic, tropical, subtle, fruity, clean, banana-like (and for some sour or extreme beers) horseblankety, earthy, musty. 
+
+Words to describe conditioning (carbonation): Soft, effervescent, spritzy, sparkling, zippy, pinpoint, bubbly, gentle, low carbonation, highly carbonated. 
+
+Words to describe body & mouthfeel: Rich, full, light, slick, creamy, oily, heavy, velvety, sweet, dry, thick, thin.
+
+Words to describe warm ethanol (alcohol) flavors from strong beer: Warm finish, heat, vodka, esters, pungent, strength.
+
+
+
+

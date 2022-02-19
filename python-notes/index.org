@@ -1,0 +1,1403 @@
+#+title: Python notes
+#+date: <2021-05-15 Sat>
+#+lastmod: 2021-08-20 12:57:43
+#+author: Nasser Alkmim
+#+email: nasser.alkmim@gmail.com
+#+toc: t
+#+draft: t
+#+tags[]: python 
+* Definitions
+** What is =pip=
+Pip: python packager manager.
+Use to install packages/libraries.
+Included with python.
+** What is Anaconda?
+
+Anaconda is a package manager (like pip) and an environment manager (like virtualenv).
+Plus other things.
+
+Miniconda is a light weight version.
+
+** What is the difference between =jupyter= and =jupyter kernel=?
+
+
+A kernel is a program (specific for a language) that runs and introspects users's code.
+It interacts with jupyter applications and the user interface.
+[[https://jupyter.readthedocs.io/en/latest/projects/kernels.html#:~:text=Kernels%20are%20programming%20language%20specific,for%20interactive%20computing%20in%20Python.][Kernels (Programming Languages) — Jupyter Documentation 4.1.1 alpha documenta...]].
+
+Jupyter uses Ipython as a backend for python language.
+The Jupyter Notebook automatically uses the Ipython kernel, is a dependency.
+A kernel with a a different python version or a virtualenv can be installed with a python package called =ipykernel=.
+[[https://ipython.readthedocs.io/en/latest/install/kernel_install.html][Installing the IPython kernel — IPython 8.0.0.dev documentation]].
+
+
+Shows the list of all live kernels from the server URL provided when calling the command.
+Subsequent calls will use the same URL.
+
+#+begin_src emacs-lisp :results output
+(print (jupyter-available-kernelspecs))
+#+end_src
+
+#+RESULTS:
+: 
+: (("edelweissfe" "/home/nasser/.local/share/jupyter/kernels/edelweissfe" :argv ["/home/nasser/miniconda3/envs/edelweissFE/bin/python" "-m" "ipykernel_launcher" "-f" "{connection_file}"] :env nil :display_name "edelweissFE" :language "python" :interrupt_mode "signal" :metadata nil) ("python3" "/home/nasser/.local/lib/python3.8/site-packages/ipykernel/resources" :argv ["/usr/bin/python3" "-m" "ipykernel_launcher" "-f" "{connection_file}"] :env nil :display_name "Python 3" :language "python" :interrupt_mode "signal" :metadata nil))
+
+** Where =python= looks for modules?
+
+It looks to python files in =sys.path=.
+
+** Which =python= executable and version?
+
+#+begin_src shell
+which python
+python --version
+#+end_src
+
+#+RESULTS:
+: /usr/local/bin/python
+: Python 3.8.10
+
+** Which =pip= version and what is the current environment?
+
+#+begin_src shell
+pip -V
+which pip
+#+end_src
+
+#+RESULTS:
+: pip 20.0.2 from /usr/lib/python3/dist-packages/pip (python 3.8)
+: /usr/bin/pip
+
+** Where =pip= install packages?
+
+If it installed in the users folder (~)
+
+#+begin_src python
+pip list -v | grep jupy
+#+end_src
+
+#+RESULTS:
+: jupyter                1.0.0                /home/nasser/.local/lib/python3.8/site-packages         pip
+: jupyter-client         6.1.12               /home/nasser/.local/lib/python3.8/site-packages         pip
+: jupyter-console        6.4.0                /home/nasser/.local/lib/python3.8/site-packages         pip
+: jupyter-core           4.7.1                /home/nasser/.local/lib/python3.8/site-packages         pip
+: jupyterlab-pygments    0.1.2                /home/nasser/.local/lib/python3.8/site-packages         pip
+: jupyterlab-widgets     1.0.0                /home/nasser/.local/lib/python3.8/site-packages         pip
+: Note: you may need to restart the kernel to use updated packages.
+
+** How to install package for all users?
+
+I had to do this so Emacs could easily find =jupyter=.
+But I would say it is not a good practice.
+Better to keep the new python packages installations contained in a specific environment.
+
+#+begin_src shell
+sudo pip install jupyter
+#+end_src
+
+#+begin_src shell
+pip list -v | grep jupyter
+#+end_src
+
+#+RESULTS:
+: jupyter                1.0.0                /usr/local/lib/python3.8/dist-packages                  pip
+: jupyter-client         6.1.12               /home/nasser/.local/lib/python3.8/site-packages         pip
+: jupyter-console        6.4.0                /home/nasser/.local/lib/python3.8/site-packages         pip
+: jupyter-core           4.7.1                /home/nasser/.local/lib/python3.8/site-packages         pip
+: jupyterlab-pygments    0.1.2                /home/nasser/.local/lib/python3.8/site-packages         pip
+: jupyterlab-widgets     1.0.0                /home/nasser/.local/lib/python3.8/site-packages         pip
+
+** How to check package available?
+
+#+begin_src shell
+pip search pygments
+#+end_src
+
+#+RESULTS:
+** What is =setup.py=?
+A python file that is used to install a package.
+
+To install a package one calls =pip install .= in the root folder where the =setup.py= is located.
+
+An additional flag =-editable= (=-e=) can be passed in order to make it editable.
+This creates a symlinks to the source directory within the site-packages instead of just copying them.
+So changes in the source file would immediately be apparent.
+
+A =setup.py= contains the package metadata and package requirements.
+
+[[https://stackoverflow.com/questions/1471994/what-is-setup-py][python - What is setup.py? - Stack Overflow]]
+** What is a package?
+A folder that contains a =__init__.py= file.
+
+** How to use =pip= and =conda= together?
+
+Conda has limited ability to control packages that it did not install.
+
+Running conda after pip has the potential to overwrite packages installed with pip.
+
+It is acceptable to use both together if after initially installing with conda, subsequent installations occur with pip.
+
+[[https://www.anaconda.com/blog/using-pip-in-a-conda-environment#:~:text=In%20summary%2C%20when%20combining%20conda,to%20install%20any%20remaining%20software.&text=When%20appropriate%20conda%20and%20pip%20requirements%20should%20be%20stored%20in%20text%20files.][Anaconda | Using Pip in a Conda Environment]]
+
+* Packaging
+:PROPERTIES:
+:header-args:shell: :dir /mnt/c/Users/c8441205/OneDrive/Academy/Projects/package
+:END:
+** Goal
+
+If we want to use out package in a specific environment elsewhere we just =pip install -e .= inside the package folder.
+
+If we want to install the package for active development we use =pip install -r requirements.txt=
+
+If someone wants to use our code, they just need the source code, the =pip install .=.
+
+An example of the project structure is in [[https://github.com/nasseralkmim/package][GitHub - nasseralkmim/package]].
+
+** Folder structure
+
+#+begin_src shell
+tree . -L 2
+#+end_src
+
+#+RESULTS:
+#+begin_example
+.
+├── LICENSE.txt
+├── README.org
+├── docs
+├── examples
+│   └── example.py
+├── main.py
+├── package
+│   ├── __init__.py
+│   ├── __pycache__
+│   ├── module.py
+│   └── subpackage
+├── package.egg-info
+│   ├── PKG-INFO
+│   ├── SOURCES.txt
+│   ├── dependency_links.txt
+│   ├── requires.txt
+│   └── top_level.txt
+├── requirements.txt
+├── setup.cfg
+├── setup.py
+└── tests
+    ├── __init__.py
+    ├── __pycache__
+    ├── test_module1.py
+    └── test_module2.py
+
+8 directories, 17 files
+#+end_example
+
+** Setup files
+
+Used to specify how the package should be installed.
+
+The =setup.py= file contains a call to a =setup()= funciton.
+Whereas the =setup.cfg= is a more friendly way to add metadata about the package.
+
+#+begin_src shell
+cat setup.py
+#+end_src
+
+#+RESULTS:
+: from setuptools import setup
+: 
+: setup()
+
+The =setup.cfg= uses the standards providing by the distribution tool [[https://setuptools.readthedocs.io/en/latest/setuptools.html#configuring-setup-using-setup-cfg-files][Building and Distributing Packages with Setuptools — setuptools 57.0.0 docume...]]
+
+The directive =package = find:= [[https://setuptools.readthedocs.io/en/latest/userguide/package_discovery.html?highlight=find%3A#using-find-or-find-packages][from the manual]] automatically looks the for package directory (with =__init__.py=).
+
+#+begin_src shell
+cat setup.cfg
+#+end_src
+
+#+RESULTS:
+#+begin_example
+[metadata]
+name = package
+version = 0.0.1
+author = Nasser Alkmim
+description = package does this and that
+
+[options]
+package = find:
+install_requires =
+    numpy
+    pandas
+
+#+end_example
+
+The =install_requires= are the dependencies that your package have and that will be installed automatically when your package is installed with =pip install -e .=.
+
+** Developing requirements
+
+In the =requirements.txt= you can specific the package that you use to develop your package.
+For instance, the testing framework =pytest= or an auto formater =black=.
+
+You can also add the =-editable .= flag, so we just need to =pip install requirements.txt= to set up the whole project.
+
+#+begin_src shell
+cat requirements.txt
+#+end_src
+
+#+RESULTS:
+: pytest
+: -e .
+
+** Documentation
+*** Style
+There are basically three major styles, reStructuredText, Google and Numpy.
+I favor Google, because:
+1. simplicity;
+2. clarity;
+
+[[https://www.sphinx-doc.org/en/master/usage/extensions/example_google.html#example-google][Example Google Style Python Docstrings — Sphinx documentation]]
+*** Automatic generate documentation =sphinx=
+
+Is automatically generated with a =sphinx= package.
+
+You can use it with /numpydoc/ style, which I prefer, with the extension =sphinx.ext.napoleon=.
+*** Automatic hosting formatted
+
+For hosting you will need a =.readthedocs.yml= project root folder.
+
+#+begin_src shell
+cat .readthedocs.yml
+#+end_src
+
+#+RESULTS:
+: python:
+:   setup_py_install: true
+
+** Continous integration
+Travis-CI.
+Used to run tests every time code is uploaded to Github.
+
+** Intra module importing
+
+[[https://docs.python.org/3/tutorial/modules.html#packages][6. Modules — Python 3.9.5 documentation]]
+
+
+If we want to import function from other modules inside out package or in subpackages.
+
+When importing a package python looks in the =sys.path= for the folder with the package name.
+
+Python knows that a directory is a package when it has a =__init__.py= file in it.
+
+In =submodule.py= (module inside a subpackage), we want to use a function that was defined in =module.py=
+
+#+begin_src shell
+cat package/subpackage/submodule.py
+#+end_src
+
+#+RESULTS:
+#+begin_example
+from package import module
+
+
+def func_2():
+    print('This is a module2 function!!')
+
+
+def func_1():
+    sum = module.func_b(2, 3)
+    print(sum, 'From module 1')
+    return sum
+#+end_example
+
+we import the specific mo
+
+** Editable installs
+
+Useful to write a package and make it available to python use it anywhere on your system.
+So you can keep development centralized in one place.
+
+In the folder the the =requirements.txt= we call =pip= from the desirable python environment as,
+
+#+begin_src shell
+pip -V
+pip install -r requirements.txt
+#+end_src
+
+#+RESULTS:
+#+begin_example
+pip 20.0.2 from /usr/lib/python3/dist-packages/pip (python 3.8)
+Obtaining file:///mnt/c/Users/c8441205/OneDrive/Academy/Projects/package (from -r requirements.txt (line 2))
+Requirement already satisfied: pytest in /home/nasser/.local/lib/python3.8/site-packages (from -r requirements.txt (line 1)) (6.2.4)
+Requirement already satisfied: numpy in /home/nasser/.local/lib/python3.8/site-packages (from package==0.0.1->-r requirements.txt (line 2)) (1.20.2)
+Requirement already satisfied: pandas in /home/nasser/.local/lib/python3.8/site-packages (from package==0.0.1->-r requirements.txt (line 2)) (1.2.4)
+Requirement already satisfied: iniconfig in /home/nasser/.local/lib/python3.8/site-packages (from pytest->-r requirements.txt (line 1)) (1.1.1)
+Requirement already satisfied: toml in /home/nasser/.local/lib/python3.8/site-packages (from pytest->-r requirements.txt (line 1)) (0.10.2)
+Requirement already satisfied: attrs>=19.2.0 in /usr/lib/python3/dist-packages (from pytest->-r requirements.txt (line 1)) (19.3.0)
+Requirement already satisfied: packaging in /home/nasser/.local/lib/python3.8/site-packages (from pytest->-r requirements.txt (line 1)) (20.9)
+Requirement already satisfied: py>=1.8.2 in /home/nasser/.local/lib/python3.8/site-packages (from pytest->-r requirements.txt (line 1)) (1.10.0)
+Requirement already satisfied: pluggy<1.0.0a1,>=0.12 in /home/nasser/.local/lib/python3.8/site-packages (from pytest->-r requirements.txt (line 1)) (0.13.1)
+Requirement already satisfied: pytz>=2017.3 in /home/nasser/.local/lib/python3.8/site-packages (from pandas->package==0.0.1->-r requirements.txt (line 2)) (2021.1)
+Requirement already satisfied: python-dateutil>=2.7.3 in /home/nasser/.local/lib/python3.8/site-packages (from pandas->package==0.0.1->-r requirements.txt (line 2)) (2.8.1)
+Requirement already satisfied: pyparsing>=2.0.2 in /home/nasser/.local/lib/python3.8/site-packages (from packaging->pytest->-r requirements.txt (line 1)) (2.4.7)
+Requirement already satisfied: six>=1.5 in /usr/lib/python3/dist-packages (from python-dateutil>=2.7.3->pandas->package==0.0.1->-r requirements.txt (line 2)) (1.14.0)
+Installing collected packages: package
+  Attempting uninstall: package
+    Found existing installation: package 0.0.1
+    Uninstalling package-0.0.1:
+      Successfully uninstalled package-0.0.1
+  Running setup.py develop for package
+Successfully installed package
+#+end_example
+
+** Using the package
+
+Now we should be able to use =package=.
+
+#+begin_src python
+import sys
+print(sys.version)
+print(sys.path)
+import package.module           # importing  a module
+package.module.func_a()         # calling a function with full name
+#+end_src
+
+#+RESULTS:
+: 3.8.10 (default, Jun  2 2021, 10:49:15) 
+: [GCC 9.4.0]
+: ['/mnt/c/Users/c8441205/OneDrive/nasser-website/content/notes/python-notes', '/usr/lib/python38.zip', '/usr/lib/python3.8', '/usr/lib/python3.8/lib-dynload', '', '/home/nasser/.local/lib/python3.8/site-packages', '/mnt/c/Users/c8441205/OneDrive/Academy/Projects/package', '/usr/local/lib/python3.8/dist-packages', '/usr/lib/python3/dist-packages', '/home/nasser/.local/lib/python3.8/site-packages/IPython/extensions', '/home/nasser/.ipython']
+: This is a module2 function!!
+
+
+** Testing
+*** What is the relation between =pytest= and =tox=?
+
+=tox= aims to (i) automate and (ii) standardize testing.
+It works with virtual environments (with predefined dependencies) and testing tools (like =pytest=).
+So it will run tests in the environment and not against your source code, ensure more reliable distribution.
+
+
+It is useful if you plan to distribute your package for a larger audience where multiple environments might be used.
+For instance, multiple python versions.
+So, =tox= sets up your testing suit to run against all the provided versions.
+
+=pytest= is a framework for writing tests.
+It is very easy and convenient to write and run the tests, which incentives a good programming practice.
+So, definitely use it.
+*** Where tests should be put?
+Separate folder, outside the source code.
+
+In this separate folder we can import our code that was installed with =pip install --editable ..=
+
+If you don’t have a =setup.py= file and are relying on the fact that Python by default puts the current directory in =sys.path= to import your package, you can execute =python -m pytest= to execute the tests against the local copy directly, without using =pip=.
+But is better to have it installed as package with =setup.py=.
+
+*** How =pytest= know which tests to run?
+
+It looks in the =/package/test/= folder for files with =*_test.py= convention.
+In those files it collects =test_*()= prefixed functions (or methods in =Test= classes)
+*** Running a test
+After the package was installed we just need to import the function in the test files and run =pytest=.
+
+#+begin_src shell
+python -m pytest 
+#+end_src
+
+#+RESULTS:
+: ============================= test session starts ==============================
+: platform linux -- Python 3.8.10, pytest-6.2.4, py-1.10.0, pluggy-0.13.1
+: rootdir: /mnt/c/Users/c8441205/OneDrive/Academy/Projects/package
+: collected 2 items
+: 
+: tests/module_test.py .                                                   [ 50%]
+: tests/submodule_test.py .                                                [100%]
+: 
+: ============================== 2 passed in 0.25s ===============================
+
+** Requirements not on Pypi
+[[https://setuptools.readthedocs.io/en/latest/userguide/dependency_management.html#dependencies-that-aren-t-in-pypi][Dependencies Management in Setuptools — setuptools 57.0.0 documentation]]
+
+In the requirements.txt add
+
+#+begin_example
+install_requires = [
+non_pypi @ https://github.com/package_repo
+]
+#+end_example
+
+1. packages that are not a single =.py= file need to append to the link =#egg=version=.
+* Style guide
+** Prologue
+A good and well rationalized convention is the one from google: https://google.github.io/styleguide/pyguide.html.
+
+A complete example can be found here [[https://sphinxcontrib-napoleon.readthedocs.io/en/latest/example_google.html][Example Google Style Python Docstrings — napoleon 0.7 documentation]].
+
+[[https://www.sphinx-doc.org/en/master/usage/extensions/napoleon.html][sphinx.ext.napoleon – Support for NumPy and Google style docstrings — Sphinx ...]]
+** Type hint
+*** Benefits of type hinting
+
+
+It helps documenting arguments and returns.
+It makes easier to read code.
+It can be used to improve speed of program execution.
+
+This is similar with C++ standard.
+But _it does not perform a type checking_.
+Python does not enforce those annotations.
+What is the point then?
+It allows for tools to perform this check.
+
+*** Type hinting with =typing= module
+New in python 3.5.
+
+[[https://docs.python.org/3/library/typing.html][typing — Support for type hints — Python 3.9.6 documentation]]
+
+
+#+begin_src python
+from typing import Union
+import numpy as np
+
+def hello_function(name: str) -> Union[str, np.ndarray]:
+    arr = np.empty(3)
+    return f"Hello {name}", arr
+
+print(hello_function('Jul'))
+print(hello_function.__annotations__)
+#+end_src
+
+#+RESULTS:
+: ('Hello Jul', array([6.9448297e-310, 6.9448297e-310, 1.5810101e-322]))
+: {'name': <class 'str'>, 'return': typing.Union[str, numpy.ndarray]}
+
+Remarks:
+1. =Union= is a type with subtypes.
+
+*** Type hint with user defined type
+
+
+#+begin_src python :session udt
+class Labels:
+    def __init__(self):
+        self.first_label = 'first'
+
+class Trades:
+    def __init__(self, labels: Labels):
+        self.labels = labels
+
+labels = Labels()
+trade = Trades(labels)
+print(trade.labels.first_label)
+#+end_src
+
+#+RESULTS:
+: first
+
+*** PEP 563 - Postponed evaluation of annotations
+[[https://docs.python.org/3/whatsnew/3.7.html#pep-563-postponed-evaluation-of-annotations][What’s New In Python 3.7 — Python 3.9.6 documentation]]
+
+Need to add =from __future__ import annotations=.
+So we can use names that were not referenced before.
+When running python versions less than 3.10.
+Right now I'm running
+
+#+begin_src shell
+python -V
+#+end_src
+
+#+RESULTS:
+: Python 3.8.10
+
+#+begin_src python
+class C:
+    def __init__(self, source: str) -> C:
+        pass
+#+end_src
+
+#+RESULTS:
+:RESULTS:
+# [goto error]
+#+begin_example
+
+NameErrorTraceback (most recent call last)
+<ipython-input-2-88d77d16c870> in <module>
+----> 1 class C:
+      2     def __init__(self, source: str) -> C:
+      3         pass
+
+<ipython-input-2-88d77d16c870> in C()
+      1 class C:
+----> 2     def __init__(self, source: str) -> C:
+      3         pass
+
+NameError: name 'C' is not defined
+#+end_example
+:END:
+
+This works with this python version.
+
+#+begin_src python
+from __future__ import annotations
+class C:
+    def __init__(self, source: str) -> C:
+        pass
+#+end_src
+
+#+RESULTS:
+
+*** PEP 526 - Variable annotations
+
+[[https://www.python.org/dev/peps/pep-0526/][PEP 526 -- Syntax for Variable Annotations | Python.org]]
+
+
+
+*** PEP 585 - Type hinting generics in standard collections
+
+For new python 3.9.
+Or from python 3.7 with =from __future__ import annotations=.
+Generic collections such as: =list, dict, tuple=.
+
+With src_shell{python -V} {{{results(=Python 3.8.10=)}}}:
+
+#+begin_src python :session generic-collection
+def func(stack: list[int]) -> list[int]:
+    stack.append(10)
+    return stack
+l = [1, 2]
+func(l)
+print(l)
+#+end_src
+
+#+RESULTS:
+:RESULTS:
+# [goto error]
+: 
+: TypeErrorTraceback (most recent call last)
+: <ipython-input-1-e9c487a88009> in <module>
+: ----> 1 def func(stack: list[int]) -> list[int]:
+:       2     stack.append(10)
+:       3     return stack
+:       4 l = [1, 2]
+:       5 func(l)
+: 
+: TypeError: 'type' object is not subscriptable
+:END:
+
+Then we need:
+
+#+begin_src python :session generic-col-future
+from __future__ import annotations
+def func(stack: list[int]) -> list[int]:
+    stack.append(10)
+    return stack
+l = [1, 2]
+func(l)
+print(l)
+#+end_src
+
+#+RESULTS:
+: [1, 2, 10]
+
+**** =mypy= type checker
+
+Mypy is a static checker.
+It checks if the type hints are correct, like a more robust linter.
+
+Why should we use this?
+By getting into the habit of always specifying the type the program becomes easier to read since the types are clear.
+
+It can be integrated in an IDE.
+Flycheck in Emacs, for instance, which is included in the lsp package.
+
+
+** Automatic documentation generator
+*** Pycco
+
+Generates documentation with code side by side.
+
+Nice for projects with low complexity since we can see the source and the comments in a nice way.
+** Good practices
+*** Don't repeat yourself
+**** Example 1 processing a portfolio
+
+1. multiple function calls with same argument.
+   1. this is begging for an abstraction into a class with common attributes
+2. multiple state change of the object 'portfolio'
+
+#+begin_src python
+def process(trades):
+    """Consolidates trade data into a portfolio DataFrame with current holdings.
+
+    Note:
+        Saves into a '.csv' file.
+
+    Args:
+        trades (DataFrame): processed trades data.
+
+    """
+    portfolio = pd.DataFrame()
+    portfolio = net_position(trades, portfolio)
+    portfolio = average_purchase_price(trades, portfolio)
+    portfolio = current_price(portfolio)
+    portfolio = profit_and_loss(portfolio)
+    portfolio = current_value(portfolio)
+    portfolio = sector(portfolio)
+    portfolio.to_csv(labels.PORTFOLIO_FILE)
+    return portfolio
+#+end_src
+
+*** Avoid bare exceptions
+To avoid naked errors.
+When an exception is caught it hide all errors, even the ones we do not expect. 
+
+*** Naming conventions
+
+Function should be imperative, with verbs.
+Makes a little more explicit what the function is doing.
+
+Naming function with verb follower by object construct.
+Direct voice is more clear.
+For instance =process_trades()=.
+
+Variables is better name followed by adjective.
+For instance =trades_processed= is better that =processed_trades=.
+
+*** Avoid multiple behavior for the same name
+
+For instance, =trades_processed= can be a single dataframe or a list with dataframes.
+It is better to separate, =trades_processed_collection= for the list of =trades_processed.=
+
+* Virtual environments
+** Rationale
+We want to isolate specific python installations.
+This is called environment.
+
+In each python installation we can have a specific set of libraries for a specific use case.
+
+Why? This is a more organizing way to deal with package dependencies.
+
+
+** Using =conda=
+*** Conda automatically adding to lines to =~/.bashrc=?
+When conda is installed, the shell will have a =(base)= in front of the prompt when conda is activated.
+
+=conda= will add lines to the =.bashrc= for automatically activation of the default =conda= environment.
+To avoid that type =conda config --set auto_activate_base false=.
+
+*** Manually adding =conda= do path?
+
+Not recommended, [[https://github.com/conda/conda/releases/tag/4.4.0][Release 4.4.0 (2017-12-20) · conda/conda · GitHub]].
+
+Recommended is to run =~/miniconda3/bin/conda init= directly, without adding to path.
+
+This will modify the =.bashrc= file.
+
+Then you will be able to =conda=.
+
+
+** Create environment
+
+=conda create --name myenv=
+
+** Activate environment
+
+=conda activate myenv=
+
+or =pip -V= to see which one is been called.
+
+** Available environments
+
+#+begin_src shell
+conda env list
+#+end_src
+
+#+RESULTS:
+
+** Adding an environment to Jupyter
+
+Install =ipykernel= inside your environment.
+=ipykernel= provides Ipython kernel for Jupyter.
+
+#+begin_src shell
+conda activate myenv
+conda install ipykernel
+#+end_src
+
+#+RESULTS:
+
+To add a virtual environment to Jupyter use:
+=python -m ipykernel install --user --name=myenv=
+
+This should install the "kernelspec myenv". at a jupyter folder with a =kernel.json= file with its properties.
+
+Now this kernel is available for Jupyter.
+This can be check with =jupyter kernelspec list=
+
+** Managing multiple python versions
+
+Currently with, src_shell{python --version} {{{results(=Python 3.8.10=)}}}.
+
+#+begin_src shell
+which python
+python --version
+#+end_src
+
+#+RESULTS:
+: /usr/local/bin/python
+: Python 3.8.10
+
+But I just installed python 3.9 from =sudo add-apt-repository ppa:deadsnakes/ppa=.
+
+<2021-08-20 Fri> Better to not change the system python version installed with =sudo apt install python3=.
+If you want to use a new python version, install with =apt= and use it in a virtual environment.
+
+
+** What is =virtualenvwrapper=?
+
+Set of shell functions.
+
+Enhances =virtualenv= package.
+
+But is better to just use the built it =venv=.
+
+** What is =pyenv=?
+<2021-08-20 Fri> not officially recommended anymore, standard =venv= is the recommended way.
+
+Python version manager.
+It is a =bash= extension (shell).
+
+Allow easy switch between multiple versions of Python.
+
+Does not depend on python.
+It substitutes manual management with virtualenv.
+
+** What is =virtualenv=?
+
+Python environment manager.
+It is a python implementation, works everywhere.
+
+It addresses the problem of dependency on different versions of a library.
+
+** Python should be installed in =/usr/bin/= or =/usr/local/bin=?
+[[https://stackoverflow.com/questions/41992104/usr-bin-python-vs-usr-local-bin-python][linux - /usr/bin/python vs /usr/local/bin/python - Stack Overflow]]
+
+=/usr/bin= is for the operating system programs and programs installed with the package manager (=apt=, =pacman=).
+
+=/usr/local/bin= is for programs not part of the operating system and installed by the /administrator/ with (make, make install).
+
+In my case I have =python= in both.
+
+#+begin_src shell
+ls -la /usr/local/bin | grep python
+#+end_src
+
+#+RESULTS:
+: -rwxr-xr-x  1 root root      224 Jun 23 16:49 ipython
+: -rwxr-xr-x  1 root root      224 Jun 23 16:49 ipython3
+: lrwxrwxrwx  1 root root       16 May  7 18:18 python -> /usr/bin/python3
+
+In this case, when I call =python= it links to the =/usr/bin/python3= since =/usr/local/bin= has precendence on my =$PATH=,
+
+#+begin_src shell
+echo $PATH | grep --color /usr/local/bin
+#+end_src
+
+#+RESULTS:
+: /usr/local/go/bin:/home/nasser/.local/bin:/usr/local/go/bin:/home/nasser/miniconda3/condabin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/local/games:/mnt/c/Program Files/WindowsApps/28644OpticosStudios.GWSL_1.4.3.0_x64__r3mwbcqrwk84r/GWSL:/mnt/c/SIMULIA/Commands:/mnt/c/Program Files/Microsoft MPI/Bin/:/mnt/c/Program Files/ImageMagick-7.0.11-Q16-HDRI:/mnt/c/WINDOWS/system32:/mnt/c/WINDOWS:/mnt/c/WINDOWS/System32/Wbem:/mnt/c/WINDOWS/System32/WindowsPowerShell/v1.0/:/mnt/c/Program Files/PuTTY/:/mnt/c/WINDOWS/System32/OpenSSH/:/mnt/c/ProgramData/chocolatey/bin:/mnt/c/Program Files/PowerShell/7/:/mnt/c/Users/c8441205/AppData/Local/SumatraPDF:/mnt/c/Program Files/dotnet/:/mnt/c/Program Files/ParaView 5.9.1-Windows-Python3.8-msvc2017-64bit/bin:/mnt/c/Program Files/Inkscape/bin:/mnt/c/Users/c8441205/AppData/Local/Microsoft/WindowsApps:/mnt/c/Users/c8441205/AppData/Local/Programs/Microsoft VS Code Insiders/bin:/home/nasser/go/bin:/home/nasser/go/bin
+
+Which is not ideal.
+Better to remove this link and use the correct python from the system installed with the package manager.
+An use explicitly python3 to refer to python version 3 and above.
+
+In the =/usr/bin= folder we can see that =python3= links to python 3.8, even though I installed an updated version of python.
+
+#+begin_src shell
+ls -la /usr/bin | grep python
+#+end_src
+
+#+RESULTS:
+#+begin_example
+-rwxr-xr-x  1 root   root        1057 Mar 13  2020 dh_python2
+lrwxrwxrwx  1 root   root          23 Mar  8 14:02 pdb2.7 -> ../lib/python2.7/pdb.py
+lrwxrwxrwx  1 root   root          23 Jun  2 12:49 pdb3.8 -> ../lib/python3.8/pdb.py
+lrwxrwxrwx  1 root   root          23 Jul  3 18:40 pdb3.9 -> ../lib/python3.9/pdb.py
+lrwxrwxrwx  1 root   root          31 Mar 13  2020 py3versions -> ../share/python3/py3versions.py
+lrwxrwxrwx  1 root   root           7 Apr 15  2020 python -> python2
+lrwxrwxrwx  1 root   root          14 Apr 15  2020 python-config -> python2-config
+lrwxrwxrwx  1 root   root           9 Mar 13  2020 python2 -> python2.7
+lrwxrwxrwx  1 root   root          16 Mar 13  2020 python2-config -> python2.7-config
+-rwxr-xr-x  1 root   root     3674216 Mar  8 14:02 python2.7
+lrwxrwxrwx  1 root   root          33 Mar  8 14:02 python2.7-config -> x86_64-linux-gnu-python2.7-config
+lrwxrwxrwx  1 root   root           9 Mar 13  2020 python3 -> python3.8
+lrwxrwxrwx  1 root   root          16 Mar 13  2020 python3-config -> python3.8-config
+-rwxr-xr-x  1 root   root     5490352 Jun  2 12:49 python3.8
+lrwxrwxrwx  1 root   root          33 Jun  2 12:49 python3.8-config -> x86_64-linux-gnu-python3.8-config
+-rwxr-xr-x  1 root   root     5397680 Jul  3 18:40 python3.9
+lrwxrwxrwx  1 root   root          29 Mar 13  2020 pyversions -> ../share/python/pyversions.py
+lrwxrwxrwx  1 root   root          33 Mar 13  2020 x86_64-linux-gnu-python2-config -> x86_64-linux-gnu-python2.7-config
+-rwxr-xr-x  1 root   root        2971 Mar  8 14:02 x86_64-linux-gnu-python2.7-config
+lrwxrwxrwx  1 root   root          33 Mar 13  2020 x86_64-linux-gnu-python3-config -> x86_64-linux-gnu-python3.8-config
+-rwxr-xr-x  1 root   root        3241 Jun  2 12:49 x86_64-linux-gnu-python3.8-config
+#+end_example
+
+Now to specify the link of =python3= to the desired python 3 version, I just removed the old link to =python3.8= and updated it to =python3.9=
+Not sure if this is ideal, but I think it is better than the =update-alternative=.
+
+** What is the difference between =venv= and =virtualenv=?
+=venv= in a subset of =virtualenv= and is integrate in python3.
+
+Since it is built in, it is better to just use the =venv=.
+
+** Using =venv=?
+[[https://docs.python.org/3/library/venv.html][venv — Creation of virtual environments — Python 3.9.6 documentation]]
+
+Then =/pythonX.X -m  venv /.virtualenvs/venvname=
+
+I had to install the =sudo apt install python3.9-venv= for the specific python version that I wanted.
+
+to activate just =source ~/.virtualenvs/venvname/activate.=
+
+Since everything in the virtualenv is contained separated from the system python, to remove a virtualenv, we can simply delete it.
+
+* Programming Concepts
+** Handling exceptions
+An exception error occurs even if the code is syntactically correct.
+
+=raise= throw an error when it is run.
+
+=assert= check a condition and throw an error if it fails.
+
+=try= and =except= block is used to handle exceptions in the algorithm.
+The =try= is run normally, and the =except= when an exception happen.
+This way we can handle the exception without crashing the program.
+** OOP versus functional
+*** Classes with methods or module with function?
+
+Classes are good:
+1. if you want multiple instanced of the object defined by it.
+2. if the functions work on "shared state" of the data.
+3. if function change the "state" of the data.
+   1. classes group data with operations
+
+
+Function are good:
+1. when they are "pure"
+   1. input and output are clear, input does not depend on external state.
+   2. question and answer are straightforward.
+   3. they are self-contained.
+   4. they composable: self contained and stateless.
+2. when they have no side effect
+   1. they do not change "state" of the data that is important elsewhere outside the function
+
+[[https://stackoverflow.com/questions/40929959/why-use-python-classes-over-modules-with-functions][Why use python classes over modules with functions? - Stack Overflow]]
+*** Pure functions
+In a pure function:
+1. return value is the only observable output.
+2. the output depends only on the arguments.
+
+
+[[https://stackoverflow.com/questions/602444/functional-declarative-and-imperative-programming][terminology - Functional, Declarative, and Imperative Programming - Stack Ove...]]
+
+*** Functional programming and imperative
+
+Functional is a form of declarative programming.
+You declare something, then you use anyway you want.
+What the computer can/will do.
+
+Imperative is procedural.
+The order of execution matters.
+What the steps for the computer do.
+
+[[https://stackoverflow.com/questions/17826380/what-is-difference-between-functional-and-imperative-programming-languages][oop - What is difference between functional and imperative programming langua...]]
+
+** Composition versus aggregation
+
+In composition one class acts as a *container* of the other.
+_One class attribute is an object of another class._
+There is an "owner-owned" relation, "composite-component".
+There is also a "_has a_" relationship.
+
+
+#+begin_src python :session composition
+class Trades:
+    def __init__(self):
+        self.labels = Labels()  # composition
+
+class Labels:
+    def __init__(self):
+        self.LABEL = 'this is a label'
+
+    def set_label(self, **kwargs: str):
+        """Set a label."""
+        self.__dict__.update(kwargs)
+	
+
+trades = Trades()               # no need to create extra "Label" object!
+print(trades.labels.LABEL)
+trades.labels.set_label(OTHER_LABEL='other label')
+print(trades.labels.OTHER_LABEL)
+#+end_src
+
+#+RESULTS:
+: this is a label
+: other label
+
+Aggregation is a form of composition.
+However, _instead of instantiating an object inside the other class we just pass the instance_.
+There as "user-used" relation.
+
+
+#+begin_src python :session aggregation
+class Trades:
+    def __init__(self, labels: Labels):
+        self.labels = labels    #  aggregation
+
+class Labels:
+    def __init__(self):
+        self.LABEL = 'this is a label'
+
+    def set_label(self, **kwargs: str):
+        """Set a label."""
+        self.__dict__.update(kwargs)
+	
+labels = Labels()               # extra object! increases complexity
+trades = Trades(labels)
+print(trades.labels.LABEL)
+trades.labels.set_label(OTHER_LABEL='other label')
+print(trades.labels.OTHER_LABEL)
+#+end_src
+
+#+RESULTS:
+: this is a label
+: other label
+
+
+*Main difference*: the object instance passed is independent, "property" is not required.
+Whereas in composition, the dependence is stronger, in order for a =Labels= object to exist, we need a =Trades= class.
+
+For this use case I prefer aggregation because:
+1. in composition the "trades" own the "labels", which is no adequate because other classes can also benefit from the "labels" (portfolio, visualization, analysis).
+2. in aggregation _labels exist independently_ of the trades.
+
+After some thought, I changed my mind:
+1. with composition I can _hide information_, avoiding complexity.
+   1. there is _no need_ to create a separate object.
+   
+[[https://realpython.com/inheritance-composition-python/][Inheritance and Composition: A Python OOP Guide – Real Python]]
+
+** Composition versus inheritance
+
+In inheritance there is a *"is a"* relationship, whereas composition represents a "has a" relationship.
+There is a "base" class and a "derived" class which extends the base.
+Every class in python is derived from =object= class.
+
+Inheritance is useful when a new class may also use the same functionalities of the parent.
+The new class, or /child/, also can change some specific functionality to adequate to its needs.
+So we don't need to re-implement methods from the base class.
+
+My comments:
+1. inheritance should be exclusive to very obvious relations.
+2. abstract family trees makes the code complex and hard to understand.
+
+#+begin_src python :session inheritance
+class Labels:
+    def __init__(self):
+        self.LABEL = 'this is a label'
+    def base_class_method(self):
+        print('from the parent!')
+
+    def set_label(self, **kwargs: str):
+        """Set a label."""
+        self.__dict__.update(kwargs)
+	
+class Trades(Labels):           # "Labels" should be defined prior to calling here
+    def __init__(self):
+        super().__init__()  # initialize members of Labels (parent class)
+
+
+trades = Trades()
+print(trades.LABEL)             # acces members of parent directly!
+trades.base_class_method()      # child can access parent methods!
+#+end_src
+
+#+RESULTS:
+: this is a label
+: from the parent!
+
+Remarks:
+1. with inheritance, we don't have verbose of composition.
+   1. use =trades.LABEL= instead of =trades.labels.LABEL=
+2. _in this case_, it does NOT make sense to have inheritance because the abstraction is not a "is a" relationship.
+   1. the trades ARE NOT labels!
+   2. really is a composition case because the trades HAVE labels.
+3. it is easier to *combine components* with composition than inheritance.
+   1. usually good candidates for inheritance share *common traits*, requiring some deep thought about the problem at hand, which is hard when the problem is too abstract.
+4. long term benefits of composition:
+   1. "better to extend what an object *can do* than extend what an object *is*".
+   2. easier to think about *"behavior"* of an object than *"nature"* and abstract family-tree.
+ 
+[[https://realpython.com/inheritance-composition-python/#:~:text=Composition%20enables%20you%20to%20reuse,one%20class%20from%20the%20other.][Inheritance and Composition: A Python OOP Guide – Real Python]]
+[[https://en.wikipedia.org/wiki/Composition_over_inheritance#cite_note-FOOTNOTEGammaHelmJohnsonVlissides199420-3][Composition over inheritance - Wikipedia]]
+
+** Data classes
+[[https://www.python.org/dev/peps/pep-0557/][PEP 557 -- Data Classes | Python.org]]
+
+Regular classes that are designed for *storing state*.
+Just makes less verbose and easy.
+It is useful when a class has mostly attributes.
+
+The decorator =@dataclass= inspects the class definition for variables with _type annotation_.
+
+#+begin_src python :session dataclass
+from dataclasses import dataclass
+
+@dataclass
+class Inventory:
+    """Keeps track of inventory."""
+    name: str
+    average_cost: float
+    quantity: float
+
+    def total_coast(self) -> float:
+        return self.average_cost * self.quantity
+inventory = Inventory('cookies', 1.2, 235)
+#+end_src
+
+#+RESULTS:
+: <bound method __create_fn__.<locals>.__eq__ of Inventory(name='cookies', average_cost=1.2, quantity=235)>
+
+** Instance attribute from method
+
+Avoid methods that create attributes.
+
+Methods that create instance attributes are methods with "side-effects".
+Changing the order of execution of the methods affects the state of the instance attributes.
+
+
+
+** Dispatcher function and decorators
+A dispatcher function will conditionally call a function.
+
+The condition might be a different behavior for a different type.
+
+Decorators transform how a function works.
+They are represented by a function that returns a function.
+When =@= calls a decorator, the subsequent function is passed as argument to the decorator function.
+
+
+*** Dispatcher with `if-elif` approach
+
+If we add a new method we need to add a new =elif= condition explicitly.
+This solution is error prone since we are hard coding the possible =linsolverName= value.
+Not robust, since it leads to friction when implementing a new solver.
+Inefficient since a chain of if's is O(n).
+
+#+begin_src python :session dispatcher
+def getLinSolverByName(linsolverName):
+    if linsolverName == 'superlu':
+        pass
+    elif linsolverName == 'umfpack':
+        pass
+    elif linsolverName == 'pardiso':
+        pass
+    elif linsolverName == 'amgcl':
+        pass
+    else:
+        pass
+#+end_src
+
+#+RESULTS:
+
+*** Dispatcher table
+
+Each function is the value of a key with its name string.
+Better than a chain of if-elif's.
+Collect all the options in a single dictionary.
+
+Less code is needed to implement a new solver.
+
+The dispatcher call is independent of the /handlers for the various cases/, making it more *robust*.
+
+The single dictionary call substitute the O(n) if-chain routine.
+
+If the identification does not exist the dictionary =get()= method returns =None=, which needs to the handled properly.
+
+#+begin_src python :session dispatcher-teble
+dispatcher = {
+'superlu': 2,                # instead of 2 pass a the `superlu` function
+'pardiso': 3,
+'amgcl': 4,
+}
+
+solver = dispatcher.get('su2perlu')  # dispatcher call
+if solver is None:
+    solver = 6                      # default solver
+    
+print(solver)
+#+end_src
+
+#+RESULTS:
+: 6
+
+*** Decorator syntax
+
+The "decorated" function is passed to the decorator and the function _returned_ is used instead.
+
+#+begin_src python
+def decorator(func):
+    def bar():
+        print('bar is executing')
+    return bar
+
+@decorator
+def foo():
+    print('foo is executing')
+
+foo()
+#+end_src
+
+#+RESULTS:
+: bar is executing
+
+
+* Fundamentals
+** Conditional return
+
+#+begin_src python :session conditional-return
+def f(arg):
+    if arg is True:
+        return 'Arg is True'
+    if arg is False:
+        return 'Arg is False'
+    print('what happens after the functions \'return\'?')
+print(f(True))
+print(f(False))
+#+end_src
+
+#+RESULTS:
+: Arg is True
+: Arg is False
+
+Remarks:
+1. as soon as the first =return= statement is called, the function execution is over.
+** Exceptions
+
+Ignoring errors is bad.
+The except block runs when there is an exception.
+If no exception is specified, any will trigger the block.
+
+#+begin_src python :session exception
+try:
+    x = 0/0
+except:
+    pass
+#+end_src
+
+#+RESULTS:
+* Packages
+** =pybind11=
+*** What is =pybind11=?
+[[https://pybind11.readthedocs.io/en/stable/index.html][Intro — pybind11 documentation]]
+
+C++ header only library that exposes C++ types in python and vice-versa.
+
+Its goal is to make this connection easy with minimal boilerplate.
+
+Since its header only, it is not necessary to link against any special libraries.
+
+Manually, we could just call the compiler with the path to includes for =pybind11= headers.
+
+*** What C++ features can be used in python?
+
+Function and methods from C++ can be mapped to python.
+
+Multiple other features as well.
+
+*** How is it included?
+
+Included here means how is =pybind11= header files going to be available.
+
+One method is to add the =pybind11= as a _submodule_ into the git project.
+After that we just need to tell the compiler where the heading are =<path to pybind11>/include/=.
+Or use some 'integration tool', build systems.
+
+
+Alternatively to the git submodule, we can also download =pybind11= as a python package from PyPI.
+=pip install pybind11= will put the files in the correspondent python environment where =pip= is been called.
+
+
+
+*** How is it integrated (built) in a project?
+
+To integrate in a python package, we need to build =pybind11=.
+
+There are multiple ways to do it.
+
+Using the python =setup.py= and the =setuptools=.
+
+
+For C++ projects, we need just to add a few lines into =CMakeLists.txt=.
+Something like this:
+
+#+begin_example
+cmake_minimum_required(VERSION 3.4...3.18)
+project(example LANGUAGES CXX)
+
+add_subdirectory(pybind11)
+pybind11_add_module(example example.cpp)
+#+end_example
+
+In the case of the package =amgcl=, which is a C++ library, it is included in the =CMakeLists.txt= file for cmake build =pybind11=.
+This will install (copy to the appropriate site package) the python library =pypind11=.
+=pybind11= provides this CMake function =pybind11_add_module= that takes care of installing the python library on any system.
+
+#+begin_src shell
+pip list | grep pybind11
+#+end_src
+
+#+RESULTS:
+: pybind11            2.7.0
+
+
+*** How is it used?
+:PROPERTIES:
+:ID:       b5954efc-0570-4afe-a457-e4b6b1edb24d
+:END:
+:BACKLINKS:
+[2021-07-20 Tue 16:28] <- [[id:22bc44d8-1015-4529-8f90-3a7eb42ca202][How to use it with python?]]
+:END:
+
+We have this C++ code with the binding code together (they can be separated). 
+
+#+begin_src C++ :tangle pybind11/example.cpp :mkdirp yes
+#include <pybind11/pybind11.h>
+
+int add(int i, int j) {
+    return i + j;
+}
+
+PYBIND11_MODULE(example, m) {
+    m.doc() = "pybind11 example plugin"; // optional module docstring
+
+    m.def("add", &add, "A function which adds two numbers");
+}
+#+end_src
+
+#+RESULTS:
+
+Remarks:
+1. the =PYBIND11_MODULE= is a macro that creates a function that will be called when we =import= in python.
+   1. =example= is the name of the module (=import example= in python)
+   2. =m= defines the variable type
+
+*** Compiling the =.cpp= file
+
+#+begin_src shell :dir pybind11
+c++ -O3 -Wall -shared -std=c++11 -fPIC $(python3-config --includes) -I/mnt/c/Users/c8441205/OneDrive/Academy/PhD/softwares/EdelweissFE/fe/linsolve/amgcl/amgcl/pyamgcl/pybind11/include example.cpp -o example$(python3-config --extension-suffix)
+#+end_src
+
+#+RESULTS:
+
+Remarks:
+1. The =-I= flag should point to =<path-to-pybind11>/include=.
+   1. this works together with =python3-config --includes=.
+   2. this is used to tell the compiler where the include files are (header files).
+2. =$(python3-config --includes)= fetches the includes path for python. 
+3. This compilation (building) will produce a binary module that can be imported to python.
+4. =-O3= optimizes
+5. =-Wall= warning all
+6. =-shared=
+7. =-fPIC= position independent code suitable for dynamic linking.
+
+#+begin_src shell  :dir pybind11
+ls
+#+end_src
+
+#+RESULTS:
+: example.cpp
+: example.cpython-39-x86_64-linux-gnu.so
+
+
+*** Running python
+Need to run in the correct python environment where =pybind11= python package was installed.
+#+begin_src shell
+pip list | grep pybind11
+#+end_src
+
+#+RESULTS:
+: pybind11            2.7.0
+
+# emacs-jupyter python does not accept ":dir" flag.
+
+#+begin_src python :session pybind11 
+import sys; sys.path.append('./pybind11/')  # added to access subfolder
+import example
+print(example.add(1, 2))
+#+end_src
+
+#+RESULTS:
+: 3
+
+** =numpy=
+
+*** What is the difference between =(R, 1)= and =(R)=
+
+Array indexed by a single index.
+
+#+begin_src python
+import numpy as np
+x = np.arange(6)
+print(x, x.shape)
+#+end_src
+
+#+RESULTS:
+: [0 1 2 3 4 5] (6,)
+
+Shape (6, 1) means that the array is indexed by two indices.
+
+#+begin_src python
+y = x.reshape((6, 1))
+print(y)
+print(y[:, 0].shape)
+print(y.shape[0])
+print(y.reshape(y.shape[0]))
+#+end_src
+
+#+RESULTS:
+: [[0]
+:  [1]
+:  [2]
+:  [3]
+:  [4]
+:  [5]]
+: (6,)
+: 6
+: [0 1 2 3 4 5]
+
+Extraction one column from a 2D array,
+
+#+begin_src python
+A = np.random.random((3, 3))
+print(A)
+b = A[:, 0]
+print(b, b.shape)
+#+end_src
+
+#+RESULTS:
+: [[0.13740637 0.90379188 0.10231694]
+:  [0.70341274 0.35867356 0.32578659]
+:  [0.18372031 0.93272656 0.19286157]]
+: [0.13740637 0.70341274 0.18372031] (3,)
+
+** =dash=
+*** What is =dash=?
+Framework for web application.
+
+It uses =Flask=, =Plotly.js= and =Reac.js=.
+** =flask=
+*** What is =flask=?
+Micro framework for web application.
+*** What is a web application?
+Similar to a website but has interaction with the user.
+** =cython=
+*** What is =cython=?
+Is python with C data types.
+

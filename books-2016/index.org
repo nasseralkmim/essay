@@ -1,0 +1,14 @@
+#+title: Books 2016
+#+date: <2017-01-01 Tue>
+#+lastmod: 2021-08-03 18:20:26
+#+author: Nasser Alkmim
+#+draft: t
+#+toc: t
+#+tags[]: books
+* Books list
+* Grande sertão veredas
+* Road to serfdom
+* Think and grow rich
+* Economy in one lesson
+* Anti-capitalistic mentality
+

@@ -1,0 +1,8 @@
+#+title: Why LaTeX
+#+date: <2021-12-06 Mon>
+#+author: Nasser Alkmim
+#+draft: t
+#+toc: t
+#+tags[]: tools latex 
+#+lastmod: 2021-12-06 17:03:49
+* Iterative nature of creation

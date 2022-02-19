@@ -1,0 +1,43 @@
+#+options: ':nil *:t -:t ::t <:t H:3 \n:nil ^:t arch:headline
+#+options: author:t broken-links:nil c:nil creator:nil
+#+options: d:(not "LOGBOOK") date:t e:t email:nil f:t inline:t num:t
+#+options: p:nil pri:nil prop:nil stat:t tags:t tasks:t tex:t
+#+options: timestamp:t title:t toc:t todo:t |:t
+#+title: Difference between risk and uncertainty
+#+date: <2020-12-20 Sun>
+#+author: Nasser Alkmim
+#+email: nasser.alkmim@gmail.com
+#+language: en
+#+select_tags: export
+#+exclude_tags: noexport
+#+creator: Emacs 27.1 (Org mode N/A)
+#+tags[]: risk
+
+
+I was watching this lecture from professor Andrew Loo and he presented a compelling analogy to understand the difference between risk and uncertainty.
+
+The analogy goes as follows:
+
+1. urn A with 50 red balls and 50 black balls, pick a color and draw, if you draw your color you win $10,000.
+2. urn B with unknown quantities, pick a color and draw, same prize.
+
+The question is how much you are willing to bet?
+
+
+Conclusions:
+
+1. in urn A, you know the probability distribution right away and can compute the expected value.
+2. in urn B, you don't know the distribution (at least, intuitively).
+   1. we can compute the expected value and in fact it is the same as in urn A.
+   2. what is missing here is that we don't have intuition about this distribution, it is hard to grasp the risk.
+   3. when we have no knowledge or no intuition about the risk we call that *uncertainty*.
+   4. risk is quantifiable from the knowledge of the probability distribution.
+
+
+
+#+DOWNLOADED: screenshot @ 2020-12-20 17:05:25
+#+attr_html: :width 400
+[[file:2020-12-20_17-05-25_screenshot.png]]
+
+
+{{< youtube a5PF2PcElV0 >}}

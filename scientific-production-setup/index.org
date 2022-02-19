@@ -1,0 +1,273 @@
+#+title: Scientific production setup
+#+date: <2021-06-03 Thu>
+#+lastmod: 2021-09-27 11:14:41
+#+author: Nasser Alkmim
+#+draft: t
+#+toc: t
+#+tags[]: tools latex
+Emacs is by far the most advanced LaTeX editor that I have used.
+Why? It makes things easier and more enjoyable.
+The main goal is reduce computational friction between what needs to be done and your tools.
+
+Under the hood there are couple of packages that enable that.
+
+* AUCTeX
+It is a major mode for =.tex= files.
+Is an environment for writing input files for TeX documents.
+
+With AUCTeX is easier to:
+1. insert macros 
+
+   
+* RefTeX
+Useful to create and reference labels.
+
+* Inserting macros
+Type =\= and you are prompt to choose: =\sqrt{}, \int, \dfrac{}{}=.
+
+A /completion framework/ (e.g. Vertico, Selectrum, Ivy, Helm) would enhance even more the functionality by showing the possibilities and narrowing it.
+
+* Fonts
+** Newtx math libertine
+
+
+
+#+DOWNLOADED: screenshot @ 2021-06-23 10:09:13
+#+attr_html: :width 350px
+[[file:Fonts/2021-06-23_10-09-13_screenshot.png]]
+
+** Newtx math utopia
+
+
+#+DOWNLOADED: screenshot @ 2021-06-23 10:10:04
+#+attr_html: :width 350px
+[[file:Fonts/2021-06-23_10-10-04_screenshot.png]]
+
+* Outline
+** Workflow to narrow to focus
+
+I use =outline-hide-other= to focus on a specific heading while still shows the context.
+
+to show the sibling of a heading I use =outline-show-children= on the parent heading (jump with =outline-up-heading=).
+
+If I want to see just the headings structure I use =outlie-hide-leaves=.
+* Zotero
+
+Workflow:
+1. copy DOI and import in Zotero.
+2. Better Bibtex automatic update =.bib= file.
+   1. bibfile stays at =~/.bibliography.bib=.
+3. Zotfile automatic rename the pdf, move it to a specific folder and creates a link for Zotero to find it.
+   1. pdfs stays in a cloud folder =~/SeaDrive/<pdfs>=
+* Matplotlib plots
+** Quote
+
+#+begin_quote
+What is to be sought in designs for the display of information is the clear portrayal of complexity.
+Not the complication of the simple; rather the task f the designer is to give visual access to the subtle and the difficult -- that is, the revelation of the complex.
+
+-- Edward R. Tufte
+#+end_quote
+
+
+** Finding size of latex text
+
+This will print the width of the page element.
+
+The =textwidth= is the width of text area and it is dependent on the page margin.
+=linewidth= depends on the environment.
+=columnwidth= is the column of text and depends on the number of columns.
+
+
+#+begin_example
+\the\textwidth
+\the\linewidth
+\the\columnwidth
+#+end_example
+
+** Matplotlib size and LaTeX size (pt)
+
+Matplotlib default uses inches.
+
+Latex uses points (pt), 72.27 pt = 1 in.
+
+
+** Ideal plot size
+
+If the nature of the data does not suggests the shape of the plot, then the length should be larger than the height.
+The reasons are [cite:@tufteVisualDisplayQuantitative2013]:
+1. analogy to the horizon, which I like because of the "poetic" argument.
+2. easier to label.
+3. emphasis on causal influence. This is my favorite reason because a longer horizontal length allows a more detailed exploration of the relation.
+
+The proportion that most prefer is close to the golden ratio.
+I use the height as 60% of the length.
+   
+
+
+
+** The case against =.pgf=
+
+Back in 2017 I tried to use it, but soon discovered that is impractical for any substantial work.
+It takes too long to compile.
+Now I use just use =.pdf= without scaling the plot.
+
+** Testing
+
+Remarks:
+1. when =usetex= is used, the plot size changes even though the figure was created with the same size.
+2. if no font is specified, "computer modern" is used.
+
+#+begin_src python :session testing
+import numpy as np
+import matplotlib.pyplot as plt
+
+size_pt = 300
+size_in = size_pt / 72.27
+figsize = [size_in, size_in * 0.6]
+
+x = np.linspace(0, 2 * np.pi)
+y = np.sin(x)
+
+fig, ax = plt.subplots(figsize=figsize)
+ax.plot(x, y)
+ax.set_title('$xy$ Title')
+
+plt.style.use('seaborn-whitegrid')
+fig, ax = plt.subplots(figsize=figsize)
+ax.plot(x, y)
+ax.set_title('$xy$ Title')
+
+plt.style.use('default')
+plt.rcParams.update({'text.usetex': True, 'font.family': 'serif'})
+fig, ax = plt.subplots(figsize=figsize)
+ax.plot(x, y)
+ax.set_title('$xy$ Title')
+#+end_src
+
+#+RESULTS:
+:RESULTS:
+[[file:./jupyter/018a741e2b89e91f6908a9d1ddef3532936fd045.png]]
+[[file:./jupyter/94dc236641eae73e4d751610e8c72bbb5ff2c9bc.png]]
+[[file:./jupyter/55023a925ce77d775473d60836f6f01203f0e390.png]]
+:END:
+
+
+
+** Why use a centralized configuration system
+A central place where the plot style is configure is ideal because it enforces consistency and it is easier to change in a single place.
+
+A use a simple package that I install locally with =pip install -e .=.
+** Workflow
+
+1. Create a plot with =org-mode= babel with a python script.
+   1. =org-mode= is used for analysis, processing and presenting the results.
+2. use the =:tangle= header argument to save the script into a centralized place.
+   1. If want to change a plot style, just run the script from this centralized place.
+   2. <2021-09-20 Mon> problem: where the data should be?
+
+
+#+begin_src python :session workflow :tangle scripts/workflow-1.py
+import numpy as np
+import matplotlib.pyplot as plt
+import figtex; figtex.style()
+
+s = 300 / 72                    # 300 points in latex
+fig, ax = plt.subplots(figsize=(s, s*3/4))
+x = np.linspace(0, 2 * np.pi)
+y = np.sin(x)
+ax.plot(x, y)
+ax.set_title(f"Typeface: {plt.rcParams['font.serif'][0]}")
+#+end_src
+
+#+RESULTS:
+[[file:./jupyter/ca6290cd96014dfaa4915e31121496cb2c934802.png]]
+
+
+#+begin_src python :session workflow :tangle scripts/workflow-2.py
+import numpy as np
+import matplotlib.pyplot as plt
+import figtex; figtex.style(serif='Times')
+
+s = 300 / 72                    # 300 points in latex
+fig, ax = plt.subplots(figsize=(s, s*3/4))
+x = np.linspace(0, 2 * np.pi)
+y = np.sin(x)
+ax.plot(x, y)
+ax.set_title(f"Typeface:  {plt.rcParams['font.serif'][0]}")
+#+end_src
+
+#+RESULTS:
+[[file:./jupyter/b395ec3db97ab09db341d05d514431e6502af101.png]]
+
+Then I can run all scripts with,
+
+#+begin_src shell
+python3 scripts/*
+#+end_src
+
+#+RESULTS:
+** Plot resolution
+*** Concepts
+Matplotlib uses the concept of "dots per inches", dpi, to set the amount of pixels for the figure.
+The default dpi matplotlib uses is 100.
+
+For the *size of figure*, matplotlib uses inches.
+The default figure size matplotlib uses is (6, 4) inches.
+So the total number of pixels (dots) is (600, 400).
+
+Plot elements sizes:
+1. lines, markers and others are created with "points" scale.
+2. the relation between points and inches is 72 points per inches.
+3. text is given in points, so a text size 10, will have 10/72 inches height.
+
+*** Remarks
+Remarks:
+1. changing just figure size, keeps the plot elements with the same thickness (measured in points).
+   1. changing dpi, scales everything.
+2. font size (in pt) does not change with figure size (in inches).
+
+*** Tests
+
+#+begin_src python
+import matplotlib.pyplot as plt
+def plot(figsize=(6, 4), dpi=72):
+    fig, ax = plt.subplots(figsize=figsize, dpi=dpi)
+    ax.plot([3, 4, 1, 2])
+    ax.set_title(f"dpi={fig.get_dpi()} fig={fig.get_size_inches()}")
+    fig.savefig(f'images/fig_dpi_{fig.get_dpi()}_size_{fig.get_size_inches()}.png')
+
+print('default figsize', plt.rcParams['figure.figsize']) 
+print('default dpi', plt.rcParams['figure.dpi']) 
+print('default font size', plt.rcParams['font.size']) 
+plot((3, 2), 72)
+plot((6, 4), 72)
+plot((3, 2), 72 * 2)
+plot((6, 4), 72 * 2)
+#+end_src
+
+
+#+RESULTS:
+:RESULTS:
+: default figsize [6.0, 4.0]
+: default dpi 72.0
+: default font size 10.0
+[[file:./jupyter/584170e213b7de6a611e8dd981e4a4a561e13f99.png]]
+[[file:./jupyter/5d827befaf69524cf0869fcaa34158ddaa0985d1.png]]
+[[file:./jupyter/ddc4994d7b396d59aa22cc57c50e93bb80b6f7e4.png]]
+[[file:./jupyter/71d06ea9e36c5c5132a93b52a5c9a80a89cb34bd.png]]
+:END:
+
+*** Relation with the font size
+
+#+begin_export latex
+The font size is 11pt.
+
+\includegraphics{images/fig_dpi_72_size_[3. 2.].png}
+\includegraphics{images/fig_dpi_144_size_[3. 2.].png}
+
+\includegraphics{images/fig_dpi_72_size_[6. 4.].png}
+
+\includegraphics{images/fig_dpi_144_size_[6. 4.].png}
+#+end_export
+

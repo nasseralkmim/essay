@@ -1,0 +1,30 @@
+#+title: Why Emacs?
+#+date: <2021-06-17 Thu>
+#+author: Nasser Alkmim
+#+draft: t
+#+toc: t
+#+tags[]: essays emacs
+Why Emacs? What is the deal about a text editor? Or, is it just a text editor?
+* Prologue
+Before considering the "why emacs?" question, we need first consider the "why writing?".
+
+What is so great about writing?
+
+What has changed with computers? Or did it change?
+* Emacs as a text editor
+
+If you enjoy writing and expressing your ideas, you need somewhere to type them.
+Many people have done that successfully with pen and paper.
+I argue that Emacs is the best writing software that exists.
+So, what is so great about Emacs?
+
+Disclaimer: I know very little about Emacs, as a matter of fact a know very little about everything.
+But I am not worried because you don't know either.
+
+* Friction and creative process
+
+Creativity is phenomenon that is sparked by trial-and-error.
+I have used the spark analogy, which may resemble the synapses that happen in our neurons connections.
+Anyways, trial-and-error is the key.
+
+

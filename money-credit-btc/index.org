@@ -1,0 +1,70 @@
+#+options: ':nil *:t -:t ::t <:t H:3 \n:nil ^:t arch:headline
+#+options: author:t broken-links:nil c:nil creator:nil
+#+options: d:(not "LOGBOOK") date:t e:t email:nil f:t inline:t num:t
+#+options: p:nil pri:nil prop:nil stat:t tags:t tasks:t tex:t
+#+options: timestamp:t title:t toc:t todo:t |:t
+#+title: Money credit and cryptocurrency
+#+date: <2020-12-26 Sat>
+#+author: Nasser Alkmim
+#+email: nasser.alkmim@gmail.com
+#+language: en
+#+select_tags: export
+#+exclude_tags: noexport
+#+creator: Emacs 27.1 (Org mode N/A)
+#+draft: t
+#+toc: t
+#+tags[]: economy portugues 
+* Dinheiro e crédito
+O que é dinheiro?
+O que é crédito?
+Os dois são lados da mesma moeda.
+Dinheiro é o meio de liquidar acordos que maturaram, /means of settlement/.
+Crédito é uma forma de postergar essa liquidação para o futuro.
+
+Os diversos ativos financeiros: reservas no Banco Central, ouro, moeda local, depósitos e securities (títulos), podem ser entendidos ora como dinheiro ora como crédito.
+Um depósito é uma promessa de pagar moeda local, um título pode ser uma promessa de pagar um depósito, e assim por diante.
+No entanto esses ativos não são equivalentes no sentido de serem intercambiáveis a qualquer tempo.
+Existe uma hierarquia natural que é bastante aparente em momentos de crise.
+Nas crises ninguém quer ter securities, querem um ativo em nível superior como dinheiro ou depósitos.
+* Bancos e finanças
+
+
+
+* Qual a relação entre dinheiro, crédito e cryptocurrency? 
+
+Um ponto crítico das cryptos é a questão de ser descentralizado, não há um monopólio que tem o poder de sua emissão, como um Banco central com moeda.
+Mas porque isso seria um ponto positivo?
+Por que a sociedade moderna criou um banco central para monopolizar a emissão de moeda?
+No centro da questão está o entendimento do funcionamento do sistema de pagamentos e a elasticidade do crédito.
+
+*** Sistema de pagamentos e atividade bancária
+Quando ocorre um pagamento na economia, duas pessoas chegaram em um acordo mútuo que gera benefícios para ambas.
+Essa transação não pode ser limitada por meios de pagamentos, pois a sociedade como um todo deixa de se beneficiar por essa atividade negocial.
+Aqui entram os bancos.
+Bancos permitem que essa transação aconteça por meio da expansão de seu balanço patrimonial (gerou um empréstimo (A) e um depósito (P)).
+Conclusão: a atividade bancária permitiu que a transação acontecesse e a sociedade como um todo se beneficiou dessa expansão do crédito.
+
+*** Um único banco
+Milhares de transações como essa ocorrem diariamente.
+Pessoas com depósitos em uma instituição fazer pagamento para pessoas com conta em outro banco.
+Os bancos então, no fim do dia, liquidam os saldos que tem entre si.
+Essa liquidação ocorre em uma Clearinghouse, que facilita esse procedimento.
+No final do dia, o sistema bancário funciona como se existisse apenas um grande banco onde todos nós tivéssemos contas e as transações seriam apenas fatos permutativos.
+No entanto, no mundo real, não existe esse banco único e algumas situações de stress podem ocorrer.
+
+*** Mercado monetário e a disciplina do crédito
+Após um dia de transações, existiram entidades deficitárias e superavitárias.
+Esses agentes se encontram no mercado monetário.
+Os deficitários pegam emprestado para liquidar as obrigações em dinheiro e os superavitários emprestam para conseguir algum retorno em caixa ocioso.
+Se agentes são constantemente deficitários, significa que estão sempre postergando a liquidação para o futuro por meio de crédito.
+Em teoria, essa postergação da data de liquidação pode seguir indefinidamente enquanto os agentes deficitários conseguirem meios de se financiar no mercado monetário.
+O Banco central pode então reforçar a disciplina do sistema por meio do controle da taxa de juros que os bancos cobram em suas transações.
+Esse aumento na taxa produz incentivos para os bancos deficitários liquidem suas obrigações.
+Um mecanismo de disciplina do crédito.
+
+
+
+
+* References
+
+1. [[http://financeandsociety.ed.ac.uk/ojs-images/financeandsociety/FS_EarlyView_Mehrling.html][Financialization and its discontents | Mehrling | Finance and Society]]

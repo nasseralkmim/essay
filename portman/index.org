@@ -1,0 +1,43 @@
+#+title: Gerenciamento de portfolio com portman
+#+date: <2020-12-30 Wed>
+#+author: Nasser Alkmim
+#+email: nasser.alkmim@gmail.com
+#+toc: t
+#+tags[]: finance python data-analysis portugues
+#+draft: t
+* Consolidação do portfolio
+
+#+begin_src python
+import pandas as pd
+import portman as pm
+
+pm.consolidate('trade_data.csv')
+#+end_src
+
+#+RESULTS:
+
+
+* Análise
+
+#+begin_src python 
+import matplotlib
+import matplotlib.pyplot as plt
+matplotlib.style.use('ggplot')
+import portman as pm
+
+pm.analysis.summary('portfolio.csv')
+pm.analysis.allocation('portfolio.csv')
+pm.analysis.returns('returns.csv')
+pm.analysis.dividends('dividends.csv')
+plt.tight_layout()
+#+end_src
+
+#+RESULTS:
+:RESULTS:
+[[file:./jupyter/bf44f73d2581e727370006b957659ee15c3aa08c.png]]
+[[file:./jupyter/e640ed38a866cb7ac98baf7f169b7fac7ef397f1.png]]
+[[file:./jupyter/72a4b1cf32b4d720024677ce501577b916ef26fa.png]]
+[[file:./jupyter/7e8e31f70804e4a40153ba9d730bb41d46e5c51b.png]]
+:END:
+
+

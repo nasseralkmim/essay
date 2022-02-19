@@ -1,0 +1,182 @@
+#+title: Where does simulations come from
+#+date: <2021-06-28 Mon>
+#+lastmod: 2021-11-14 10:36:52
+#+author: Nasser Alkmim
+#+draft: t
+#+tags[]: essays scientific-computing
+#+toc: t
+* Introduction
+# This essay is about the field of scientific computing and an attempt to communicate some of key aspects of it.
+
+# Scientific computing refers to modern science concept.
+Usually, when thinking about science, we have the image of a researcher doing an experiment in the laboratory and drawing conclusions from it.
+In the case of /computational science/ the experiment is a computer simulation.
+So, where does a simulation come from?
+
+# models are what connects nature with mathematics.
+# continuum to discrete
+The aim of this short essay is to give an intuition for a non-engineer on how the simulations are created.
+First, I explain the connection between nature and mathematics (which is deep and philosophical, and I'm not going that deep...).
+Then, how to take advantage of the computer by converting the continuum to discrete.
+Finally, to wrap things up, what is the connection between simulations and matrices.
+
+
+* Nature and mathematics
+
+# First, I explain the connection between nature and mathematics (which is deep and philosophical, and I'm not going that deep...).
+
+To understand where simulations come from, we need to comprehend how to first make an apple pie.
+Just kidding.
+We actually need a little comprehension of the simulation process.
+
+At the core of a simulation we have a /model representing reality/.
+# what are the models?
+Models are our abstraction of reality, it is a form of simplified representation of it.
+One model that we learn in school is the Newton mechanical model, you probably remember $F=ma$.
+The essence of it is that if we know the force we can compute the acceleration.
+
+Mathematics is the language in which we can express those models.
+The mathematical equations describe how a certain variable change and evolve.
+To make the equation refer to a particular problem we use specific conditions that characterize a situations, those are called boundary conditions.
+
+Now that we know what models are, how to use them?
+In order to transform the model in practical predictions we need to /solve/ its equations.
+Here is where computers can help us, however we first need a way to translate our beautiful abstraction of the world to something that the computers can understand. 
+For that, the continuum must be transformed into discrete.
+
+#+DOWNLOADED: screenshot @ 2021-08-26 14:48:00
+#+attr_html: :width 350px
+[[file:images/Models,_mathematics_and_computers/2021-08-26_14-48-00_screenshot.png]]
+
+
+
+* From continuum to discrete
+# Then, how to take advantage of the computer by converting the continuum to discrete.
+
+The question now is: how to use a computer to solve our model equations?
+In short, /numerical methods/ are the bridge from the mathematical continuum representation and the simple operations that the computer can perform.
+
+# how to transform continuum to discrete
+How do we go from a continuum description to simple operations in a discrete setting?
+Actually, why do we have a continuum description in the first place?
+I do not know precisely where it came from, however I speculate that since Newton description of motion we became aware of how powerful the mathematical description of the world can be.
+
+The mathematical description used by Newton uses differential calculus and one of its main features is to treat the physical variables as a continuum[fn:1].
+But in the end, is nature a continuum or discrete?
+It depends on the scale you look.
+With naked eyes you see it as a continuum, however, if you go to the atom's level all you see is empty space.
+Nonetheless, the /description/ of it is up to us[fn:2].
+We got used to describing nature as a continuum.
+This description works well because we can make intuitive sense of it and I would say it has some beauty.
+Some people even are led believe that the equations are nature itself[fn:3].
+
+The challenge with the continuum description is that an analytical solution is sometimes hard to find or even not possible[fn:4].
+You can understand the analytical solution as /a formula/ that you can use to find the answer to all possible problems.
+Since they are hard to find, we devised strategies that can approximate them.
+Here is where the discrete description comes into play.
+
+One way to visualize this transition from continuum to discrete is to look at two instants of time separated by a few seconds.
+In a continuum setting, we would have infinitely many instants between those two.
+In contrast to that, in a discrete model, we only have those two.
+This process is known as Finite Difference Method.
+We transform our equations into a series of simpler equations that we can solve with the computer.
+
+* Matrices and simulations
+# Finally, to wrap things up, what is the connection between simulations and matrices.
+
+To summarize so far, we now know that an equation can represent some aspect of reality.
+We also know that a discrete description is adequate for using a computer to perform the calculations.
+Now, what are we missing?
+What is left is just the procedure to solve the discrete equations.
+This is mostly done with the help of linear algebra.
+That is the connection between matrices and simulations.
+
+
+
+* How mathematics and computer are connected                       :noexport:
+
+The field of applied mathematics has one specific branch for linear algebra, and as the name suggests it is related to using mathematics in some sort of application.
+The motivation for it is the simple goal of solving a linear system of equations.
+
+It turns out that many applications in many fields end up at some point with a system of equations to be solved.
+The applications are endless.
+From the usual engineering practice of find the strength of materials to econometrics for macroeconomic indicators such as the GDP, web page ranking for the search engine, machine learning for multiple use-cases, climate prediction, and so on.
+
+
+* Why we want to solve equations                                   :noexport:
+Simply put, solving equations from a model means to predict the future.
+It is human power achieved through years of knowledge accumulation.
+We developed models that represent reality and with those models we can make predictions.
+The language used to model reality is mathematics.
+
+Now, why do we want to predict the future?
+Well, if we know what is going to happen we can prepare ourselves beforehand.
+This means that we can manage our resources better.
+
+
+* Why we want to solve linear systems of equations                 :noexport:
+
+The world we live in is inherently nonlinear.
+Meaning that the observable changes do not have a simple proportional correspondence to its cause.
+Fortunately we developed tools that allows us to approximate the world with a linear approximation.
+
+
+* Computers and linear systems                                     :noexport:
+
+Our desire to know more and make better and more reliable predictions generates an ever-increasing demand for computational power.
+If today we can solve a problem with one billion equations, in the next morning there will be problem with one billion and 1 equations to be solved. 
+
+
+* Where do matrices come from?                                     :noexport:
+
+For someone who is not in the mathematics related field, the idea of solving system of equations might be alien.
+After all, where does the system of equations come from?
+In the context of structural engineering, which is the field of the author, the system arises when we model how the structure will displace and deformed based on the forces applied to it.
+But the essence of the system is the presence of /multiple pieces that interact/ with each other.
+For instance, one structural member deformation produces forces in another member.
+
+This example is an extrapolation of a core principle in physics derived from Newton's laws of equilibrium and motion.
+Where a simple interaction between two masses can yield a system of equations to be solved.
+
+If we abstract even further with some math, for those aware, we find out that system of equations and consequently  matrices, arise when we discretize differential equations.
+
+* Practical challengers                                            :noexport:
+* Footnotes
+
+[fn:4] The analytic solution represents a explicit mathematical formula that can express the solution for any particular problem.
+The problem is particular because of specific boundary or initial conditions.
+
+[fn:3] Nassin N. Taleb has a funny phrase: "lecturing birds how to fly".
+
+[fn:2] We can represent multiple micro cracks in the body as a continuum damage parameter that captures the same effect in an average sense.
+
+[fn:1]  We apply equilibrium to a infinitesimal volume of mass then we use limit to collapse this volume into a point, making it valid in the continuum.
+
+* References
+
+
+- Tonti, E. (). The Mathematical Structure of Classical and Relativistic
+  Physics. : Springer New York.
+
+
+- Olver, P. J., & Shakiban, C. (). Applied Linear Algebra. : Springer
+  International Publishing.
+
+
+- Trefethen, L. N., & Bau, D. (). Numerical Linear Algebra. : Society for
+  Industrial and Applied Mathematics.
+
+
+- Schulthess, T. C. (). Programming Revisited. , 11(5),
+  369–373. http://dx.doi.org/10.1038/nphys3294
+
+- Wilson, G., Bryan, J., Cranston, K., Kitzes, J., Nederbragt, L., &
+  Teal, T. K. (). Good enough practices in scientific computing. ,
+  13(6), 1005510. http://dx.doi.org/10.1371/journal.pcbi.1005510
+
+- [[https://www.mathworks.com/company/newsletters/articles/the-world-s-largest-matrix-computation.html][The World’s Largest Matrix Computation - MATLAB & Simulink]]
+
+- [[https://math.stackexchange.com/questions/256682/why-study-linear-algebra][soft question - Why study linear algebra? - Mathematics Stack Exchange]]
+
+- [[https://en.wikipedia.org/wiki/Computational_science][Computational science - Wikipedia]]
+

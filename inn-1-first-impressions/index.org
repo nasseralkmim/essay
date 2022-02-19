@@ -1,0 +1,32 @@
+#+options: ':nil *:t -:t ::t <:t H:3 \n:nil ^:t arch:headline
+#+options: author:t broken-links:nil c:nil creator:nil
+#+options: d:(not "LOGBOOK") date:t e:t email:nil f:t inline:t num:t
+#+options: p:nil pri:nil prop:nil stat:t tags:t tasks:t tex:t
+#+options: timestamp:t title:t toc:t todo:t |:t
+#+title: Innsbruck - First impressions
+#+date: <2021-03-12 Fri>
+#+author: Nasser Alkmim
+#+email: nasser.alkmim@gmail.com
+#+language: en
+#+select_tags: export
+#+exclude_tags: noexport
+#+creator: Emacs 27.1 (Org mode 9.4.3)
+#+tags[]: innsbruck
+#+draft: t
+
+I recently started my PhD at the University of Innsbruck, and will start share some of my day to day life and work here.
+
+Innsbruck is the capital of a region called Tirol.
+It is not a big city, the first thing I noticed when arrived here through the train station is how quick you can get to places with the rail train system.
+
+The city is very organized, and I was really impressed with the tiny gap between the rail train and the concrete sidewalk.
+Good construction standards.
+
+I have arrived at the end o winter and the temperatures get to around 0°C.
+It is fine, with a light fleece and a windbreaker is good enough to stand the weather.
+
+
+#+DOWNLOADED: screenshot @ 2021-03-26 11:09:19
+#+attr_html: :width 350px
+#+caption: View from my room.
+[[file:2021-03-26_11-09-19_screenshot.png]]

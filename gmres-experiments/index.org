@@ -1,0 +1,570 @@
+#+title: GMRES experiments
+#+date: <2021-08-18 Wed>
+#+lastmod: 2021-08-20 11:43:20
+#+author: Nasser Alkmim
+#+draft: t
+#+toc: t
+#+tags[]: numerical-analysis python
+* Symmetric Sherman 1 - Black oil simulation with shale barriers
+:PROPERTIES:
+:HEADER-ARGS:shell: :dir sherman_1
+:HEADER-ARGS:python: :session sherman_1
+:END:
+** Characteristics
+1. real and symmetric
+2. size 1000x1000
+3. condition number 2.3e4
+4. no diagonal dominance
+5. sparse (3750 nonzeros)
+** Download matrix and RHS
+   
+#+begin_src shell
+wget ftp://math.nist.gov/pub/MatrixMarket2/Harwell-Boeing/sherman/sherman1.mtx.gz
+wget ftp://math.nist.gov/pub/MatrixMarket2/Harwell-Boeing/sherman/sherman1_rhs1.mtx.gz
+#+end_src
+
+#+RESULTS:
+** Visualizing
+
+#+begin_src python
+from scipy.io import mmread
+from scipy.sparse import csr_matrix
+import pandas as pd
+import numpy as np
+import matplotlib.pyplot as plt
+import matplotlib
+matplotlib.style.use('ggplot')
+
+A = csr_matrix(mmread('sherman_1/sherman1.mtx.gz'))
+b = mmread('sherman_1/sherman1_rhs1.mtx.gz').ravel()
+print(type(A), A.shape)
+print(type(b), b.shape)
+plt.spy(A.todense())
+#+end_src
+
+#+RESULTS:
+:RESULTS:
+: <class 'scipy.sparse.csr.csr_matrix'> (1000, 1000)
+: <class 'numpy.ndarray'> (1000,)
+#+attr_org: :width 257
+[[file:./jupyter/2148efeb1f6f1062366ee58b0d48002d9b97fcb8.png]]
+:END:
+** Spectral portrait
+
+#+begin_src python
+def spectral_portrait(A, limx, limy, levels=[]):
+    """Plot spectral portrait as a coutour"""
+    I = np.identity(A.shape[0])
+    x_d = np.linspace(limx[0], limx[1], 10)
+    y_d = np.linspace(limy[0], limy[1], 10)
+
+    Sp = np.empty((len(x_d), len(y_d)))
+    for i, x in enumerate(x_d):
+        for j, y in enumerate(y_d):
+            z = x + 1j * y
+            # j in the row to represent the complex plane
+            # i in the column to represent real direction
+            Sp[j, i] = np.log10(
+                np.linalg.norm(np.linalg.inv(A - z * I), ord=2) * np.linalg.norm(A, ord=2)
+            )
+    fig, ax = plt.subplots()
+    cax = ax.contourf(x_d, y_d, Sp, levels=15)
+    cs = ax.contour(x_d, y_d, Sp, levels=levels)
+    ax.clabel(cs)
+    fig.colorbar(cax)
+    ax.set_xlabel("Real");ax.set_ylabel("Imag")
+
+eigvals = np.linalg.eigvals(A.todense())
+print(f"Min/Max eigenvalue real {eigvals.real.min(), eigvals.real.max()}")
+print(f"Min/Max eigenvalue imag {eigvals.imag.min(), eigvals.imag.max()}")
+spectral_portrait(A.todense(), [-10, 10], [-5, 5])
+#+end_src
+
+#+RESULTS:
+:RESULTS:
+: Min/Max eigenvalue real (-5.044869367165509, -0.0003234871204137457)
+: Min/Max eigenvalue imag (0.0, 0.0)
+: <ipython-input-3-5b1d6c36947a>:18: UserWarning: No contour levels were found within the data range.
+:   cs = ax.contour(x_d, y_d, Sp, levels=levels)
+[[file:./jupyter/53800b39e125275b9e60fadc84f6f57f3a9a569e.png]]
+:END:
+
+** Sparse solver
+
+#+begin_src python
+from scipy.sparse.linalg import spsolve
+x_direct = spsolve(A, b)
+print(np.allclose(A @ x_direct, b))
+#+end_src
+
+#+RESULTS:
+: True
+
+** GMRES
+
+General remarks:
+1. =scipy= GMRES default tolerance is just =1e-5=.
+   1. =tol= is multiplied by the norm of the RHS to check convergence.
+   2. =atol= is absolute value to check convergence (norm of residual must be less than this value)
+   3. currently =atol=tol= by default, next version this will change.
+   4. =scipy= uses the largest between =atol= and =tol * norm(b)=.
+2. =scipy= GMRES restart default is just 20
+3. =numpy= all close checks "closeness" with absolute tolerance of =1e-8=.
+
+Effect of restart option:
+1. setting small number of iteration for restart makes the convergence slow.
+   1. restarting every time is bad for convergence because after each restart the orthogonality of the approximation space is lost.
+2. after around 200 iterations before restarting, convergence does not change even if we don't restart.
+   1. we could keep only 200 vectors and still get good convergence.
+
+#+begin_src python
+from scipy.sparse.linalg import gmres
+class GmresCounter:
+    def __init__(self):
+        self.iters = 0
+        self.rk = []
+    def __call__(self, rk=None):
+        self.iters += 1
+        self.rk.append(rk)
+
+fig, ax = plt.subplots()
+restart = np.arange(20, 1000, 20)
+num_iter = []
+
+for r in restart:
+    c = GmresCounter()
+    x, _ = gmres(A, b, callback=c, tol=1e-9, restart=r)
+    num_iter.append(c.iters)
+    # check if converged
+    if not np.allclose(A @ x, b):
+        print(f'Did not converge to the tol with inner {i} and outer_k {o}')
+
+ax.plot(restart, num_iter)
+ax.set_ylabel('GMRES iterations');ax.set_xlabel('Restart option')
+#+end_src
+
+#+RESULTS:
+[[file:./jupyter/dc4f8585077620988239efa123cf4ccec96f47c3.png]]
+
+** Loose GMRES
+
+General remarks:
+1. loose GMRES is very effective in reduce the number of iterations in this case.
+   1. this happens because the skipping angle of the residuals is small.
+   2. "skipping angle" is the angle between every other residual.
+
+Effect of inner and outer iterations:
+1. more "inner iterations", overall convergence in less GMRES iterations.
+2. the "outer_k" parameter has low influence on the convergence.
+
+#+begin_src python
+from scipy.sparse.linalg import lgmres
+fig, ax = plt.subplots()
+
+inner_m = np.arange(10, 120, 10) # number of inner GMRES iterations per each outer
+outer_k = np.arange(1, 4)      # number of vectors to carry between GMRES inner iterations
+marker = ['o', 'x', 's']
+for o, m in zip(outer_k, marker):
+    num_iter = []
+    for i in inner_m:
+        c = GmresCounter()
+        x, _ = lgmres(A, b, callback=c, tol=1e-9, inner_m=i, outer_k=o, atol=1e-9)
+	# check if converged
+        if not np.allclose(A @ x, b):
+            print(f'Did not converge to the tol with inner {i} and outer_k {o}')
+        num_iter.append(c.iters)
+    ax.plot(inner_m, num_iter, label=f'outer_k {o}', marker=m)
+ax.set_ylabel('GMRES iterations');ax.set_xlabel('Inner iterations');fig.legend()
+#+end_src
+
+#+RESULTS:
+[[file:./jupyter/1b85741b97d9ae685250ec4d2dd445582e3e9889.png]]
+
+** Preconditioned GMRES with AMG
+
+Remarks:
+1. Because 'loose' GMRES is effective for this problem, when preconditioned it is also effective.
+
+#+begin_src python
+from scipy.sparse.linalg import gmres
+import pyamg
+ml = pyamg.ruge_stuben_solver(csr_matrix(A))
+print(ml)
+counter3 = GmresCounter()
+M = ml.aspreconditioner()
+x_pgmres, info = lgmres(A, b, M=M, tol=1e-9, callback=counter3, inner_m=15, atol=1e-15)
+print(counter3.iters)
+print(np.allclose(A @ x_pgmres, b))
+x_pgmres, info = gmres(A, b, M=M, tol=1e-9, callback=counter3, restart=15)
+print(counter3.iters)
+print(np.allclose(A @ x_pgmres, b))
+#+end_src
+
+#+RESULTS:
+:RESULTS:
+# [goto error]
+: 
+: NameErrorTraceback (most recent call last)
+: <ipython-input-2-4bceb22673d6> in <module>
+:       1 from scipy.sparse.linalg import gmres
+:       2 import pyamg
+: ----> 3 ml = pyamg.ruge_stuben_solver(csr_matrix(A))
+:       4 print(ml)
+:       5 counter3 = GmresCounter()
+: 
+: NameError: name 'csr_matrix' is not defined
+:END:
+
+* Unsymmetric Sherman 2 - Thermal simulation with steam injection
+:PROPERTIES:
+:HEADER-ARGS:shell: :dir sherman_2
+:HEADER-ARGS:python: :session sherman_2
+:END:
+** Characteristic
+
+1. size 2205 by 2205.
+2. sparse and unsymmetric.
+3. GMRES(30) with large median skipping angle around 8.4 [cite:@bakerTechniqueAcceleratingConvergence2005].
+4. large condition number =1e12=.
+
+   
+** Downloading the matrix and RHS
+
+#+begin_src shell :mkdirp true
+wget ftp://math.nist.gov/pub/MatrixMarket2/Harwell-Boeing/sherman/sherman2.mtx.gz
+wget ftp://math.nist.gov/pub/MatrixMarket2/Harwell-Boeing/sherman/sherman2_rhs1.mtx.gz
+#+end_src
+
+#+RESULTS:
+
+** Visualizing
+
+#+begin_src python
+from scipy.io import mmread
+from scipy.sparse import csr_matrix
+import pandas as pd
+import numpy as np
+import matplotlib.pyplot as plt
+import matplotlib
+matplotlib.style.use('ggplot')
+
+A = csr_matrix(mmread('sherman_2/sherman2.mtx.gz'))
+b = mmread('sherman_2/sherman2_rhs1.mtx.gz').ravel()
+print(type(A), A.shape)
+print(type(b), b.shape)
+print(np.linalg.cond(A.todense()) / 1e12, '1e12')
+cax = plt.spy(A.todense())
+#+end_src
+
+#+RESULTS:
+:RESULTS:
+: <class 'scipy.sparse.csr.csr_matrix'> (1080, 1080)
+: <class 'numpy.ndarray'> (1080,)
+: 0.9643332830340884 1e12
+#+attr_org: :width 263
+[[file:./jupyter/fea35a91af01ee94d4e6555f3fdbf6e4f758b68c.png]]
+:END:
+
+** Spectral portrait
+*** Definition
+
+[[https://math.nist.gov/MatrixMarket/spectral.html][Matrix Market: Spectral Portraits]]
+
+$z \rightarrow S_p = \log_{10} ( \lVert (A - z I)^{-1}\rVert_2 \lVert A \rVert_2 )$
+
+
+*** Example matrix
+
+Companion matrix of monic polynomial ([[https://en.wikipedia.org/wiki/Companion_matrix][Companion matrix - Wikipedia]]).
+
+Remarks:
+1. matrix is known as "Rose" and has complex eigenvalues.
+2. large condition number.
+3. eigenvalue by construction are [1, 2, 3, 4]
+
+#+begin_src python :session spectral-portrait
+import numpy as np
+np.set_printoptions(2, suppress=True)
+import matplotlib.pyplot as plt
+import matplotlib
+matplotlib.style.use("ggplot")
+from scipy.linalg import companion
+
+p1 = np.polynomial.Polynomial([-1, 1])
+p2 = np.polynomial.Polynomial([-2, 1])
+p3 = np.polynomial.Polynomial([-3, 1])
+p4 = np.polynomial.Polynomial([-4, 1])
+p = p1 ** 3 * p2 ** 3 * p3 ** 3 * p4
+coef = np.insert(p.coef, 0, 1)[:-1]
+A = companion(coef)
+A[:, -1] = A[0, :]
+A[0, :-1] = 0
+print(f"Condition number: {np.linalg.cond(A):.2e}")
+eigvals = np.linalg.eigvals(A)
+print(f"Min/Max eigenvalue real {eigvals.real.min(), eigvals.real.max()}")
+print(f"Min/Max eigenvalue imag {eigvals.imag.min(), eigvals.imag.max()}")
+fig, ax = plt.subplots()
+cax = ax.matshow(A)
+fig.colorbar(cax)
+#+end_src
+
+#+RESULTS:
+:RESULTS:
+: Condition number: 1.06e+06
+: Min/Max eigenvalue real (0.9999362409312127, 4.000000000049132)
+: Min/Max eigenvalue imag (-0.000442993644627718, 0.000442993644627718)
+#+attr_org: :width 319
+[[file:./jupyter/923b259e7621c400ca8607f4b5e958adb0af7f47.png]]
+:END:
+
+*** Spectral portrait
+
+Spectral portrait is used to check _spectral sensitivity_ of the spectrum of a matrix.
+The "portrait" is a visualization of the pseudospectrum.
+
+Remarks:
+1. color map scale in $log_{10}$ allows we see the pseudospectrum from $10^{-6}$ to $10^{-16}$.
+2. the region inside the the contour associate with the pseudospectrum $10^{-12}$ contains all the eigenvalues of *all the matrices* $A+E$ where $\lVert E \rVert_2 \leq 10^{-12} \lVert A \rVert_2$.
+   1. the $E$ 2-norm is small, the region is small as well.
+3. if the matrix $A$ has "normwise" relative precision of $10^{-8}$, then the region delimited with the pseudospectrum equals $10^{-8}$ contains *all possible eigenvalues* for the matrix.
+   1. the matrix is highly nonnormal with defective eigenvalues, hence the possibilities are large.
+4. pseudospectrum because we are not looking at the spectrum of the matrix $A$ but perturbed version of $A+E$.
+   1. the perturbation is associate with the parameter $\epsilon$.
+   2. the region with $\epsilon=10^{-12}$ contains all the eigenvalues of $A+E$ with $\lVert E \rVert_2 \leq \epsilon \lVert A \rVert_2$.
+   3. large $\epsilon$ means large perturbation,
+5. the eigenvalues are plotted in the the complex plane, by construction they are [1, 2, 3, 4]
+6. smaller $\varepsilon$ has contour not connected, it is disjoit.
+
+#+begin_src python :session spectral-portrait
+I = np.identity(A.shape[0])
+
+x_d = np.linspace(0, 5, 100)
+y_d = np.linspace(-2.5, 2.5, 100)
+
+Sp = np.empty((len(x_d), len(y_d)))
+for i, x in enumerate(x_d):
+    for j, y in enumerate(y_d):
+        z = x + 1j * y
+        # j in the row to represent the complex plane
+        # i in the column to represent real direction
+        Sp[j, i] = np.log10(
+            np.linalg.norm(np.linalg.inv(A - z * I), ord=2) * np.linalg.norm(A, ord=2)
+        )
+fig, ax = plt.subplots()
+cax = ax.contourf(x_d, y_d, Sp, levels=15)
+cs = ax.contour(x_d, y_d, Sp, levels=[8, 12], colors=["y", "r"])
+ax.scatter(eigvals.real, eigvals.imag, color='m')
+ax.clabel(cs)
+fig.colorbar(cax)
+ax.set_xlabel("Real");ax.set_ylabel("Imag")
+#+end_src
+
+#+RESULTS:
+[[file:./jupyter/2bf33c90a9e5378f96522038c03ca02b99f5744f.png]]
+
+*** Function
+
+#+begin_src python :session func
+import numpy as np
+np.set_printoptions(2, suppress=True)
+import matplotlib.pyplot as plt
+import matplotlib
+matplotlib.style.use("ggplot")
+
+def spectral_portrait(A, limx, limy):
+    """Plot spectral portrait as a coutour"""
+    I = np.identity(A.shape[0])
+    x_d = np.linspace(limx[0], limx[1], 100)
+    y_d = np.linspace(limy[0], limy[1], 100)
+
+    Sp = np.empty((len(x_d), len(y_d)))
+    for i, x in enumerate(x_d):
+        for j, y in enumerate(y_d):
+            z = x + 1j * y
+            # j in the row to represent the complex plane
+            # i in the column to represent real direction
+            Sp[j, i] = np.log10(
+                np.linalg.norm(np.linalg.inv(A - z * I), ord=2) * np.linalg.norm(A, ord=2)
+            )
+    fig, ax = plt.subplots()
+    cax = ax.contourf(x_d, y_d, Sp, levels=15)
+    cs = ax.contour(x_d, y_d, Sp, levels=[8, 12], colors=["y", "r"])
+    ax.clabel(cs)
+    fig.colorbar(cax)
+    ax.set_xlabel("Real");ax.set_ylabel("Imag")
+#+end_src
+
+#+RESULTS:
+
+Testing
+
+#+begin_src python :session func
+from scipy.linalg import companion
+
+p1 = np.polynomial.Polynomial([-1, 1])
+p2 = np.polynomial.Polynomial([-2, 1])
+p3 = np.polynomial.Polynomial([-3, 1])
+p4 = np.polynomial.Polynomial([-4, 1])
+p = p1 ** 3 * p2 ** 3 * p3 ** 3 * p4
+coef = np.insert(p.coef, 0, 1)[:-1]
+A = companion(coef)
+A[:, -1] = A[0, :]
+A[0, :-1] = 0
+
+spectral_portrait(A, [0, 5], [-2.5, 2.5])
+#+end_src
+
+#+RESULTS:
+[[file:./jupyter/2c5bca3471d5fc9fe979300f3d7d3d8388257446.png]]
+** Sparse solver
+
+#+begin_src python
+from scipy.sparse.linalg import spsolve
+x_direct = spsolve(A, b)
+print(np.allclose(A @ x_direct, b))
+#+end_src
+
+#+RESULTS:
+: True
+
+** Loose GMRES
+
+1. high condition number, no convergence of GMRES or LGMRES even after 5000 iterations.
+
+#+begin_src python
+from scipy.sparse.linalg import lgmres, gmres
+fig, ax = plt.subplots()
+
+class GmresCounter:
+    def __init__(self):
+        self.iters = 0
+        self.rk = []
+    def __call__(self, rk=None):
+        self.iters += 1
+        self.rk.append(rk)
+
+max_iter = 5
+restart = 1
+c_l = GmresCounter()
+x_l, _ = lgmres(A, b, callback=c_l, tol=1e-9, inner_m=restart, outer_k=2, atol=1e-9, maxiter=max_iter)
+c = GmresCounter()
+x, _ = gmres(A, b, callback=c, tol=1e-9, restart=restart, maxiter=max_iter)
+print('GMRES converged? ', np.allclose(A @ x, b))
+print('loose GMRES converged? ', np.allclose(A @ x_l, b))
+print('GMRES iterations: ', c.iters)
+print('loose GMRES iterations: ', c_l.iters)
+ax.plot(c.rk, label='GMRES')
+l_r = []
+for r in c_l.rk:
+    l_r.append(np.linalg.norm(r))
+ax2 = ax.twinx()
+ax2.plot(l_r, label='lGMRES', color='g')
+ax.set_ylabel('Residual norm');ax.set_xlabel('Iteration');fig.legend()
+#+end_src
+
+#+RESULTS:
+:RESULTS:
+: GMRES converged?  False
+: loose GMRES converged?  False
+: GMRES iterations:  5
+: loose GMRES iterations:  5
+[[file:./jupyter/a25e0a21af23c43ca240f98acd7b44811155e49b.png]]
+:END:
+
+
+** Preconditioned LGMRES with AMG
+Remark:
+1. AMG was not effective.
+
+#+begin_src python
+from scipy.sparse.linalg import gmres
+import pyamg
+fig, ax = plt.subplots()
+
+Acsr = csr_matrix(A)
+coarsening = {'classic': pyamg.ruge_stuben_solver,
+              'aggreg': pyamg.smoothed_aggregation_solver}
+smoother = ['gauss_seidel',
+            'jacobi',
+            'sor',
+            'block_jacobi',
+            'block_gauss_seidel']
+
+restart = 100
+maxiter = 100
+iter = []
+i = 1
+for typ, cor in coarsening.items():
+    for smo in smoother:
+        ml = cor(Acsr, presmoother=smo, postsmoother=smo)
+        c = GmresCounter()
+
+        M = ml.aspreconditioner()
+        x, info = lgmres(Acsr, b, M=M, tol=1e-9, callback=c, inner_m=restart, atol=1e-15, maxiter=maxiter)
+        if info != 0:
+            conv = 'nc!'
+        ax.bar(i, c.iters, label=f'{typ}: {smo} - {conv}')
+        i += 1
+ax.set_ylabel('Number of iteration');fig.legend()
+#+end_src
+
+#+RESULTS:
+:RESULTS:
+: /home/nasser/.local/lib/python3.8/site-packages/pyamg/util/linalg.py:386: RuntimeWarning: invalid value encountered in double_scalars
+:   if (np.abs(error)/np.abs(ev[max_index]) < tol) or\
+: /home/nasser/.local/lib/python3.8/site-packages/pyamg/aggregation/smooth.py:159: RuntimeWarning: divide by zero encountered in double_scalars
+:   D_inv_S = (omega/approximate_spectral_radius(D_inv_S))*D_inv_S
+: /home/nasser/.local/lib/python3.8/site-packages/pyamg/relaxation/smoothing.py:455: RuntimeWarning: divide by zero encountered in double_scalars
+:   omega = omega/rho_D_inv_A(lvl.A)
+[[file:./jupyter/8f62debe0ff47e329c5254ed8de4bf5b3cababff.png]]
+:END:
+
+** Preconditioned LGMRES with ILU
+
+#+begin_src python
+from scipy.sparse import linalg, csc_matrix
+import pyamg
+
+class LGmresCounter:
+    def __init__(self):
+        self.iters = 0
+        self.rk_n = []
+    def __call__(self, rk=None):
+        self.iters += 1
+        self.rk_n.append(np.linalg.norm(rk))
+        
+fig, ax = plt.subplots()
+fig2, ax2 = plt.subplots()
+precond = {'spilu' : linalg.spilu(csc_matrix(Acsr), fill_factor=10),
+           'splu': linalg.splu(csc_matrix(Acsr))}
+
+restart = 50
+maxiter = 100
+i = 0
+for lab, op in precond.items():
+    M = linalg.LinearOperator(Acsr.shape, op.solve)
+    
+    c = LGmresCounter()
+    x, info = lgmres(Acsr, b, M=M, tol=1e-9, callback=c, inner_m=restart, atol=1e-15, maxiter=maxiter)
+    ax2.plot(c.rk_n, label=lab)
+    print(info)
+    print(np.allclose(Acsr @ x, b))
+    if info != 0:
+        conv = 'nc!'
+    ax.bar(i, c.iters, label=f'{lab} - {conv}')
+    i +=1
+ax.set_ylabel('Number of iteration');fig.legend()
+ax2.set_ylabel('Residual norm');fig2.legend()
+#+end_src
+
+#+RESULTS:
+:RESULTS:
+: 100
+: False
+: 0
+: False
+[[file:./jupyter/33f15035ea2fa4bd60858bd23576164d802b167e.png]]
+[[file:./jupyter/009c793780e180dc7c6d267ea5df1323e36923d6.png]]
+:END:
+
+

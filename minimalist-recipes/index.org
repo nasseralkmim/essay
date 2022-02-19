@@ -1,0 +1,117 @@
+#+options: ':nil *:t -:t ::t <:t H:3 \n:nil ^:t arch:headline
+#+options: author:t broken-links:nil c:nil creator:nil
+#+options: d:(not "LOGBOOK") date:t e:t email:nil f:t inline:t num:t
+#+options: p:nil pri:nil prop:nil stat:t tags:t tasks:t tex:t
+#+options: timestamp:t title:t toc:t todo:t |:t
+#+title: Favorite recipes 2021
+#+date: <2021-03-13 Sat>
+#+author: Nasser Alkmim
+#+email: nasser.alkmim@gmail.com
+#+language: en
+#+select_tags: export
+#+exclude_tags: noexport
+#+creator: Emacs 27.1 (Org mode 9.4.3)
+#+tags[]: food favorites
+#+toc: t
+#+draft: t
+My favorites recipes with simple and healthy ingredients.
+Focusing on high volume and low calorie ingredients for maximum satiety.
+
+* Chicken and rice stir fry
+
+Ingredients:
+
+1. chicken
+2. rice
+3. spinach (baby)
+4. champignon mushroom
+5. frozen vegetables (red bell pepper, corn, beans, carrots)
+6. siracha on top
+
+
+#+DOWNLOADED: screenshot @ 2021-03-13 17:19:29
+#+attr_html: :width 350px
+[[file:Chicken_and_rice_stir_fry/2021-03-13_17-19-29_screenshot.png]]
+
+
+* Curry with rice
+1. same as stir fry
+2. curry sauce (ready)
+
+
+
+#+DOWNLOADED: screenshot @ 2021-03-15 15:50:41
+#+attr_html: :width 350px
+[[file:Curry_with_rice/2021-03-15_15-50-41_screenshot.png]]
+
+* Tomato soup with rice
+1. same as the stir fry
+2. canned tomatoes
+   
+
+#+DOWNLOADED: screenshot @ 2021-03-16 20:33:34
+#+attr_html: :width 350px
+[[file:Tomato_soup_with_rice/2021-03-16_20-33-34_screenshot.png]]
+
+
+
+* Carbonara
+
+1. eggs
+2. bacon
+3. pasta
+4. parmesan cheese
+
+#+DOWNLOADED: screenshot @ 2021-03-14 12:53:06
+#+attr_html: :style width: 350px
+   [[file:Carbonara/2021-03-14_12-53-06_screenshot.png]]
+
+   
+* Egg sandwich
+1. bread
+2. eggs
+3. cheese
+4. butter
+
+
+#+DOWNLOADED: screenshot @ 2021-03-14 12:56:13
+#+attr_html: :width 350px
+[[file:Egg_sandwich/2021-03-14_12-56-13_screenshot.png]]
+
+
+   
+* Smoked salmon rice cake
+Good low calorie and high protein breakfast or snack.
+
+1. rice crispy
+2. low calorie cream cheese
+3. cucumber
+4. smoked salmon
+
+#+DOWNLOADED: screenshot @ 2021-03-19 10:39:57
+#+attr_html: :width 350px
+[[file:Smoked_salmon_rice_crispy/2021-03-19_10-39-57_screenshot.png]]
+
+* Fetta chesse and ham rice cake
+
+1. feta cheese 25 kcal
+2. ham 25 kcal
+3. rice cake 25 kcal
+4. tomato and onions
+
+   #+DOWNLOADED: screenshot @ 2021-03-24 16:45:01
+   #+attr_html: :width 350px
+   [[file:Fetta_chesse_and_ham_rice_cake/2021-03-24_16-45-01_screenshot.png]]
+
+* Zucchini omelette rice race
+
+1. zucchini egg white omelette 30 kcal
+2. low fat cream cheese 25 kcal
+3. rice cake 25 kcal
+4. tomato and onions 10 kcal
+
+#+DOWNLOADED: screenshot @ 2021-03-26 11:39:51
+#+attr_html: :width 350px
+[[file:Zucchini_omelette_rice_race/2021-03-26_11-39-51_screenshot.png]]
+
+

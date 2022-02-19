@@ -1,0 +1,15 @@
+#+title: Blog, learning and skin in the game
+#+date: <2020-12-27 Sun>
+#+author: Nasser Alkmim
+#+email: nasser.alkmim@gmail.com
+#+draft: t
+#+tags[]: meta learning 
+#+toc: t
+* Blogging as a way to learn
+First let me briefly explain what I thin "learning" is.
+
+What does this have to do with skin in the game?
+
+Blog is what connects this two together.
+If you are into programming and data analysis the best tool is emacs org-mode.
+* Note taking and the thinking process

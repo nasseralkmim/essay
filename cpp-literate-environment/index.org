@@ -1,0 +1,73 @@
+#+title: C++ literate environment
+#+date: <2021-05-28 Fri>
+#+author: Nasser Alkmim
+#+email: nasser.alkmim@gmail.com
+#+draft: t
+#+toc: t
+#+tags[]: c++
+* Prologue
+** C++ compiler
+#+begin_src shell
+g++ --version
+#+end_src
+
+#+RESULTS:
+: g++ (Ubuntu 9.3.0-17ubuntu1~20.04) 9.3.0
+: Copyright (C) 2019 Free Software Foundation, Inc.
+: This is free software; see the source for copying conditions.  There is NO
+: warranty; not even for MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+: 
+
+#+begin_src emacs-lisp
+(print org-babel-C++-compiler)
+#+end_src
+
+#+RESULTS:
+: g++
+
+** Tangle block into file
+C++ org-babel block have no support for session.
+Which means I can not use one block definitions/declarations in another one, like in a Jupyter notebook or python org-babel blocks.
+
+My idea is to save it to a file and import in another block.
+Using the =:tangle filename= header argument. [[https://orgmode.org/manual/Extracting-Source-Code.html][Extracting Source Code (The Org Manual)]].
+
+It seems that =:tangle= does not automatically creates a folder.
+To begin, lets start with current directory.
+
+#+RESULTS:
+
+#+begin_src C++ :tangle test_class.cpp :main no
+#include <string>
+class Widget {
+public:
+std::string value {"from the class!!"};
+};
+std::string foo () {return "from the function";}
+#+end_src
+
+#+RESULTS:
+
+I don't know why the block execution gives an error (=(.text+0x24): undefined reference to `main'=), but it works as intended.
+The file is created after I save the buffer.
+** Including external file
+I need to include the file with absolute path which is annoying.
+
+#+header: :includes /mnt/c/Users/c8441205/OneDrive/nasser-website/content/notes/numerical-experiments/test_class.cpp
+#+begin_src C++
+#include <iostream>
+#include <ostream>
+
+int main () {
+std::cout << 2 << std::endl;
+std::cout << foo() << std::endl;
+Widget v;
+std::cout << v.value;
+}
+#+end_src
+
+#+RESULTS:
+: 2
+: from the function
+: from the class!!
+

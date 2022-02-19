@@ -1,0 +1,104 @@
+#+options: ':nil *:t -:t ::t <:t H:3 \n:nil ^:t arch:headline
+#+options: author:t broken-links:nil c:nil creator:nil
+#+options: d:(not "LOGBOOK") date:t e:t email:nil f:t inline:t num:t
+#+options: p:nil pri:nil prop:nil stat:t tags:t tasks:t tex:t
+#+options: timestamp:t title:t toc:t todo:t |:t
+#+title: Does monetary easing causes "asset inflation"?
+#+date: <2020-12-25 Fri>
+#+author: Nasser Alkmim
+#+email: nasser.alkmim@gmail.com
+#+language: en
+#+select_tags: export
+#+exclude_tags: noexport
+#+creator: Emacs 27.1 (Org mode N/A)
+#+toc: t
+#+draft: t
+#+tags[]: monetary-policy economy portugues
+* Introduction
+
+Some people say that monetary easing by the central bank in the past decade is not affecting the CPI but the asset prices (stocks and bonds).
+
+
+To see how this is wrong (?) we need to understand inflation, monetary policy and modern finance.
+* Inflation
+
+Results from excess demand for goods and the ability of the supply side to provide.
+
+*** Monetarist
+
+#+begin_quote
+Right wingers can be so fanciful about their intellectual inheritance. -- critical mass (FT comment)
+#+end_quote
+
+#+begin_quote
+The other is the fact that investment in the real economy seems to have reached a limit, or at least slowed to a snail’s pace, which means that the demand for capital is extremely low. If people are not building new businesses, that is a huge drag on aggregate demand. Why is this happening? In part it is the result of tech disruption of traditional industries. -- Marty Edwards (FT comment)
+#+end_quote
+
+
+
+
+
+* Monetary policy
+*** Antes de 2008
+
+*** Depois de 2008
+* Modern finance
+
+#+begin_quote
+Modern finance is about stocks and bonds, not money;
+about capital markets, not money market;
+and about financiers, not bankers.
+Most important, is about stocks, not flows;
+and it focuses attention on movement of capital asset prices, not on movement of liquid bank reserves. --- Perry Mehrling
+#+end_quote
+
+* Quantitative easing
+*** Definição de QE
+[[https://www.stlouisfed.org/on-the-economy/2017/november/quantitative-easing-how-used][What Is Quantitative Easing, and How Has It Been Used?]] QE é compra de ativos pelo BC.
+Aumenta ativo e aumenta passivo (bank reserves).
+*** Bank reserves and money supply
+[[https://www.newyorkfed.org/medialibrary/media/research/staff_reports/sr380.pdf][NYFED Bank reserves]]
+Desde a crise de 2008, as reservas bancárias junto ao BC aumentaram muito.
+Os livros de macroeconomia dizem que esse aumento implica numa multiplicação monetária e consequentemente pode gerar inflação.
+Mas não foi o que ocorreu.
+Diferente das circunstâncias convencionais, as reservas bancárias recebem juros, então há um tradeoff a ser vencido para que os bancos utilizem esses recursos.
+
+*** QE e expansão do crédito
+
+BC compra títulos com prazo longo, 10 a 30 anos, aumentando a demanda por esses títulos.
+O aumento do preço implica que o juros diminui (rendimentos ou yield diminui).
+
+Isso estimula diretamente o crédito usado no mercado de capitais (hipotecas, debêntures, CDB)
+Estimula pois diminui o custo para se tomar crédito.
+
+*** Artigo FT 2014
+[[https://www.ft.com/content/ddf57993-3c63-305c-a0b1-c7d6548a3e43?fbclid=IwAR0WOwdT33YVWkPH9hynDvEse6qYRhno_1XmfR6Wm0n_KXjJ3V5sOPgZ_bQ][Subscribe to read | Financial Times]] Ele plotou monetary BASE e SP500, no próprio gráfico mostra correlação oposta. Errado concluir qualquer tipo de correlação desse gráfico, muito menos relação de causalidade.
+
+[[https://www.investopedia.com/terms/m/monetarybase.asp][Monetary Base]] é moeda (não confundir com dinheiro) mais reservas dos bancos no BC, é a parte líquida do dinheiro.
+Money supply inclui expansão da base monetária por meio de instrumento de crédito.
+
+*** Efeito do QE em portfolios
+Quando o BC compra títulos de longo prazo, no QE, ele põem pressões de aumento do preço desses títulos.
+Consequentemente, em títulos pré-fixados, os quais tem o rendimento calculado como valor presente dos pagamentos futuros, tem seu rendimento reduzido (diminui o yield).
+Pois para ter o como o valor presente aumentou, será necessário um rendimento menor para se ter o equivalente de pagamentos futuros.
+
+Essa redução no rendimento desses títulos de renda fixa pode implicar em alterações no preço do risco usado em precificação de ativos, e.g. usando Capital Asset Pricing Model (CAPM).
+
+* Asset inflation
+*** FED QE e S&P500
+
+É fato que após o QE do FED o índice S&P500 subiu.
+Isso é o observado.
+Agora, concluir que a *causa* do rally de equities foi o QE é um salto argumentativo ingênuo.
+Correlação não indica causalidade.
+
+#+DOWNLOADED: screenshot @ 2021-01-23 09:36:34
+#+attr_html: :width 350px
+[[file:Asset_inflation/2021-01-23_09-36-34_screenshot.png]]
+
+
+* Referências
+
+1. [[https://www.ft.com/content/6536113f-f509-41e2-bee0-597ed90843b6][Higher inflation is coming and it will hit bondholders | Financial Times]]
+2. Minsky and Modern Finance. Perry Mehrling (2000).
+3. [[https://www.newyorkfed.org/markets/programs-archive/large-scale-asset-purchases][Large-Scale Asset Purchases - FEDERAL RESERVE BANK of NEW YORK]]

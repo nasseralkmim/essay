@@ -1,0 +1,28 @@
+#+options: ':nil *:t -:t ::t <:t H:3 \n:nil ^:t arch:headline
+#+options: author:t broken-links:nil c:nil creator:nil
+#+options: d:(not "LOGBOOK") date:t e:t email:nil f:t inline:t num:t
+#+options: p:nil pri:nil prop:nil stat:t tags:t tasks:t tex:t
+#+options: timestamp:t title:t toc:t todo:t |:t
+#+title: Shadow banking and FED as a lender of last resort
+#+date: <2020-12-25 Fri>
+#+author: Nasser Alkmim
+#+email: nasser.alkmim@gmail.com
+#+language: en
+#+select_tags: export
+#+exclude_tags: noexport
+#+creator: Emacs 27.1 (Org mode N/A)
+#+draft: t
+#+tags[]: economy monetary-policy 
+#+toc: t
+* Traditional crisis
+
+During a traditional crises, with mostly traditional banks[fn:1], the cash commitments are greater than the cash flows.
+So, there is a liquidity problem for the banks.
+The FED can directly provide that liquidity by increasing banks reserves.
+
+* References
+1. [[https://voxeu.org/article/growth-non-bank-finance-and-new-monetary-policy-tools]] 
+
+* Footnotes
+
+[fn:1] Traditional banks accept deposits (short term borrowing) and make loas (long term lending).

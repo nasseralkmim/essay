@@ -1,0 +1,802 @@
+#+title: Numerical analysis notes
+#+date: <2021-06-30 Wed>
+#+lastmod: 2021-08-09 10:09:07
+#+author: Nasser Alkmim
+#+draft: t
+#+toc: t
+#+tags[]: python numerical-analysis linear-algebra
+* Fixed point methods
+:PROPERTIES:
+:header-args:python: :session relaxation-methods
+:END:
+** Definition
+From an approximation attempt based on the split of the matrix.
+
+#+DOWNLOADED: screenshot @ 2021-07-10 09:20:36
+#+attr_html: :width 550px
+[[file:images/Fixed_point_methods/2021-07-10_09-20-36_screenshot.png]]
+** General implementation
+Relation between fixed-point iteration and preconditioning.
+
+#+DOWNLOADED: screenshot @ 2021-07-10 09:44:01
+#+attr_html: :width 550px
+[[file:images/Fixed_point_methods/2021-07-10_09-44-01_screenshot.png]]
+
+
+
+#+begin_src python
+import numpy as np
+
+def smoother(A, b, x, Q, n=100, tol=1e-12):
+    residual, residuals, iter_counter, I = 1, [], 0, np.identity(A.shape[0])
+    while residual > tol:
+        x = (I - Q @ A) @ x + Q @ b
+        iter_counter += 1
+        if iter_counter == n:
+            break
+        residual = np.linalg.norm(b - A @ x)
+        residuals.append(residual)
+    return x, iter_counter, residuals
+#+end_src
+
+#+RESULTS:
+
+** Jacobi
+
+#+begin_src python
+import matplotlib.pyplot as plt
+import matplotlib
+matplotlib.style.use('ggplot')
+
+A = np.array([[9, 2], [3, 5]])
+b = A[:, 0]
+x = b * 0
+print(f'A={A}')
+print(f'b={b}')
+print(f'Exact sol: {np.linalg.solve(A, b)}')
+print(f'Exact sol: {np.linalg.solve(A, b)}')
+Q = np.diagflat(np.diag(A)) # 
+print(f'Q^-1={Q}')
+x, i, r = smoother(A, b, x, np.linalg.inv(Q), tol=1e-8)
+print(f'Iter sol: {x} in {i} iterations')
+plt.plot(r);plt.xlabel('iteration');plt.ylabel('residual norm')
+#+end_src
+
+#+RESULTS:
+:RESULTS:
+: A=[[9 2]
+:  [3 5]]
+: b=[9 3]
+: Exact sol: [1. 0.]
+: Exact sol: [1. 0.]
+: Q^-1=[[9 0]
+:  [0 5]]
+: Iter sol: [1.00000000e+00 1.06546361e-09] in 21 iterations
+[[file:./jupyter/9be5447df271774179144bb59130c021bdb94b84.png]]
+:END:
+
+** Gauss Seidel
+
+#+begin_src python
+import matplotlib.pyplot as plt
+import matplotlib
+matplotlib.style.use('ggplot')
+
+A = np.array([[9, 2], [3, 5]])
+b = A[:, 0]
+x = b * 0
+print(f'A={A}')
+print(f'b={b}')
+print(f'Exact sol: {np.linalg.solve(A, b)}')
+Q = (np.diagflat(np.diag(A)) - np.tril(A, -1)) # 
+print(f'Q^-1={Q}')
+x, i, r = smoother(A, b, x, np.linalg.inv(Q), tol=1e-8)
+print(f'Iter sol: {x} in {i} iterations')
+plt.plot(r);plt.xlabel('iteration');plt.ylabel('residual norm')
+#+end_src
+
+#+RESULTS:
+:RESULTS:
+: A=[[9 2]
+:  [3 5]]
+: b=[9 3]
+: Exact sol: [1. 0.]
+: Q^-1=[[ 9  0]
+:  [-3  5]]
+: Iter sol: [1.00000000e+00 1.11835052e-09] in 39 iterations
+[[file:./jupyter/b94ea0147e5654c6bce7e218e0864e94511e8bc3.png]]
+:END:
+
+* QR decomposition
+:PROPERTIES:
+:header-args:python: :session qr
+:END:
+** Definition
+
+Goal is to find the decomposition of $A=QR$.
+Where $Q$ is a orthonormal basis for $A$ and $R$ is a triangular matrix with the "orthogonalization" components.
+
+#+DOWNLOADED: screenshot @ 2021-07-06 11:53:23
+#+attr_html: :width 500px
+[[file:Krylov_subspace_methods/2021-07-06_11-53-23_screenshot.png]]
+
+** Implementation
+
+#+begin_src python
+from typing import Union
+import numpy as np
+np.set_printoptions(2)
+
+def qr(A: np.ndarray) -> Union[np.ndarray, np.ndarray]:
+    """Performs A=QR decomposition on A square."""
+    n, _ = A.shape
+    R, Q = np.zeros((n, n)), np.zeros((n, n))
+    for i in range(n):              # for each column (0, n)
+        R[i, i] = np.linalg.norm(A[:, i]) # diagonal entries of R matrix
+        Q[:, i] = A[:, i] / R[i, i]       # first basis vector
+        for j in range(i, n):       # upper triangular
+            R[i, j] = Q[:, i] @ A[:, j]   # non-diagonal entries
+            A[:, j] = A[:, j] - R[i, j] * Q[:, i] # remove non orthogonal part (Gram-Schimidt)
+    return Q, R
+#+end_src
+
+#+RESULTS:
+
+** Simple example
+
+#+begin_src python 
+import matplotlib.pyplot as plt
+A = np.array([[12, -51, 4], [6, 167, -68], [-4, 24, -41]])
+npq, npr = np.linalg.qr(A)
+Q, R = qr(A)
+print(f'Q=\n {Q} \n R=\n{R}')
+print(f'numpy: \n Q=\n{npq} \n R=\n{npr}')
+plt.imshow(R)
+#+end_src
+
+#+RESULTS:
+:RESULTS:
+#+begin_example
+Q=
+ [[ 0.86 -0.39 -0.32]
+ [ 0.43  0.9   0.03]
+ [-0.29  0.17 -0.95]] 
+ R=
+[[ 14.   21.  -14. ]
+ [  0.  175.  -70. ]
+ [  0.    0.   34.8]]
+numpy: 
+ Q=
+[[-0.86  0.39  0.33]
+ [-0.43 -0.9  -0.03]
+ [ 0.29 -0.17  0.94]] 
+ R=
+[[ -14.  -21.   14.]
+ [   0. -175.   70.]
+ [   0.    0.  -35.]]
+#+end_example
+#+attr_org: :width 271
+[[file:./jupyter/cc7779dc587ee0ab9d27dc22cf01d0ca8a6abaf7.png]]
+:END:
+** QR and symmetric matrices
+
+#+begin_src python
+import matplotlib.pyplot as plt
+import matplotlib
+matplotlib.style.use('ggplot')
+
+size = 10
+np.random.seed(2)
+A = np.random.random((size, size))
+As= A.T @ A
+Q, R = qr(As)
+fig, (ax1, ax2) = plt.subplots(1, 2)
+ax1.imshow(R)
+ax1.set_title('Symm')
+
+Q, R = qr(A)
+ax2.imshow(R)
+ax2.set_title('Non Symm')
+#+end_src
+
+#+RESULTS:
+[[file:./jupyter/20b18d7f46a33ad58a6cfd6393a6d2f588439a97.png]]
+
+Remarks:
+1. the triangular matrix has large value at the top.
+2. the orthogonalization process has *lower recurrence*, we only need to subtract the from the basis candidate the projection of a few other basis. 
+
+   
+** Backward and forward substitution
+
+
+#+DOWNLOADED: screenshot @ 2021-07-09 14:20:51
+#+attr_html: :width 550px
+[[file:images/QR_decomposition/2021-07-09_14-20-51_screenshot.png]]
+
+
+#+begin_src python
+def backward_subs(U: np.ndarray, c: np.ndarray) -> np.ndarray:
+    """Compute x from Ux=c, with U upper triangular."""
+    m, n = U.shape
+    x = np.zeros(m)
+    # from last m to first 0, -1 to convert position to index 
+    for i in range(m-1, -1, -1):
+        x[i] = (c[i] - U[i, i + 1:] @ x[i + 1:]) / U[i, i]
+    return x
+
+def forward_subs(L: np.ndarray, b: np.ndarray) -> np.ndarray:
+    """Compute c from Lc=b, with L lower triangular."""
+    m, n = L.shape
+    c = np.zeros(m)
+    for i in range(m):
+        c[i] = b[i] - L[i, :i] @ c[:i]  / L[i, i]
+    return c
+
+np.random.seed(1)
+A = np.random.random((3, 3))
+from scipy.linalg import lu
+L, U = lu(A, permute_l=True)
+b = A[:, 0]
+c = forward_subs(L, b)
+x = backward_subs(U, c)
+print(x)
+print(np.linalg.solve(A, b))
+#+end_src
+
+#+RESULTS:
+: [ 1. -0.  0.]
+: [ 1. -0.  0.]
+
+* Arnoldi iterations
+:PROPERTIES:
+:header-args:python: :session qr
+:END:
+** Definition
+
+The Arnoldi iteration uses the same Gram-Schimit idea in the QR.
+But it extends the 
+But now we want to find $AQ_n = Q_{n+1} \tilde{H}_n$.
+For $A$ a square $m \timex m$ matrix.
+This is a reduction of a matrix to a *Hessenberg* form.
+The algorithm goes is performed column by column and can be stopped whenever.
+# If A is symm the Hessenberg will be tridiagonal, low recurrence and fast algorithm.
+
+We can understand it as generating basis vectors for a Krylov subspace defined by a general vector $b$ and a matrix $A$.
+
+#+DOWNLOADED: screenshot @ 2021-07-06 11:50:57
+#+attr_html: :width 500px
+[[file:Krylov_subspace_methods/2021-07-06_11-50-57_screenshot.png]]
+** Implementation
+
+#+begin_src python
+import numpy as np
+from typing import Union
+
+np.set_printoptions(2, suppress=True)
+
+def arnoldi(A: np.ndarray,
+            b: np.ndarray,
+            n_max: int) -> Union[np.ndarray, np.ndarray]:
+    """Arnoldi iteration AQ_n = Q_n+1 H_n.
+
+    Args:
+        A: (m x m) square matrix.
+        b: (m) vector.
+        n_max: number of basis.
+
+    Returns:
+        H: (n_max + 1, n_max) Hessenberg matrix.
+        Q: (m, n_max + 1) matrix with orthogonal basis.
+    """
+    m = A.shape[0]
+    H = np.zeros((n_max + 1, n_max))
+    Q = np.zeros((m, n_max + 1))
+    Q[:, 0] = b / np.linalg.norm(b)  # (1) first basis vector
+
+    for n in range(n_max):  # loop over each basis vector
+        v = A @ Q[:, n]  # (2) basis candidate
+        for j in range(n + 1):  # loop over all previous basis
+            H[j, n] = Q[:, j] @ v  # (3) inner product for projection
+            v = v - H[j, n] * Q[:, j]  # (4) ortogonalization
+        H[n + 1, n] = np.linalg.norm(v)  # (5)
+        if H[n + 1, n] < 1e-12:  # arnoldi breakdown
+            return H, Q  # return e exit function
+        Q[:, n + 1] = v / H[n + 1, n]  # (5)
+    return H, Q
+#+end_src
+
+#+RESULTS:
+
+** Example
+
+#+begin_src python
+np.random.seed(2)
+n = 2
+A = np.random.random((n, n))
+b = np.zeros(A.shape[0]); b[0] = 1
+H, Q = arnoldi(A, b, n_max=n)
+print(f'H: \n {H}')
+print(f'Q: \n {Q}')
+print(f'AQ_n = Q_n+1 H_n?')
+print(f'AQ_n =\n{A @ Q[:, :n]}')
+print(f'Q_n+1 H_n=\n{Q @ H}')
+#+end_src
+
+#+RESULTS:
+#+begin_example
+H: 
+ [[0.44 0.03]
+ [0.55 0.44]
+ [0.   0.  ]]
+Q: 
+ [[1. 0. 0.]
+ [0. 1. 0.]]
+AQ_n = Q_n+1 H_n?
+AQ_n =
+[[0.44 0.03]
+ [0.55 0.44]]
+Q_n+1 H_n=
+[[0.44 0.03]
+ [0.55 0.44]]
+#+end_example
+
+** Symmetric matrices
+
+#+begin_src python
+import matplotlib.pyplot as plt
+np.random.seed(2)
+fig, (ax1, ax2) = plt.subplots(1, 2)
+
+n = 15
+A = np.random.random((n, n))
+b = np.zeros(A.shape[0]); b[0] = 1
+
+As = A.T @ A
+H, Q = arnoldi(As, b, n_max=n)
+ax1.imshow(H)
+ax1.set_title('Symm')
+
+H, Q = arnoldi(A, b, n_max=n)
+ax2.imshow(H)
+ax2.set_title('Non Symm')
+#+end_src
+
+#+RESULTS:
+[[file:./jupyter/2fbad947e2c6112f89ca989ab2274c4869afbc50.png]]
+
+Remarks:
+1. symmetric matrices implies in lower recurrence since it yields a tridiagonal $H$.
+   1. it can optimize the algorithm by not requiring looping over all previous basis, just the immediate previous.
+   2. tridiagonal because $H$ is Hessenberg and will be symmetric as well.
+
+** Relation with Kyrlov subspaces
+
+From Strang class.
+[[https://ocw.mit.edu/courses/mathematics/18-086-mathematical-methods-for-engineers-ii-spring-2006/video-lectures/lecture-18-krylov-methods-multigrid-continued/][Lecture 18: Krylov Methods / Multigrid Continued | Video Lectures | Mathemati...]]
+
+#+begin_src python
+n = 6
+krylov_dimension = 6
+
+A = np.diagflat(np.arange(1, n+1))
+b = np.ones(n)
+K = np.empty((n, krylov_dimension))
+K[:, 0] = b
+for k in range(1, krylov_dimension):
+    K[:, k] = A**k @ b
+print('cond(K): ', np.linalg.cond(K))
+H, Q = arnoldi(K, b, n_max=n)
+print('cond(Q): ', np.linalg.cond(Q))
+
+fig, ax = plt.subplots()
+ax.imshow(H)
+#+end_src
+
+#+RESULTS:
+:RESULTS:
+: cond(K):  731200.938786102
+: cond(Q):  1.4142135623733276
+#+attr_org: :width 214
+[[file:./jupyter/da67bec0a1a72539965321a001b7c13fd2be8a67.png]]
+:END:
+
+Remarks:
+1. condition number of the Krylov matrix is very high.
+   1. close to singular, columns *almost linearly dependent*.
+   2. look at $K^T K$, which is symmetric with positive eigenvalues
+      1. the Gram matrix measures how independent are the columns vectors.
+   3. this matrix's eigenvalues are related to the square of the singular values of $K$
+2. condition number of the orthonormal basis of the Krylov subspace is much smaller.
+   1. column space vectors are independent
+3. the matrix $H$ is concentrated at the top, indicating low recurrence and efficiency of the algorithm.
+   1. because less subtractions are required.
+
+
+
+* Least squares
+:PROPERTIES:
+:header-args:python: :session qr
+:END:
+** Definition
+Find an approximation for an overdetermined $Ax=b$ that minimizes the residual norm.
+
+The problem is that $Ax=b$ has no solution, which means that we can not express $b$ as a linear combination of the columns of $A$.
+Then, what we do?
+We project $b$ onto $A$ and solve that instead.
+
+
+#+DOWNLOADED: screenshot @ 2021-07-09 17:00:20
+#+attr_html: :width 550px
+[[file:images/Least_squares/2021-07-09_17-00-20_screenshot.png]]
+
+
+** Implementation
+
+#+begin_src python
+def least_square(A: np.ndarray, b: np.ndarray) -> np.ndarray:
+    """Approximate x for Ax=b
+
+    Returns:
+        x: (n) n is the number of columns of A.
+    """
+    Q, R = qr(A.T @ A)
+    x = backward_subs(R, Q.T @ A.T @ b)
+    return x
+A = np.array([[1, -2], [1, 0], [1, 2]])
+b = np.array([1, 2, 4])
+x = least_square(A, b)
+print(x)
+npx, _, _, _ = np.linalg.lstsq(A, b, rcond=None)
+print(npx)
+#+end_src
+
+#+RESULTS:
+: [2.33 0.75]
+: [2.33 0.75]
+
+** Visualization
+
+#+begin_src python
+fig, ax = plt.subplots()
+A = np.array([[0, 6], [1, 0], [2, 0]])
+b = np.array([1, 2, 4])
+x = least_square(A, b)
+ax.scatter(*A.T)
+domain = np.linspace(0, 2)
+print('Least square solution for Ax=b: ', x)
+ax.plot(domain, domain*x[1] + x[0])
+#+end_src
+
+#+RESULTS:
+:RESULTS:
+: Least square solution for Ax=b:  [2.   0.17]
+[[file:./jupyter/9ac60e73b05feede6aacc6d059834f1a1d1760ea.png]]
+:END:
+
+* Krylov subspace methods
+:PROPERTIES:
+:header-args:python: :session qr
+:END:
+** Relation with fixed-point iterations
+
+#+DOWNLOADED: screenshot @ 2021-07-10 10:04:13
+#+attr_html: :width 550px
+[[file:images/Krylov_subspace_methods/2021-07-10_10-04-13_screenshot.png]]
+
+** Definition
+
+Krylov subspace methods are iterative methods that use the Krylov subspace.
+The solution approximation is in the Krylov subspace, which is cheap to construct, just requires matrix vector multiplication.
+Specially cheap if we are dealing with sparse matrices.
+# It extends the standard relaxation methods by attempting to find a better linear combination in this space.
+
+The Krylov space by construction has bad condition number.
+# columns point almost to same direction by construction of the space.
+# it measures error amplification
+Arnoldi algorithm, for instance, solves that by generating a orthonormal basis for it.
+
+** Projection onto Krylov subspaces
+** GMRES
+In order to find the linear combination of the Krylov column vectors we impose that the residual at each step _is minimum_.
+
+
+#+DOWNLOADED: screenshot @ 2021-07-16 07:48:23
+#+attr_html: :width 550px
+[[file:images/Krylov_subspace_methods/2021-07-16_07-48-23_screenshot.png]]
+
+
+
+** GMRES and least squares
+This minimization constraint, minimum residual, is solved using the least square method.
+
+** GMRES and Arnoldi
+GMRES uses Arnoldi to simplify the minimization problem.
+
+** GMRES Implementation
+
+#+DOWNLOADED: screenshot @ 2021-07-15 20:38:48
+#+caption: Trefethen and Bau, 1997.
+#+attr_html: :width 450px
+[[file:images/Krylov_subspace_methods/2021-07-15_20-38-48_screenshot.png]]
+
+#+begin_src python 
+def gmres(A: np.ndarray,
+          b: np.ndarray,
+          max_iter: int = 200,
+          tol: float = 1e-8) -> np.ndarray:
+    """Solve Ax=b using GMRES."""
+    m = A.shape[0]
+    x = np.zeros(m)
+    num_iter = 0
+    residuals = []
+    for n in range(max_iter):
+        H, Q = arnoldi(A, b, n)
+        rhs = np.zeros(n+1); rhs[0] = np.linalg.norm(b) 
+        y = least_square(H, rhs)
+        x = Q[:, :n] @ y
+        r = np.linalg.norm(H @ y - rhs)
+        residuals.append(r)
+        if r < tol:
+            break
+        num_iter += 1
+    return x, num_iter, residuals
+#+end_src
+
+#+RESULTS:
+
+Remarks:
+1. At each GMRES iteration, we call the =arnoldi= function.
+   1. this is not optimal, because the basis created are constant.
+   2. we just need the =n+1= basis.
+2. In this implementation we store the number of basis correspondent to the iteration count.
+   1. usually, the optimal algorithms have a maximum number of stored basis.
+   2. when this maximum is reached the storage is "restarted".
+
+** Example
+
+#+begin_src python
+np.random.seed(2)
+size = 5
+A = np.random.random((size,size))
+print('A=\n', A)
+b = np.random.random(size)
+print('b=\n', b)
+print('Numpy: ', np.linalg.solve(A, b))
+x, num_iter, _ = gmres(A, b)
+print("GMRES: ", x, "num_iter: ", num_iter)
+#+end_src
+
+#+RESULTS:
+: A=
+:  [[0.44 0.03 0.55 0.44 0.42]
+:  [0.33 0.2  0.62 0.3  0.27]
+:  [0.62 0.53 0.13 0.51 0.18]
+:  [0.79 0.85 0.49 0.85 0.08]
+:  [0.51 0.07 0.43 0.1  0.13]]
+: b=
+:  [0.6  0.23 0.11 0.22 0.35]
+: Numpy:  [ 0.62 -1.42  0.21  1.04 -0.49]
+: GMRES:  [ 0.62 -1.42  0.21  1.04 -0.49] num_iter:  5
+
+** Analysis of residual
+
+
+#+begin_src python
+import matplotlib.pyplot as plt
+import matplotlib
+matplotlib.style.use('ggplot')
+np.random.seed(2)
+
+size = 20
+A = np.random.random((size,size))
+b = np.random.random(size)
+x, num_iter, r = gmres(A, b)
+
+plt.plot(r);plt.xlabel('iteration');plt.ylabel('residual norm')
+#+end_src
+
+#+RESULTS:
+[[file:./jupyter/d656a4b1c095afd9dc922d7a9ec9f9a70d9d8774.png]]
+
+** Comparing with alternatives
+
+#+begin_src python
+import pyamgcl as amg
+import numpy as np
+from scipy.sparse import csr_matrix
+import scipy.sparse.linalg as sci
+np.set_printoptions(2, suppress=True)
+
+Ad = np.array([[1, 0, 0], [0, 2, 0], [0, 0, 3]])
+b = np.array([1, 4, 6])
+
+A = csr_matrix(Ad)
+
+x_sp = sci.spsolve(A, b) 
+
+x_g, _ = sci.gmres(A, b, maxiter=100, tol=1e-8)
+
+preconditioner = amg.amgcl(A)
+x_p, _ = sci.gmres(A, b, M=preconditioner, maxiter=100, tol=1e-8)
+
+# dense matrix
+x_my, i, _ = gmres(Ad, b)
+
+print('sparse direct solver correct? ', np.allclose(A.dot(x_sp), b))
+print('GMRES correct? ', np.allclose(A.dot(x_g), b))
+print('GMRES+AMG correct? ', np.allclose(A.dot(x_p), b))
+print('My GMRES correct? ', np.allclose(A.dot(x_my), b))
+print('My number of iterations: ', i)
+#+end_src
+
+#+RESULTS:
+: sparse direct solver correct?  True
+: GMRES correct?  True
+: GMRES+AMG correct?  True
+: My GMRES correct?  True
+: my number of iterations:  3
+
+** Negative determinant
+
+
+#+begin_src python :session negative-det
+import matplotlib.pyplot as plt
+import matplotlib
+matplotlib.style.use('ggplot')
+import numpy as np
+from scipy.sparse.linalg import gmres, spsolve
+from scipy.sparse import random
+
+class gmres_counter:
+    def __init__(self, disp=True):
+        self._disp = disp
+        self.num_iter = 0
+        self.residual_norms = []
+    def __call__(self, rk=None):
+        self.num_iter += 1
+        self.residual_norms.append(rk)
+        if self._disp:
+            print(f'Iter {self.num_iter} \t residual = {str(rk)}')
+
+
+A = np.array([[2, -1, 3], [3, -2, 5], [-1, 4, 1]])
+b = np.array([1, 0, 0])
+
+counter = gmres_counter(disp=False)
+
+x, info = gmres(A, b, callback=counter, maxiter=150)
+print('Convergece tolerance achieved? ', info == 0) # >0 not converged
+print('GMRES converged? ', np.allclose(A @ x, b), f'in {counter.num_iter} iterations')
+print('Determinant: ', np.linalg.det(A))
+
+fig, (ax1, ax2) = plt.subplots(1, 2)
+im = ax1.imshow(A);ax1.set_title('Sparsity pattern')
+fig.colorbar(im, ax=ax1)
+ax2.plot(counter.residual_norms);ax2.set_xlabel('iteration');ax2.set_ylabel('residual norm')
+fig.tight_layout()
+
+x_exact = np.linalg.solve(A, b)
+print('Exact solver right, matrix non singular? ', np.allclose(A @ x_exact, b))
+#+end_src
+
+#+RESULTS:
+:RESULTS:
+: Convergece tolerance achieved?  True
+: GMRES converged?  True in 3 iterations
+: Determinant:  -5.999999999999997
+: Exact solver right, matrix non singular?  True
+[[file:./jupyter/62552b04e3fbc6d0db173a5db1310767512901b0.png]]
+:END:
+
+Remark:
+1. Even with negative determinant, GMRES converged.
+
+* Multigrid methods
+:PROPERTIES:
+:header-args:python: :session multilevel-methods
+:END:
+** Setup phase
+
+In this phase we need to construct the operators for each level.
+
+
+* Diagonal dominance and convergence of fixed-point methods
+:PROPERTIES:
+:header-args:python: :session iterative-convergence
+:END:
+** Prologue
+Fixed point methods are also refereed as relaxation methods due their historical application to problems models with "div (grad)" operator, or Laplacian.
+** Derivation Jacobi
+
+
+#+DOWNLOADED: screenshot @ 2021-07-01 15:01:57
+#+attr_html: :width 350px
+[[file:Diagonal_dominance_and_convergence_of_fixed-point_methods/2021-07-01_15-01-57_screenshot.png]]
+
+
+** Diagonal dominant matrix
+
+#+begin_src python
+import numpy as np
+
+def jacobi(A, b, x, n=100, tol=1e-12):
+    D = np.diag(A)              # just a 1d array
+    R = A - np.diagflat(D)      # diagflat matrix with diagonal
+    error = 1
+    i = 0
+    e = []
+    while error > tol:
+        x = (b - R @ x) / D
+        i += 1
+        if i == n: break
+        error = np.linalg.norm(b - A @ x)
+        e.append(error)
+    return x, i, e
+#+end_src
+
+#+RESULTS:
+
+#+begin_src python
+import matplotlib.pyplot as plt
+import matplotlib
+matplotlib.style.use('ggplot')
+
+A = np.array([[9, 2], [3, 5]])
+b = A[:, 0]
+x = b * 0
+print(A, b)
+print(f'Exact sol: {np.linalg.solve(A, b)}')
+x, i, e = jacobi(A, b, x)
+print(f'Iter sol: {x} in {i} iterations')
+print(f'Condition number {np.linalg.cond(A)}')
+print(f'Eigenvalues {np.linalg.eigvals(A)}')
+plt.plot(e);plt.xlabel('iteration');plt.ylabel('residual norm')
+#+end_src
+
+#+RESULTS:
+:RESULTS:
+: [[9 2]
+:  [3 5]] [9 3]
+: Exact sol: [1. 0.]
+: Iter sol: [1. 0.] in 30 iterations
+: Condition number 2.677847838291863
+: Eigenvalues [10.16227766  3.83772234]
+[[file:./jupyter/7270276a530723e7f2f2c4b51086384b47b8762b.png]]
+:END:
+
+Remarks:
+1. $A$ is diagonally dominant because the diagonal element is greater than the sum of the off diagonal elements.
+2. convergence in 30 iterations.
+3. small condition number.
+** Non diagonal dominant
+
+#+begin_src python
+A = np.array([[9, 100], [2, 5]]) 
+b = A[:, 0]
+x = b * 0
+print(A, b)
+print(f'Exact sol: {np.linalg.solve(A, b)}')
+x, i, e = jacobi(A, b, x)
+print(f'Iter sol: {x} in {i} iterations')
+print(f'Condition number {np.linalg.cond(A)}')
+print(f'Eigenvalues {np.linalg.eigvals(A)}')
+plt.plot(e);plt.xlabel('iteration');plt.ylabel('residual norm')
+#+end_src
+
+#+RESULTS:
+:RESULTS:
+: [[  9 100]
+:  [  2   5]] [9 2]
+: Exact sol: [ 1. -0.]
+: Iter sol: [-2.45965443e+32  0.00000000e+00] in 100 iterations
+: Condition number 65.21047149118199
+: Eigenvalues [21.28285686 -7.28285686]
+[[file:./jupyter/de669aaa273dd6a7fa2b1b8a2a0df019f22cf638.png]]
+:END:
+
+Remarks:
+1. residual exploded and solution did not converged.
+2. high condition number.
+3. eigenvalues spread apart in a wider range.
+

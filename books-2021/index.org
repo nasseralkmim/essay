@@ -1,0 +1,825 @@
+#+title: 2021 Books review
+#+date: <2022-01-02 Sun>
+#+lastmod: 2022-02-19 09:16:27
+#+author: Nasser Alkmim
+#+toc: t
+#+tags[]: books
+* List of books
+#+begin_export html
+<img src="programmers-brain.jpg" style="display: revert; max-width: fit-content; width: 146px">
+<img src="images/The_only_game_in_town/only-game-in-town.jpg" style="display: revert; max-width: fit-content; width: 146px">
+<img src="images/Analysis_of_manias,_panics_and_crashes/2022-01-02_09-38-31_5193DAiuikL._SX322_BO1,204,203,200_.jpg" style="display: revert; max-width: fit-content; width: 146px">
+<img src="images/Unlimited_memory/2022-01-02_09-40-56_51Ey3BYOjvL.jpg" style="display: revert; max-width: fit-content; width: 146px">
+<img src="images/Guide_to_factor_investing/2022-01-02_09-50-36_71ajWs2Yz8L.jpg" style="display: revert; max-width: fit-content; width: 146px">
+<img src="images/Philosophy_of_software_design/2022-01-02_09-48-43_71J0G8g08dL.jpg" style="display: revert; max-width: fit-content; width: 146px">
+<img src="images/The_data_detective/2022-01-02_09-53-09_81ub8IxiVeL.jpg" style="display: revert; max-width: fit-content; width: 146px">
+<img src="images/The_lean_start_up/2022-01-02_09-54-33_81-QB7nDh4L.jpg" style="display: revert; max-width: fit-content; width: 146px">
+<img src="images/Code/2022-01-02_09-58-07_5b2c265c931026fbaadb317e383a4d63.jpg" style="display: revert; max-width: fit-content; width: 146px">
+<img src="images/Surfaces_and_essences/2022-01-02_09-59-47_9780465018475.jpg.jpeg" style="display: revert; max-width: fit-content; width: 146px">
+#+end_export
+* The programmer's brain
+** Confusion sources
+1. lack of knowledge, not relevant facts in the long term memory.
+2. lack of information, not enough capacity in the short term memory.
+3. lack of processing power, personal working memory limitations.
+* The only game in town
+** Antigamente:
+1. Bancos competiam por depósitos.
+2. Governo pagava juros pelo seu título de dívida.
+3. Sociedade contava com bancos para financiar produção.
+
+
+** Bc
+1. Não perceberam quando operações financeiras complexas foram transferidas para os shadow bankings... Não mostrou evidências além de apenas mencionar.
+
+
+** 2008
+1. Setor bancário não mais focava em canalizar depósitos em projetos produtivos.
+
+** Problemas da geração
+1. Como sair do liquidity trap
+2. Como escapar do balance sheet recession
+3. novas tendência produtivas
+4. Falta de investimento em infraestrutura
+5. Efeito de debt overhangs? debt overhangs that undermine existing and new productive capacity
+6. Efeitos demográficos
+7. E corrida contra as máquinas
+
+** Porque os mecanismos de recuperação não funcionam?
+Excesso de savings, população não cresce e se torna mais desigual.
+
+** Impacto do fluxo de capitais estrangeiro no eme.
+1. Países desenvolvidos crescem pouco, estímulo monetário pelo bc, apetite por risco  faz com que eme sejam destinação de capitais (tourist dollars).
+2. Esse fluxo de capital não é pro longo prazo e gera volatilidade.
+3. A fonte desses recursos advém de "fábricas de crédito" dos bancos centrais.
+4. Raghu Rajan fala sobre isso.
+
+** BIS brigade
+1. Efeitos de política monetária não comvencional em distorcer a ligação entre mercados e fundamentos enquanto não provém uma cure para o crescimento pífio.
+
+** Eme self insurance policies
+1. Reservas internacionais
+2. Câmbio flexivel
+3. Mudanças institucionais que façam o gerenciamento econômico mais responsavel e mais agil
+
+** Política monetária e desigualdade
+1. Expansão da.balanca de pagamentos favorece os que tem ativos, pois ao provisionar liquidez evitar vendas e queda de preço de ativos (suporte).
+2. O autor fala como se o objetivo do BC fosse o controle do preço dos ativos, mas vejo esse efeito como uma consequência do provisionamento de liquidez.
+
+** mpacto da desigualdade no próprio desenvolvimento do capitalismo
+1. Reduz a quantidade de consumo, demanda agregada.
+
+** Seguradoras e ambiente de baixo juros
+1. Juros baixo reduz lucro financeiro e dificulta para seguradoras (que tem caixa remunerado com renda fixa)
+2. Prejudica serviços financeiros de longo prazo em geral (pensões).
+
+** Banks and non banks
+1. Regulation is lagging for p2p lending.
+2. Risco de liquidez está underpriced.
+3. Credit intermediation is moving from the banking sector to the debt securities market. Market based credit (mehrling e jamie Caruana do bis).
+
+** Liquidity
+1. Depende dos dealers-brokers
+2. Algum fator induz todos os investidores a remanejar seus portfólios, se eles não conseguem por falta de liquidez, acabam liquidando outros ativos para compensar. Isso afeta as correlações dos ativos. Isso cria distorção no preço e afeta dealers alavancados usando money market funding.
+3. Mudanças na estrutura do mercado de  intermediação: diminuição dos market makers (dealers) e diminuição do apetite por risco de balanço patrimonial.
+
+** Consequências da diminuição da atividade dos dealers
+1. Dealer tem acesso oa financiamento do BC (discount window). Através de bancos?
+2. Desafios p2p, legais e operacionais. Talvez blockchain ajude aqui.
+
+** Behavior, asset prices and central bank
+1. Notícias ruins sobre a economia, implicam em boas notícias para o mercado.
+2. Em vez de investidores reavaliarem seus valuations, eles assumem que o BC vai ser mais engajado em eliminar volatilidade.
+3. Juros baixo incentiva participação no mercado em busca de retorno e aumento da exposição ao risco (yellen do fed).
+
+** Gfc effects and equities prices
+1. Depois da gfc, empresas aumentaram reserva de dinheiro para eventualidades.
+2. Como rendia pouco, houve pressão da gerência e conselho para retornar esses recursos aos acionistas.
+3. Empresas então começaram a recomprar sua ações, distribuir dividendos e Merge and acquisitions.
+4. Aumentou preço das ações.
+5. Afetou correlações entre ativos (capm) todas as classes subiram juntas.
+
+** The only game in town
+1. Único jogo é depender dos bancos centrais.
+
+** Valuing liquidity and optionality
+1. Liquidez é sobre valorizada, Capm, por exemplo assume liquidez absoluta.
+2. Balancear passivo/ativo. As vezes é necessário desviar do senso comum e usar estrategia de gerenciamento de risco.
+
+** New New normal
+1. Emergentes pioraram, classe média diminuiu, desigualdade aumentou
+2. Avançados recuperaram
+
+** Câmbio
+1. O câmbio é onde a falta de coordenação multilateral e a falta de respostas política refletem.
+* Analysis of manias, panics and crashes
+** Kindleberger on the great depression
+1. Keynes talked about lack of demand, Friedman about fed lack of credit support.
+2. Kindleberger argued about the lack of international credit support.
+
+** Efficient market hypothesis and instability
+1. Incorrect prices should be corrected by trading, which reduces instabilities.
+2. More trade means more efficient pricing mechanics, hence international trade should promote more stable prices.
+3. A perfect market should have no crises. But this is not what happens.
+4. In reality, irrational behavior drives the market.
+
+** Kindleberger and Bagehot
+1. Bagehot says that CB should lend freely, at a penalty, to solvent banks. 
+2. Kindleberger extends to insolvent banks.
+3. Avoid liquidity crisis to turn into solvency crises.
+4. Lender of last resort, where borrowers go for money to pay interest when no one is lending.
+
+** Global payment imbalances and oil crisis
+1. Oil production reduced hence prices went up.
+2. Surplus revenue from oil sale is used to invest on global securities.
+3. Capital flows is volatile and produces distortion on local markets.
+
+** How to tame a crisis?
+1. Monetarists call for controlling money supply.
+2. Some suggest regulation.
+3. Banks are not the cause but a symptom.
+
+
+** Exchange rate and interest rate
+1. Fix exchange rate does not allow changes in interest rate. 
+2. Money supply affects exchange rate. Inverse proportional.
+4. Reduce interest rate, increase money supply, increase international offer, increase exchange rate (value o curry decrease in dollars).
+5. Free float currency allows government to control money supply.
+
+
+** How leaving the gold standard increased fragility?
+1. 
+** old comments
+Kindleberger
+1. Era contra a teoria de mercados eficiente.
+2. Era cético contra teoria monetária. Monetária tás acreditam que bolhas podem ser controladas com aumento no juros. Kindleberger dizia que bolhas surgiam por causa da expansão do crédito e fluxo de capital externo.
+3. Desenvolveu sobre as ideias de Bagehot.
+4. Foi o fluenciado por Minsky "instabilidade inerente da economia de mercado".
+
+Resumo
+1. Crises decorrem de psicologia de mob, manada.
+2. Mania é o otimismo exarcebado.
+3. Manias são alimentadas pela expansão do crédito.
+4. Quando o preço dos ativos cai gera pânico.
+5. Instabilidade do mercado nunca vai desaparecer, apenas pode ser gerenciada.
+
+Great depression
+1. Keynes. Falta de demanda que deveria ser criada pelo governo.
+2. Friedman. Falha do fed que deveria provisionar liquidez para que os bancos honrassem os depósitos.
+3. Kindleberger. Perspectiva internacional. 
+4. Bolhas são alimentadas por crédito.
+5. Nova fonte de fragilidade na década de 80, global payment imbalances.
+
+Sistema de pagamentos global
+1. Contexto do choque do petróleo.
+2. Fluxo internacional na bolsa nacional faz a bolsa e o câmbio valoriza.
+3. Quando esses ativos deixam de performar, investidores vendem rapidamente fazendo uma crise de depreciação (crise financeira) e desvalorização da moeda.
+
+Lender of last resort
+1. Firmas pegam emprestado para rolar suas dias para o futuro, expansão do crédito
+2. Quem vai emprestar para elas cumprirem suas obrigações sem precisar liquidar ativos? Bc
+3. Sem o bc, quando as firmas muito dependente de crédito precisarem liquidar obrigações e não tiverem fonte de financiamento (mais crédito) elas precisa vender seus ativos e isso derruba os preços.
+4. Crise de liquidez gera crise de solvência
+5.  Pois ao vender os ativos desvalorizados, o capital gerado não é suficiente para cobrir as obrigações.
+
+Padrão ouro
+1. Fixa o preço do ouro em relação a moeda.
+2. Evita volatilidade entre moedas de diferentes nações.
+3. Sair do padrão ouro, significa que o câmbio entre moedas é determinado por oferta e demanda do mercado, mais volátil.
+4. Especuladores irracionais em busca de retorno podem causar muita volatilidade no câmbio entre moedas.
+5. Com moeda fixa ao ouro, pais não consegue controlar a oferta monetária. Pois, esse controle afeta a oferta e demanda pela moeda internacionalmente.
+6. Ex. Se Argentina abaixa o juros, ou seja, aumenta a oferta monetária. Isso também aumenta oferta da moeda no mercado global. A moeda fica menos escassa. Teoricamente o valor do peso deveria cair. Mas num sistema fixo, isso não pode acontecer.
+7. Sair do padrão ouro significa que o país pode controlar a oferta monetária.
+8. Controlar a oferta monetária pode ser útil para providenciar estabilidade ao crédito, pois pode reduzir ou aumentar conforme a atividade econômica.
+
+2008
+1. Errado pensar que Lehman brothers foi a causa de crise.
+* Unlimited memory
+
+** Aprender e memorizar
+1. Aprender é adquirir novas informações
+2. Memorizar é armazenar essas informações
+
+** Vantagens de ter uma boa memória
+1. Mais informação armazenada implica em maior potencial para fazer conexões únicas entre elas
+2. Informação só pode ser construída com base em informação precedente, quanto mais se sabe mais fácil ficar saber mais.
+
+** O que é inteligência
+1. Poder recuperar informações da memória
+
+** Poder de acreditar
+1. Acreditar em algo mesmo que não seja verdadeiro permite guiar nosso comportamento
+
+** Eliminar conflito na mente para abrir espaço para aprender
+1. Controle sua voz interior, seu guia.
+2. Não multitask, intelecto pode ser treinado ao se fazer 1 coisa por vez.
+3. Saber o que você quer saber, propósitos guia. Clareza reduz resistência. Esse proprosito deve estar sempre sendo relembrado e na primeira instância da nossa mente.
+
+** Melhor absorver informação da leitura
+1. Usar imaginação e criar imagens na mente
+2. Lembramos mais facilmente de verbos pois temos uma imagem mental do que eles representam
+
+** Longo e médio termo
+1. Usar o que sabemos de longo prazo para armazenar e conectar com novas informações
+2. Nós só lembramos o que pensanos
+
+Organização e aprendizagem
+
+** Peg method
+1. Associar informação a rima
+
+Memory is the residue of thought
+
+** Analogy as the core of cognition
+1. We only learn by association
+2. Aprender é conectar informação nova com informação antiga.
+3. Quanto mais você sabe, mais fácil é conectar novas informações. Como uma bola de neve.
+
+
+
+
+* Guide to factor investing
+** Capm
+1. Only the market factor is considered
+2. Beta measures sensitivity to the market risk
+3. Beta is not just volatility (used to be a measure of risk...)
+
+** Beta definition
+1. Degree in which an asset tends to move with the market
+2. Correlation between asset return and market return multiplied by ratio between asset volatility and market volatility
+3. Beta is the market factor
+
+** Problems with capm
+1. Only explains 2/3 of difference in return of two portfolio
+2. Portfolio a return 10%, b 13%. Their beta difference explains only 2% of the difference. The other 1% is due another factor.
+
+** Return of small market cap stocks
+1. Higher return of small caps was not explain only with beta (correlation with market return)
+2. Beta did not explain excess return of small caps
+3. Size premium/factor
+
+** 3 factors
+1. Size, value and market explain 90% of excess return (premium return)
+
+** Factors definition
+1. Factors are long/short portfolios
+
+** Size factor
+1. Subtract average return of portfolio with small cap stocks from portfolio with large cap average returns
+2. Is persistent, generates excess return 70% of the time for 5 year period analysis.
+
+Msci eafe - developed outside north america, large and mid capa
+
+** Small cap growth anomaly
+1. Have lower return
+
+** Value stocks
+1. 30% stocks with higher book/price ratio
+2. Growth are the 30 lowest book/price ratio, their price is high compared with the book value
+3. Sharpe 0.34
+4. Growth are already big companies with stock price reflecting their value, maybe even overvalued
+
+** Sharpe ratio
+1. Angle of the security market line
+2. More steep, higher Sharpe, more return per unit of risk
+
+** Momentum
+1. Rank based on last 12 months, excluding the most recent
+2. Top 30 average minus bottom 30 average is the factor
+3. Up minus down
+4. Return is performance, up means high performance, price going up
+5. Momentum premium is higher than market premium
+6. Has the highest Sharpe ratio
+* Philosophy of software design
+** Comments
+1. Nice abstract level thinking with some gooD practical examples that can clarify them.
+2. It gives good abstractions so we can talk about design choices. Like: general purpose, deep module, independency between modulus.
+
+
+** Practical summary of guiding principles.
+1. Avoid information leakage. 
+2. Design modules thinking about the information they need, not the order they occur.
+3. Modulus should have simple and clear interfaces but can hide a lot of functionality and information behind, they are deep (could result in larger).
+4. Modulus should be design such that they can be extendended independently without interference and without breaking things.
+5. We should be able to work on a module without knowledge of the others.
+6. Avoid repetition. Don't mix general and special purpose in a single place.
+7. A method should be understandable independently.
+8. Good abstractions when the user does not need to read the code.
+9. Avoid comments that repeat the code.
+10. Implementation that are hard to describe indicate bad design.
+11. Design of ease of writing, not ease of reading.
+12. Put time in design clean abstraction that reduce complexity.
+13. Development should be measured with abstractions, not particular isfeatures.
+
+** Process x essence
+1. Process oriented culture moved away from more essential questions.
+
+** Computer science fundamentals
+1. Problem decomposition.
+2. Always think about complexity and redesign when an improvement opportunity appears.
+
+** How to reduce complexity
+1. Avoid special cases.
+2. Use identifiers in a consistent way.
+3. Encapsulate so people can work on a system without been exposed to all it's complexity.
+4. Good design minimize complexity.
+5. Design should be obvious. It is easy to develop without introducing bugs/incompatibility.
+
+** How to identify complexity (symptoms)
+1. Hard to made small improvements. Code propagation, a small change requires modification in various parts of the code.
+2. Hard to understand how the code works.
+3. Bug fix have high probability of introducing another bug.
+4. High cognitive load manifest itself in multiple dependencies, too much abstraction (few lines of code instead a couple more).
+5. Complexity accumulates fast.
+
+** Consequences of complexity
+6. If we need a lot much time to understand how to change the code safely it means the code is complex.
+7. Risky to modify code without risk of breaking or introducing inconsistencies.
+6. Unknown unkowns, How do I make sure that in order to develop the code I need just made modifications in a specific place.
+
+** Causes of complexity
+1. When a code can not be understood or modified in isolation.
+2. Dependencies are introduced as part of the design process.
+3. Define in a centralized fashion and provide a stard way to access this finial via an API.
+4. The API dependency is not obvious.
+
+** Tactically and strategically
+1. Tatic refers to short term vision.
+2. Just having a tatic is bad in the long run, a long term strategy is a solution.
+3. Long term success depends on structure of the code.
+4. A good structure should be obvious and facilitate extension of the code.
+
+*** Modules guides
+** Modules should be deep
+1. High level division of the software. Can be a class, e.g.
+2. Ideally should be independent, modify one module should not break another.
+3. Common dependency: function arguments and code that calls this function.
+4. Deep: powerful functionality yet simple interface
+5. Cost is the interface and de benefits are the functionality.
+6. The interface is what introduces complexity into the system.
+
+*** Dealing with modules dependencies
+1. Abstract division in interface and implementation.
+2. Interface manages the "what" and implementation the "how".
+
+*** Shallow modules red flags
+1. Interface is as complicated as the functionality it provides.
+2. Too many shallow classes is proned to information leakage between them.
+
+*** Problem with common guiding principle of "simple and small classes are better"
+1. Multiple small classes add complexity since each must have its own interface.
+
+*** Interface design for common case
+1. Interface should be designed such that the common case is as simple as possible.
+2. The flexibility can be provided with specific methods.
+3. Do i need a separate object or can I built it Into other class? How is this object going to be used.
+4. Use composition (instanciate inside the class) instead of aggregation (passing instance as argument).
+
+*** Information leakage
+0. Same knowledge is used in multiple places.
+1. Design decision impacts multiple modules.
+2. The opposite of leakage is information hiding.
+3. How to design such that this information affects only one class.
+4. Example: two classes assume a specific file format.
+5. Example: two class access a data frame with a common column name, if the name of the column change, both class will need to be fixed.
+6. Alternatives: encapsulate that information in a new class or merge the two classes that share the same information.
+
+*** Temporal decomposition
+7. Temporal decomposition may cause information leakage.
+8.  When a program is supposed to run sequentially.
+9. A sign of temporal decomposition is when a call to methods has to be done in a specific order. Shallow interface, would be better to merge into one class with a single method. This merged class would be larger but the information would be hidden with a simpler interface, the class would be deeper.
+
+*** Overexposure
+1. When the user need to know about a rarely used feature to use a common one.
+
+** Dispatcher
+1. Method that uses it's arguments to select another method.
+
+** Pass thrugh variable
+1. Global variable makes it hard to create multiple instances of it.
+2. Alternative is a context object that stores global state information.
+3. He suggested aggregation to store context variables.
+4. Pass just to the constructor and store in as object attributes.
+5. If a new variable needs to be added, just change the context class.
+6. Problem: can hide dependencies and increase overburden on new developers. Specially if it is used indiscriminately.
+
+** Together or apart
+1. If components are independent, better apart.
+2. If they are dependent then separation is bad because it can hide dependencies.
+3. indication for been together: share information, used together (if bidirectional), hard to understand one without the other.
+
+** Long and short methods
+1. Longer are harder to understand.
+2. Splitting methods adds new interfaces, could increase complexity.
+3. Splitting should make it sinpler, always.
+4. A method can be Split by extracting subtasks.
+5. If the subdivision resulted in multiple shallow methods, then it might just add complexity.
+
+** Exceptions handling and complexity
+1. Centralize where exceptions are handled.
+2. Errors that are not worth been handle should just report back and abort the application.
+3. Aggregation of exceptions when an error propagates.
+
+** How to define special cases out of existence
+1. Normal cases should be designed to handle special cases.
+
+** Different layers different abstraction
+1. The way users/clients think about abstraction does not necessarily need a exact correspondence in the application, it can abstraded in another way. (Invisible selection for instance).
+
+** Masking exceptions
+1. Handling exceptions inside a module and masking them works of the exception information is not needed outside.
+2. Things that are not important should be hidden
+
+** Designing steps
+1. Start a design with it's interface.
+
+** Comments
+
+*** Good code is not self docummenting
+1. Rational for design can only be in comments.
+2. Comments are good to express what can not be expressed with code but it is in the developer mind during production.
+
+*** Comments and abstractions
+1. Abstraction is a simplified view of an entity.
+2. Abstraction omits details without losing its essence.
+3. Abstraction rational is not obvious from just code.
+4. Abstraction are used to provide an easy way to think about something.
+5. Good abstractions must be documented.
+
+*** Things to do and to avoid
+1. Keep documentation close to related implementation. Ensures consistency.
+2. Avoid repetition.
+3. Avoid comments that just state what the code does. If someone can write the comment by just looking at the code, then it is unecessary.
+4. Avoid using the same words of the entity being documented .
+5. Comments farther from the code should be more abstract.
+
+*** Documentation during the design process
+1. Comments can provide intuition or precision, high and low level.
+2. Variables comments should be with nouns and should convey the nature, what it represents, not how it is used.
+3. Comments should aid on designing thinking.
+
+*** Implementation and interfacr comments
+1. Implementation describes how a class SHOuLD work.
+2. Interface comments show someone how to USE
+3. If interface comments also need to explain implementation, this is a bad sign a indicates shallowness.
+
+*** Interface comments
+1. Starts describing the behavior.
+2. Return type.
+3. Restrictions on the argument.
+4. Exceptions that can be raised.
+5. Potential side effects.
+
+*** Implementation comments
+1. What and why, not how.
+2. Comment before each loop to describe what happens each iteration.
+
+*** Naming
+1. Avoid names that can have multiple behavior, "blocks" for instance, not clear.
+
+** Changes in code and overall design
+1. The design should be faced critically in light of a change.
+2. The change is easily implemented?
+3. The change causes side effects?
+4. With this every modification should improve the system design.
+
+** Obvious code
+1. More obvious if names are good and code is consistent.
+
+** Inheritance and composition
+1. Inheritance may increase complexity, it requires the knowledge of the whole family tree.
+2. Composition is a good alternative.
+3. Use a helper classe that can be used by multiple other classes without inheritance.
+
+** Agile
+*** Definitions
+1. It is an approach to software development.
+2. Goals: development should be incremental, lightweight and flexible.
+3. Key: development is incremental and iterative.
+4. Each increments adds new abstraction and refractors old based on experience.
+
+*** Problems
+1. Lead to tactical programming, narrow vision, focused only on adding working software without thinking about designing the overall system.
+2. This leads to increase in complexity soon.
+3. Best to increment with abstraction, not features.
+
+** Tests
+*** Difference between unit test and system test
+1. Developers write their own unit test.
+2. Unit tests test a small section of the code, a single method.
+3. Unit tests can be run in isolation.
+4. Unit tests are managed with a coveraged tool, every line of code is tested.
+5. System tests ensure that different parts of the application work together.
+6. Tests give you confidence that the application is working.
+
+*** Testing and design 
+1. Good test coverage allows structural design changes that improve the code.
+2. Coding without refactoring the design mostly adds to complexity of the system.
+
+*** Test driven development
+1. Write test before implementation.
+2. Test should ensure expected behavior.
+
+*** Problem with TDD
+1. Focus on feature and not the design.
+2. There is an incentive to hack solutions just so they pass the tests.
+
+*** When to write a test?
+1. When fixing bugs, write a test that fails because of it.
+
+** Design patterns
+*** Getters and setters
+1. Better not expose instance variables (attributes).
+2. This violates the principle of information hiding.
+3. Getter and setter are shallow methods.
+* The data detective
+** General comments
+1. Books filled with those anecdotal histories for the author to make his arguments more credible. It is a recipe from Gladwell I think, for making best sellers. I think it is sometimes interesting, other times pointless and boring.
+
+** Why evidence is not enough?
+*** Irrational humans
+1. Giving people more information is not enough to prove a point, there is also an emotional component. (Climate change eg.)
+2. The more details in an argument the easiest it is to convince people o something. If you want make a good article, pack it with details and shape the narrative.
+
+*** Bias assimilation?
+1. People conclude not bases on data, evidence and scientific method. They more likely conclude based on their values and prior beliefs.
+2. Bias assimilation is a psychology term that explains polarization.
+3. Instead of converging to a single conclusion, based on evidence and facts, the more detailed is given the more polaring the ideas become.
+4. This happens because with more details people find more options to selectively choose the information that fits with what they already believe.
+
+*** Does objective truth exists?
+1. Local and global consequences of our own set of truths. Being wrong about climate change will produce no harm to the individual, but to the collective.
+
+** Steps for being a data detective
+1. New information?
+2. Are we looking for a conclusion?
+
+** Correlation and causation
+1. Just because there is some evidence that the additional factor caused.
+
+* The lean start up
+** Comments
+1. Addresses the feeling of not acompliing anything when the work is intangible.
+2. A product is any source of value. It can be very general and abstract.
+3. Multiple tests data allows learning mentality whereas single data points induce "political selling".
+4. Empirical results are better than speculation (scientific method in business).
+5. Good questions combined with good data results in effective analysis.
+6. Robust and simples automated report generator is good to improve the characteristics of "auditability" of the analysis.
+
+** Why startups fails
+1. Start ups don't know their product nor their customers.
+
+** What is validate learning?
+1. A process to gauge if they are making progress.
+2. Build measure learn loop.
+3. Learning happens with experimentation systems designed by senior management.
+
+** Start up goal
+1. Figure out what the customer wants and will pay for it.
+2. Fast iteration and customer feedback are key factors.
+3. The vision is consistent, but the product can change.
+
+** Build, measure and learn feedback loop
+1. Analogy with steering a car instead of lunching a rocket.
+
+** What characterize a startup
+1. Hiring process that selects creative people.
+2. Culture building that fertilize productivity environment.
+3. Process that manages and coordinate activities of the employees.
+
+** Difference between learning and validate runs
+1. Validade learning is not a realization after the fact to cover a failure.
+2. Validate learning is for demonstrating progress.
+
+** Effort and value creation
+1. Agile development is not enough to guarantee value creation, it can lead to waste.
+2. "Learning" in a start up means to find what the customer (end) values.
+3. Effort should be directed in "valeu pathways" otherwise it's waste. Nasser.
+4. Getting early feedback is good to learn about what creates value.
+5. Effort should yield learning about customer want.
+
+** Job descriptions
+1. Head of product development: ensure timely delivery of high quality products and features.
+
+** Why validation learning?
+1. Validation comes from systematic testing.
+2. Scientific method into business decisions.
+3. It is a form of value to learn how to create a sustainable business.
+4. A sustainable business is made out of a product that customers want.
+
+** Steps to better approach a project/enterprise
+1. Breakdown vision.
+
+** Startup beginnings
+1. Value and growth hypothesis.
+2. MVP allows minimum effort to test the hypothesis.
+3. Facebook value hypothesis was validate with data about user time in the platform. Growth was validate through rate of change of users.
+
+** What is vision?
+1. Start with a premise assumption
+2. This premise should be a way to achieve the companie's value.
+
+** Why MVP is important?
+1. Quickly gets you to a stage where you can measure and learn.
+2. The goal is to test the fundamental business hypothesis.
+
+** Types of MVPs
+1. Videos that demonstrate the product and ask for registration To waiting list, proving the value hypothesis.
+
+** Quality
+1. Can be defines as costumer perceived valeu.
+2. Low quality MVP can be used to find what costumer values.
+
+** How to measure progress
+1. Learning milestones prove that you are "executing with discipline" or "executing in a systematic way".
+2. Cohort analysis can rule out the exponential growth effect and give a better assessment of current decision.
+3. Actionable metrics differ from "vanity metrics" which measure a gross value without segregating the causes.
+
+** Characteristics of good metrics
+1. Actionable, clear question lead to clear results that can be acted upon.
+2. Clear question also makes it clear how to proceed to answer it, which leads to easy replication.
+
+** How to evaluate productivity?
+1. Check if efforts are contributing to value creation.
+
+** Pivot or persevere
+1. Frequent meeting to decide between pivot or persevere.
+2. Analogy making is important to decide pivot strategy.
+
+** How to hold people accountable for learning?
+
+** Small batches versus mass production
+1. Communication costs between process in mass production is considerable.
+2. Small batches allow discovery.
+
+** Where does growth comes from?
+1. The engine of growth uses past costumers as fuel to generate new customer.
+2. This can be materialized as word of mouth.
+3. Funded market and subscription based products.
+4. Enginea of growth are a focal metric point.
+
+** What is marginal profit?
+1. Revenue generated by a costumer minus the cost to acquire the costumer.
+2. This can be used to marketing.
+
+
+#+DOWNLOADED: https://images-na.ssl-images-amazon.com/images/I/81-QB7nDh4L.jpg @ 2022-01-02 09:54:33
+#+attr_html: :width 350px
+[[file:images/The_lean_start_up/2022-01-02_09-54-33_81-QB7nDh4L.jpg]]
+
+* Code
+** bit
+1. Bit is the building block of information.
+
+** General comments
+1. Gets boring sometimes with all the explanations about calculations.
+2. Had to stop reading on page 211, because it is too detailed.
+
+* Surfaces and essences
+** My comments
+1. This books is an exiting and stimulant voyage in metalinguistic. Text talking about text in an abstract way.
+2. Very engaging and interesting.
+3. Brilliant the transition from "he who steals an egg might still an ox" to "he who gives an egg might give an ox"
+4. Why the English uses "surfaces and essences? Essence finding is an act of analogy making to pin point the main idea.
+5. We observe the surface but through analogy making we can reach its depths.
+6. Simple ideas that carry a lot of deep concepts and abstraction behind.
+
+** Concepts, thought and analogy
+1. Analogies create concepts 
+2. Concepts create thoughts
+3. A sequence of analogies characterize a concept which is synonyms with category
+4. Eg, Mother is a mental category in which thousands of analogies enriched
+5. A concept sophistication increases as more analogies enrich its idea
+6. Each instant of thought is marked by an analogy
+
+** How concepts and analogies are related
+1. Analogies triger concepts that help us make sense of the new with the old.
+2. Analogy making and categorization are the same phenomenon.
+
+** Categories
+1. Mental categories are not simple drawers where things are collected.
+2. Category is a dynamic mental structure.
+3. Categorization allows the individual whos mental process carries it to see the invisible.
+4. Categorization is the process of linking an entity to a prior category.
+5. Categorization is central to thinking (cognition) and analogy is the mechanism to perform it.
+6. Sometimes they don't have labels. Non lexical.
+7. We know more categories than words.
+8. Analogical perseptions allow us to readily identify instances of categories.
+9. The crux of perseption is the act of abstracting. And the abstraction allows us to create and extend categories.
+
+** Analogy as the motor to cognition
+1. No only proportional type
+2. Mental process of searching past knowledge and relating to new
+3. Selective exploitation of past experience to shed light on new things
+4. Is the machine behind thought, ie categorization
+
+** Essence of human being
+1. Triggering of memory by analogy
+2. Thinking: when we link present to the past with analogies
+
+** What is cognition?
+1. Pysichological phenom
+2. Thinks means to look for resemblances. If no resemblances are searched, there is no thinking.
+
+** What is a concept?
+1. Abstract pattern in the brain.
+2. Mental structure.
+3. Represents recurrent and regular  aspect of the world.
+4. Does not matter how many informations or books do you have, what counts are concepts internalized.
+
+** Concept building
+1. "Building a house in which the house change the nature of the bricks that made the house."
+2. Hierarchical natura but not rigidly structure, fluid
+3. Sequence of analogies can carry us from concrete to abstract.
+4. Concepts can be extendended analogically with a snow ball effect.
+5. Concept become an integral part of the person who acquires it.
+6. Aquire a concept means to be able to use it to make new analogies.
+
+** Categorization
+1. Precised categorization is almost impossible
+2. Categories can be a continuum, not discrete boxes. (Orwell animals farm, one animal more equal than others)
+3. The name label can be extrapolated to include new entities related by new analogies.
+4. A group of words can represent a category that stretch the meaning of the inidivual words.
+
+** Hofstadter quote
+"the outset seemed odd and unnatural gradually become so familiar that in the end one no longer sees what could at first have seemed puzzling or confusing about them."
+
+** Words
+1. Semantic is related to the meaning of the word.
+2. Syntactic to the role of the word in the phrase.
+
+** How we learn?
+1. Analogy broadening allows us to acquire new concepts.
+
+** Proverbs
+1. Does not count as true but their ability to cast light in a situation.
+2. They work in a abstract level further than the meaning of the words.
+
+** What it means to abstract something
+1. To abandon less important aspects
+2. The meaning can be lost depending on the abstraction level. 
+
+** Naming concepts benefits
+1. Allows people fumigate them.
+2. People can act on them and exert influence on others.
+
+** What is intelligence
+1. Is the ability to quickly get the essence when facing a new situation.
+2. This is closely related to search and find analogies that can be applied!
+3. Number os concepts one has can be considered a component of intelligence.
+4. Not only the volume of concepts, but the density of connections between them.
+5. The collection of categories one has is the medium through which you can filter and perceive the environment.
+
+** What it means to think and it's relation with intelligence
+5. Analogical nature of our thought is the ceaseless activity of mapping fresh mental structures (new perceptions) with old mental structures (concepts).
+6. The constant search of new maps, analogies, is a mirror of our intelligence.
+7. "far from being an unthinking activity, the art of super-rapid right-on retrieval is the core of thinking"
+
+** More concepts make you smarter?
+1. Intelligence is the ability to pinpoint the essence of situations.
+2. The more vast and refined the collection of experiences one has, the more able one is of riding right analogies to capture the essence of something.
+3. Repertoire of categories at one disposal is a measure of intelligence.
+4. A concept becomes an integral part of the person who acquires it.
+
+** Collective intelligence
+1. Because of the snowball of new concepts been created with analogy from previous, peolo are increasingly getting more intelligent.
+
+** Tony Hoagland poem
+There isn’t a word for walking out of the grocery store with a gallon jug of milk in a plastic sack that should have been bagged in double layers — so that before you are even out the door you feel the weight of the jug dragging the bag down, stretching the thin plastic handles longer and longer and you know it’s only a matter of time until the bottom suddenly splits. There is no single, 
+unimpeachable word for that vague sensation of something moving away from you as it exceeds its elastic capacity — which is too bad, because that is the word I would like to use to describe standing on the street chatting with an old friend as the awareness grows in me that he is no longer a friend, but only an acquaintance, a person with whom I never made the effort — until this moment, when as we say goodbye I think we share a feeling of relief, a recognition that we have reached the end of a pretense, though to tell the truth what I already am thinking about is my gratitude for language —
+how it will stretch just so much and no farther; how there are some holes it will not cover up; how it will move, if not inside, then around the circumference of almost anything — how, over the years, it has given me back all the hours and days, all the plodding love and faith, all the misunderstandings and secrets I have willingly poured into it.
+
+** This is water
+1. Humans surrounded by analogies they don't notice as the fishes are surrounded by water they don't feel.
+2. Some analogies don't have a label, they are non lexical.
+
+** Analogical instinct and complexity
+1. Our analogical instinct nature is a constant battle to carry ourselves, stay afloat, in a complex world.
+2. Every analogy one makes triggers a subsequent acceptance or denial like an uncontrolled chain reaction.
+
+** Analogical nature of empathy
+1. "I am like you" is a form of analogy.
+
+** Psychology and Intellectual perception
+*** Definitions
+1. We perceive through our senses but also through concepts.
+2. Our physiology has sensorial modalities, vision and hearing.
+3. Each modality can capture specific features (movement, colors).
+4. We are limited by the power of our senses, our field of vision.
+5. Psychology limits our senses perceptions to specific formats, encodings.
+
+*** Perceiving and conceiving
+1. Our perseptions depend on our repertoire of concepts.
+2. The concepts filters the outside stimulus before they get into ourselves, our consciousness.
+
+*** Conceptual encodings
+1. They allow our memories to be connected more efficiently.
+2. Different from total route or "perseptions without encodings".
+3. Memories are made by first processing them with our repertoire of concepts, then they are appropriately stored.
+4. When a concept is labeled it has anchors that makes them more easily remembered.
+
+** Analogical process and evolutionary arguments
+1. Reminding is the core process of understanding new situations.
+2. When we first receive a stimulus, an experience, we do not have all the categories related to the experience at first.
+3. We can not get at the same time of experiencing the highly abstract encoding to construct a road map to the money and this encoding category.
+

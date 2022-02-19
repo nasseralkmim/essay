@@ -1,0 +1,801 @@
+#+title: Finance data in python
+#+date: <2020-12-25 Fri>
+#+lastmod: 2021-07-18 09:36:19
+#+author: Nasser Alkmim
+#+email: nasser.alkmim@gmail.com
+#+tags[]: python finance data-analysis
+#+toc: t
+Finance data in python using =yahooquery=.
+It extracts pretty much all data from  [[https://finance.yahoo.com/][Yahoo Finance - Stock Market Live, Quotes, Business & Finance News]].
+I tried the other library =yfinance= but it was limited.
+
+* Bid and ask quote of Market price
+
+Bid price is the price someone is willing to pay.
+Think about the price offered in an auction.
+Whereas the ask price is the price someone is asking to sell.
+Think about the price someone puts in a product label.
+
+The market price is price of the last transaction made.
+
+#+begin_src python
+print(yf.Ticker('GOOG').quotes['GOOG']['bid'])
+print(yf.Ticker('GOOG').quotes['GOOG']['regularMarketPrice'])
+#+end_src
+
+#+RESULTS:
+: 2633.52
+: 2636.91
+
+Which corresponds to the information in the yahoo finance page,
+
+
+#+DOWNLOADED: screenshot @ 2021-07-02 09:43:29
+#+attr_html: :width 350px
+[[file:Bid_and_ask_quote/2021-07-02_09-43-29_screenshot.png]]
+* Stock information
+
+Key information:
+1. currency
+2. regular market price
+3. quote type: equity (asset class)
+
+
+#+begin_src python
+from pprint import pprint
+pprint(ticker.quotes)
+#+end_src
+
+#+RESULTS:
+#+begin_example
+{'GOOG': {'ask': 2637.99,
+          'askSize': 8,
+          'averageAnalystRating': '1.6 - Buy',
+          'averageDailyVolume10Day': 841442,
+          'averageDailyVolume3Month': 1240690,
+          'bid': 2633.52,
+          'bidSize': 8,
+          'bookValue': 342.743,
+          'currency': 'USD',
+          'displayName': 'Alphabet',
+          'epsCurrentYear': 86.92,
+          'epsForward': 94.94,
+          'epsTrailingTwelveMonths': 75.04,
+          'esgPopulated': False,
+          'exchange': 'NMS',
+          'exchangeDataDelayedBy': 0,
+          'exchangeTimezoneName': 'America/New_York',
+          'exchangeTimezoneShortName': 'EDT',
+          'fiftyDayAverage': 2534.5298,
+          'fiftyDayAverageChange': 102.38013,
+          'fiftyDayAverageChangePercent': 0.04039413,
+          'fiftyTwoWeekHigh': 2659.92,
+          'fiftyTwoWeekHighChange': -23.01001,
+          'fiftyTwoWeekHighChangePercent': -0.00865064,
+          'fiftyTwoWeekLow': 1406.55,
+          'fiftyTwoWeekLowChange': 1230.3599,
+          'fiftyTwoWeekLowChangePercent': 0.87473595,
+          'fiftyTwoWeekRange': '1406.55 - 2659.92',
+          'financialCurrency': 'USD',
+          'firstTradeDateMilliseconds': 1092922200000,
+          'forwardPE': 27.774488,
+          'fullExchangeName': 'NasdaqGS',
+          'gmtOffSetMilliseconds': -14400000,
+          'language': 'en-US',
+          'longName': 'Alphabet Inc.',
+          'market': 'us_market',
+          'marketCap': 1737491611648,
+          'marketState': 'CLOSED',
+          'messageBoardId': 'finmb_29096',
+          'postMarketChange': -3.3898926,
+          'postMarketChangePercent': -0.12855549,
+          'postMarketPrice': 2633.52,
+          'postMarketTime': 1626479962,
+          'priceEpsCurrentYear': 30.337206,
+          'priceHint': 2,
+          'priceToBook': 7.693548,
+          'quoteSourceName': 'Delayed Quote',
+          'quoteType': 'EQUITY',
+          'region': 'US',
+          'regularMarketChange': 11.579834,
+          'regularMarketChangePercent': 0.44108108,
+          'regularMarketDayHigh': 2643.66,
+          'regularMarketDayLow': 2617.1257,
+          'regularMarketDayRange': '2617.1257 - 2643.66',
+          'regularMarketOpen': 2632.82,
+          'regularMarketPreviousClose': 2625.33,
+          'regularMarketPrice': 2636.91,
+          'regularMarketTime': 1626465603,
+          'regularMarketVolume': 743059,
+          'sharesOutstanding': 323580000,
+          'shortName': 'Alphabet Inc.',
+          'sourceInterval': 15,
+          'tradeable': False,
+          'trailingPE': 35.140057,
+          'triggerable': True,
+          'twoHundredDayAverage': 2213.8977,
+          'twoHundredDayAverageChange': 423.0122,
+          'twoHundredDayAverageChangePercent': 0.19107126}}
+#+end_example
+
+* Evolution of market price
+
+Close price is the last market price that the security was traded in a day.
+
+#+begin_src python
+import matplotlib
+import matplotlib.pyplot as plt
+matplotlib.style.use('ggplot')
+
+ticker = yf.Ticker('GOOG')
+ticker.history(period='max').close.plot(ylabel='price R$', xlabel='date')
+ticker.history(start='2018-09-15', end='2018-09-18').close.plot(ylabel='close price', xlabel='date')
+#+end_src
+
+#+RESULTS:
+[[file:./jupyter/bf3c8be52e632d54a2f8fdaa7a0927191c7fa768.png]]
+
+* Company information
+
+Key information:
+1. industry (and sector)
+
+
+#+begin_src python
+pprint(ticker.asset_profile)
+#+end_src
+
+#+RESULTS:
+#+begin_example
+{'GOOG': {'address1': '1600 Amphitheatre Parkway',
+          'auditRisk': 9,
+          'boardRisk': 3,
+          'city': 'Mountain View',
+          'companyOfficers': [{'age': 47,
+                               'exercisedValue': 3595837,
+                               'fiscalYear': 2020,
+                               'maxAge': 1,
+                               'name': 'Mr. Sundar  Pichai',
+                               'title': 'CEO & Director',
+                               'totalPay': 7425547,
+                               'unexercisedValue': 24802002,
+                               'yearBorn': 1973},
+                              {'age': 47,
+                               'exercisedValue': 0,
+                               'fiscalYear': 2020,
+                               'maxAge': 1,
+                               'name': 'Mr. Lawrence Edward Page',
+                               'title': 'Co-Founder & Director',
+                               'totalPay': 1,
+                               'unexercisedValue': 0,
+                               'yearBorn': 1973},
+                              {'age': 46,
+                               'exercisedValue': 0,
+                               'fiscalYear': 2020,
+                               'maxAge': 1,
+                               'name': 'Mr. Sergey  Brin',
+                               'title': 'Co-Founder & Director',
+                               'totalPay': 1,
+                               'unexercisedValue': 0,
+                               'yearBorn': 1974},
+                              {'age': 62,
+                               'exercisedValue': 0,
+                               'fiscalYear': 2020,
+                               'maxAge': 1,
+                               'name': 'Ms. Ruth M. Porat',
+                               'title': 'Sr. VP & CFO',
+                               'totalPay': 672770,
+                               'unexercisedValue': 0,
+                               'yearBorn': 1958},
+                              {'age': 59,
+                               'exercisedValue': 0,
+                               'fiscalYear': 2020,
+                               'maxAge': 1,
+                               'name': 'Dr. Prabhakar  Raghavan',
+                               'title': 'Sr. VP of Google',
+                               'totalPay': 664750,
+                               'unexercisedValue': 0,
+                               'yearBorn': 1961},
+                              {'exercisedValue': 0,
+                               'fiscalYear': 2020,
+                               'maxAge': 1,
+                               'name': 'Mr. Philipp  Schindler',
+                               'title': 'Sr. VP & Chief Bus. Officer of Google',
+                               'totalPay': 881816,
+                               'unexercisedValue': 0},
+                              {'age': 59,
+                               'exercisedValue': 0,
+                               'fiscalYear': 2020,
+                               'maxAge': 1,
+                               'name': 'Mr. Kent  Walker',
+                               'title': 'Corp. Sec.',
+                               'totalPay': 664750,
+                               'unexercisedValue': 0,
+                               'yearBorn': 1961},
+                              {'age': 44,
+                               'exercisedValue': 0,
+                               'maxAge': 1,
+                               'name': "Ms. Amie Thuener O'Toole",
+                               'title': 'Chief Accounting Officer & VP',
+                               'unexercisedValue': 0,
+                               'yearBorn': 1976},
+                              {'exercisedValue': 0,
+                               'maxAge': 1,
+                               'name': 'Ms. Ellen  West',
+                               'title': 'VP of Investor Relations',
+                               'unexercisedValue': 0},
+                              {'age': 54,
+                               'exercisedValue': 0,
+                               'maxAge': 1,
+                               'name': 'Ms. Fiona Clare Cicconi',
+                               'title': 'Chief People Officer',
+                               'unexercisedValue': 0,
+                               'yearBorn': 1966}],
+          'compensationAsOfEpochDate': '2020-12-31 01:00:00',
+          'compensationRisk': 10,
+          'country': 'United States',
+          'fullTimeEmployees': 139995,
+          'governanceEpochDate': '2021-07-01 02:00:00',
+          'industry': 'Internet Content & Information',
+          'longBusinessSummary': 'Alphabet Inc. provides online advertising '
+                                 'services in the United States, Europe, the '
+                                 'Middle East, Africa, the Asia-Pacific, '
+                                 'Canada, and Latin America. The company '
+                                 'offers performance and brand advertising '
+                                 'services. It operates through Google '
+                                 'Services, Google Cloud, and Other Bets '
+                                 'segments. The Google Services segment '
+                                 'provides products and services, such as ads, '
+                                 'Android, Chrome, hardware, Google Maps, '
+                                 'Google Play, Search, and YouTube, as well as '
+                                 'technical infrastructure; and digital '
+                                 'content. The Google Cloud segment offers '
+                                 'infrastructure and data analytics platforms, '
+                                 'collaboration tools, and other services for '
+                                 'enterprise customers. The Other Bets segment '
+                                 'sells internet and TV services, as well as '
+                                 'licensing and research and development '
+                                 'services. The company was founded in 1998 '
+                                 'and is headquartered in Mountain View, '
+                                 'California.',
+          'maxAge': 86400,
+          'overallRisk': 10,
+          'phone': '650-253-0000',
+          'sector': 'Communication Services',
+          'shareHolderRightsRisk': 10,
+          'state': 'CA',
+          'website': 'http://www.abc.xyz',
+          'zip': '94043'}}
+#+end_example
+
+* ETF US based
+** Asset profile
+Asset profile does not give much information.
+
+#+begin_src python
+ticker = 'VOO'
+etf_us = yf.Ticker(ticker)
+pprint(etf_us.asset_profile)
+#+end_src
+
+#+RESULTS:
+#+begin_example
+{'VOO': {'companyOfficers': [],
+         'longBusinessSummary': 'The investment seeks to track the performance '
+                                'of the Standard & Poorâ\x80\x98s 500 Index '
+                                'that measures the investment return of '
+                                'large-capitalization stocks.\n'
+                                ' The fund employs an indexing investment '
+                                'approach designed to track the performance of '
+                                'the Standard & Poor&#39;s 500 Index, a widely '
+                                'recognized benchmark of U.S. stock market '
+                                'performance that is dominated by the stocks '
+                                'of large U.S. companies. The advisor attempts '
+                                'to replicate the target index by investing '
+                                'all, or substantially all, of its assets in '
+                                'the stocks that make up the index, holding '
+                                'each stock in approximately the same '
+                                'proportion as its weighting in the index.',
+         'maxAge': 86400,
+         'phone': '866-499-8473'}}
+#+end_example
+
+** Quotes
+
+Key information:
+1. currency
+2. quote type: ETF (asset class)
+3. regular market price
+
+#+begin_src python
+pprint(etf_us.quotes)
+print(etf_us.quotes[ticker]['regularMarketPrice'])
+#+end_src
+
+#+RESULTS:
+#+begin_example
+{'VOO': {'ask': 396.9,
+         'askSize': 9,
+         'averageDailyVolume10Day': 4102928,
+         'averageDailyVolume3Month': 3898712,
+         'bid': 396.65,
+         'bidSize': 8,
+         'bookValue': 305.54,
+         'currency': 'USD',
+         'epsTrailingTwelveMonths': 47.92,
+         'esgPopulated': False,
+         'exchange': 'PCX',
+         'exchangeDataDelayedBy': 0,
+         'exchangeTimezoneName': 'America/New_York',
+         'exchangeTimezoneShortName': 'EDT',
+         'fiftyDayAverage': 392.49667,
+         'fiftyDayAverageChange': 4.113312,
+         'fiftyDayAverageChangePercent': 0.010479864,
+         'fiftyTwoWeekHigh': 402.57,
+         'fiftyTwoWeekHighChange': -5.960022,
+         'fiftyTwoWeekHighChangePercent': -0.014804933,
+         'fiftyTwoWeekLow': 293.3,
+         'fiftyTwoWeekLowChange': 103.31,
+         'fiftyTwoWeekLowChangePercent': 0.3522332,
+         'fiftyTwoWeekRange': '293.3 - 402.57',
+         'financialCurrency': 'USD',
+         'firstTradeDateMilliseconds': 1284039000000,
+         'fullExchangeName': 'NYSEArca',
+         'gmtOffSetMilliseconds': -14400000,
+         'language': 'en-US',
+         'longName': 'Vanguard S&P 500 ETF',
+         'market': 'us_market',
+         'marketState': 'CLOSED',
+         'messageBoardId': 'finmb_28117396',
+         'postMarketChange': 0.030029297,
+         'postMarketChangePercent': 0.007571493,
+         'postMarketPrice': 396.64,
+         'postMarketTime': 1626479979,
+         'priceHint': 2,
+         'priceToBook': 1.2980623,
+         'quoteSourceName': 'Delayed Quote',
+         'quoteType': 'ETF',
+         'region': 'US',
+         'regularMarketChange': -3.1100159,
+         'regularMarketChangePercent': -0.7780486,
+         'regularMarketDayHigh': 400.88,
+         'regularMarketDayLow': 396.14,
+         'regularMarketDayRange': '396.14 - 400.88',
+         'regularMarketOpen': 400.84,
+         'regularMarketPreviousClose': 399.72,
+         'regularMarketPrice': 396.61,
+         'regularMarketTime': 1626465600,
+         'regularMarketVolume': 3992549,
+         'shortName': 'Vanguard S&P 500 ETF',
+         'sourceInterval': 15,
+         'tradeable': False,
+         'trailingAnnualDividendRate': 5.303,
+         'trailingAnnualDividendYield': 0.013266787,
+         'trailingPE': 8.276503,
+         'trailingThreeMonthNavReturns': 8.54,
+         'trailingThreeMonthReturns': 8.39,
+         'triggerable': True,
+         'twoHundredDayAverage': 371.44656,
+         'twoHundredDayAverageChange': 25.163422,
+         'twoHundredDayAverageChangePercent': 0.06774439,
+         'ytdReturn': 15.24}}
+396.61
+#+end_example
+
+
+** Historical price
+
+#+begin_src python
+etf_us.history().close.plot()
+#+end_src
+
+** Top holdings
+Only for funds and ETF.
+Just the top 10, there is no way to make an overlap analysis with just that.
+
+#+begin_src python
+print(etf_us.fund_top_holdings)
+#+end_src
+
+#+RESULTS:
+#+begin_example
+           symbol                     holdingName  holdingPercent
+symbol row                                                       
+VOO    0     AAPL                       Apple Inc            0.06
+       1     MSFT                  Microsoft Corp            0.06
+       2     AMZN                  Amazon.com Inc            0.04
+       3       FB            Facebook Inc Class A            0.02
+       4    GOOGL            Alphabet Inc Class A            0.02
+       5     GOOG            Alphabet Inc Class C            0.02
+       6    BRK.B  Berkshire Hathaway Inc Class B            0.01
+       7     TSLA                       Tesla Inc            0.01
+       8     NVDA                     NVIDIA Corp            0.01
+       9      JPM             JPMorgan Chase & Co            0.01
+#+end_example
+
+
+* ETF Ireland based
+** Asset profile
+No profile.
+
+#+begin_src python
+ticker = 'SXR8.DE'
+etf_int = yf.Ticker(ticker)
+pprint(etf_int.asset_profile)
+#+end_src
+
+#+RESULTS:
+: {'SXR8.DE': 'No fundamentals data found for any of the '
+:             'summaryTypes=assetProfile'}
+
+** Quotes
+
+Key information:
+1. currency EUR
+2. quote type: ETF (asset class)
+3. regular market price
+4. long name 'iShares VII Public Limited Company - iShares Core S&P 500 UCITS ETF'
+   1. indicates the factor (market factor because of S&P 500)
+
+#+begin_src python
+pprint(etf_int.quotes)
+print(etf_int.quotes[ticker]['regularMarketPrice'])
+#+end_src
+
+#+RESULTS:
+#+begin_example
+{'SXR8.DE': {'ask': 374.01,
+             'askSize': 47,
+             'averageDailyVolume10Day': 23995,
+             'averageDailyVolume3Month': 25326,
+             'bid': 373.89,
+             'bidSize': 32,
+             'currency': 'EUR',
+             'esgPopulated': False,
+             'exchange': 'GER',
+             'exchangeDataDelayedBy': 0,
+             'exchangeTimezoneName': 'Europe/Berlin',
+             'exchangeTimezoneShortName': 'CEST',
+             'fiftyDayAverage': 360.20166,
+             'fiftyDayAverageChange': 13.79834,
+             'fiftyDayAverageChangePercent': 0.038307264,
+             'fiftyTwoWeekHigh': 376.51,
+             'fiftyTwoWeekHighChange': -2.5100098,
+             'fiftyTwoWeekHighChangePercent': -0.0066665155,
+             'fiftyTwoWeekLow': 272.64,
+             'fiftyTwoWeekLowChange': 101.359985,
+             'fiftyTwoWeekLowChangePercent': 0.37177223,
+             'fiftyTwoWeekRange': '272.64 - 376.51',
+             'firstTradeDateMilliseconds': 1274252400000,
+             'fullExchangeName': 'XETRA',
+             'gmtOffSetMilliseconds': 7200000,
+             'language': 'en-US',
+             'longName': 'iShares VII Public Limited Company - iShares Core '
+                         'S&P 500 UCITS ETF',
+             'market': 'de_market',
+             'marketState': 'CLOSED',
+             'messageBoardId': 'finmb_105912893',
+             'priceHint': 2,
+             'quoteSourceName': 'Delayed Quote',
+             'quoteType': 'ETF',
+             'region': 'US',
+             'regularMarketChange': -1.3800049,
+             'regularMarketChangePercent': -0.36762875,
+             'regularMarketDayHigh': 376.51,
+             'regularMarketDayLow': 373.61,
+             'regularMarketDayRange': '373.61 - 376.51',
+             'regularMarketOpen': 374.99,
+             'regularMarketPreviousClose': 375.38,
+             'regularMarketPrice': 374.0,
+             'regularMarketTime': 1626449778,
+             'regularMarketVolume': 16183,
+             'shortName': 'ISHARES VII PLC',
+             'sourceInterval': 15,
+             'tradeable': False,
+             'triggerable': False,
+             'twoHundredDayAverage': 339.33963,
+             'twoHundredDayAverageChange': 34.66037,
+             'twoHundredDayAverageChangePercent': 0.10214065}}
+374.0
+#+end_example
+
+
+** Historical price
+
+#+begin_src python
+etf_int.history().close.plot()
+#+end_src
+
+#+RESULTS:
+[[file:./jupyter/1c5ff95b2169299042adea71d6dcfeb8cbb38a90.png]]
+
+** Top holdings
+No top holdings.
+
+#+begin_src python
+print(etf_int.fund_top_holdings)
+#+end_src
+
+#+RESULTS:
+: {'SXR8.DE': 'No fundamentals data found for any of the summaryTypes=topHoldings'}
+
+
+* Brazilian REIT
+
+It requires adding ".SA" to the end of the ticker.
+
+Key information:
+1. quote type says EQUITY
+2. asset profile industry gives 'REIT - Retail' which is a good "asset class information
+
+#+begin_src python
+fii = yf.Ticker('VISC11.SA')
+pprint(fii.asset_profile)
+pprint(fii.quotes)
+print(fii.quotes['VISC11.SA']['regularMarketPrice'])
+fii.history().close.plot()
+#+end_src
+
+#+RESULTS:
+:RESULTS:
+#+begin_example
+{'VISC11.SA': {'companyOfficers': [],
+               'country': 'Brazil',
+               'industry': 'REIT - Retail',
+               'maxAge': 86400,
+               'sector': 'Financial'}}
+{'VISC11.SA': {'ask': 112.16,
+               'askSize': 0,
+               'averageDailyVolume10Day': 21665,
+               'averageDailyVolume3Month': 26842,
+               'bid': 112.01,
+               'bidSize': 0,
+               'currency': 'BRL',
+               'esgPopulated': False,
+               'exchange': 'SAO',
+               'exchangeDataDelayedBy': 0,
+               'exchangeTimezoneName': 'America/Sao_Paulo',
+               'exchangeTimezoneShortName': 'BRT',
+               'fiftyDayAverage': 109.034,
+               'fiftyDayAverageChange': 2.9660034,
+               'fiftyDayAverageChangePercent': 0.027202556,
+               'fiftyTwoWeekHigh': 118.88,
+               'fiftyTwoWeekHighChange': -6.8799973,
+               'fiftyTwoWeekHighChangePercent': -0.057873465,
+               'fiftyTwoWeekLow': 99.2,
+               'fiftyTwoWeekLowChange': 12.800003,
+               'fiftyTwoWeekLowChangePercent': 0.1290323,
+               'fiftyTwoWeekRange': '99.2 - 118.88',
+               'firstTradeDateMilliseconds': 1509537600000,
+               'fullExchangeName': 'São Paulo',
+               'gmtOffSetMilliseconds': -10800000,
+               'language': 'en-US',
+               'longName': 'Vinci Shopping Centers Fundo Investimento '
+                           'Imobiliario - Fii',
+               'market': 'br_market',
+               'marketCap': 1598352000,
+               'marketState': 'CLOSED',
+               'messageBoardId': 'finmb_433093458',
+               'priceHint': 2,
+               'quoteSourceName': 'Delayed Quote',
+               'quoteType': 'EQUITY',
+               'region': 'US',
+               'regularMarketChange': -0.05999756,
+               'regularMarketChangePercent': -0.053540565,
+               'regularMarketDayHigh': 112.95,
+               'regularMarketDayLow': 111.69,
+               'regularMarketDayRange': '111.69 - 112.95',
+               'regularMarketOpen': 112.06,
+               'regularMarketPreviousClose': 112.06,
+               'regularMarketPrice': 112.0,
+               'regularMarketTime': 1626466020,
+               'regularMarketVolume': 20863,
+               'sharesOutstanding': 14271000,
+               'shortName': 'FII VINCI SCCI',
+               'sourceInterval': 15,
+               'tradeable': False,
+               'triggerable': False,
+               'twoHundredDayAverage': 111.02175,
+               'twoHundredDayAverageChange': 0.9782486,
+               'twoHundredDayAverageChangePercent': 0.008811324}}
+112.0
+{'VISC11.SA': 'No fundamentals data found for any of the '
+              'summaryTypes=topHoldings'}
+#+end_example
+[[file:./jupyter/d58ef188b56ef7cdd99daf7309655a851e72a083.png]]
+:END:
+* Brazilian Stock
+
+Key information:
+1. currency
+2. quote type: EQUITY (asset class)
+3. regular market price
+
+#+begin_src python
+stock_br = yf.Ticker('EGIE3.SA')
+pprint(stock_br.asset_profile)
+pprint(stock_br.quotes)
+print(stock_br.quotes['EGIE3.SA']['regularMarketPrice'])
+stock_br.history().close.plot()
+#+end_src
+
+#+RESULTS:
+:RESULTS:
+#+begin_example
+{'EGIE3.SA': {'address1': 'Rua Paschoal ApOstolo PItsica, no 5064',
+              'address2': 'Agronomica',
+              'auditRisk': 5,
+              'boardRisk': 6,
+              'city': 'FlorianÃ³polis',
+              'companyOfficers': [{'exercisedValue': 0,
+                                   'maxAge': 1,
+                                   'name': 'Mr. Eduardo Antonio Gori Sattamini',
+                                   'title': 'CEO, Investor Relations Officer & '
+                                            'Member of Management Board',
+                                   'unexercisedValue': 0},
+                                  {'exercisedValue': 0,
+                                   'maxAge': 1,
+                                   'name': 'Mr. Marcelo Cardoso Malta',
+                                   'title': 'CFO & Member of Management Board',
+                                   'unexercisedValue': 0},
+                                  {'exercisedValue': 0,
+                                   'maxAge': 1,
+                                   'name': 'Mr. Jose Luiz Jansson Laydner',
+                                   'title': 'COO & Member of Management Board',
+                                   'unexercisedValue': 0},
+                                  {'exercisedValue': 0,
+                                   'maxAge': 1,
+                                   'name': 'Mr. Gabriel Mann dos Santos',
+                                   'title': 'Chief Trading Officer,  Energy '
+                                            'Commercialization Officer & '
+                                            'Member of Management Board',
+                                   'unexercisedValue': 0},
+                                  {'exercisedValue': 0,
+                                   'maxAge': 1,
+                                   'name': 'Mr. Guilherme Slovinski Ferrari',
+                                   'title': 'Chief New Bus.es, Strategy & '
+                                            'Innovation Officer and Member of '
+                                            'Management Board',
+                                   'unexercisedValue': 0},
+                                  {'exercisedValue': 0,
+                                   'maxAge': 1,
+                                   'name': 'Mr. Marcos Keller Amboni',
+                                   'title': 'Chief Regulation & Market Officer '
+                                            'and Member of Management Board',
+                                   'unexercisedValue': 0},
+                                  {'exercisedValue': 0,
+                                   'maxAge': 1,
+                                   'name': 'Mr. Marcio Daian Neves',
+                                   'title': 'Chief Implementation Officer & '
+                                            'Member of Management Board',
+                                   'unexercisedValue': 0},
+                                  {'exercisedValue': 0,
+                                   'maxAge': 1,
+                                   'name': 'Ms. Luciana Moura Nabarrete',
+                                   'title': 'Chief Admin. Officer & Member of '
+                                            'Management Board',
+                                   'unexercisedValue': 0},
+                                  {'age': 52,
+                                   'exercisedValue': 0,
+                                   'maxAge': 1,
+                                   'name': 'Mr. Gustavo Henrique Labanca Novo',
+                                   'title': 'CEO of TAG & Alternate Director',
+                                   'unexercisedValue': 0,
+                                   'yearBorn': 1968},
+                                  {'age': 40,
+                                   'exercisedValue': 0,
+                                   'maxAge': 1,
+                                   'name': 'Mr. Leonardo Augusto Serpa',
+                                   'title': 'Alternate Director',
+                                   'unexercisedValue': 0,
+                                   'yearBorn': 1980}],
+              'compensationRisk': 5,
+              'country': 'Brazil',
+              'fax': '55 48 3221 7253',
+              'fullTimeEmployees': 1600,
+              'governanceEpochDate': '2021-07-01 02:00:00',
+              'industry': 'Utilities—Regulated Electric',
+              'longBusinessSummary': 'Engie Brasil Energia S.A., together with '
+                                     'its subsidiaries, generates, sells, and '
+                                     'trades in electrical energy in Brazil. '
+                                     'The company operates 60 plants, '
+                                     'including 11 hydroelectric power plants; '
+                                     '4 thermal power plants; and 45 '
+                                     'complementary plants, which comprise 3 '
+                                     'biomass, 38 wind farms, 2 photovoltaic '
+                                     'solar power plants, and 2 small '
+                                     'hydroelectric plants in the 21 states of '
+                                     'Brazil. As of December 31, 2019, it had '
+                                     'an installed capacity of 10,431.2 '
+                                     'megawatts. The company also transports '
+                                     'natural gas through 4,500 km of gas '
+                                     'pipelines in the Southeast, Northeast, '
+                                     'and North regions of Brazil. In '
+                                     'addition, it engages in manufacture, '
+                                     'wholesale, retail sale, operation, and '
+                                     'maintenance of solar panels. The company '
+                                     'was formerly known as Tractebel Energia '
+                                     'S.A. and changed its name to Engie '
+                                     'Brasil Energia S.A. in July 2016. The '
+                                     'company was incorporated in 2005 and is '
+                                     'headquartered in FlorianÃ³polis, Brazil. '
+                                     'Engie Brasil Energia S.A. operates as a '
+                                     'subsidiary of ENGIE SA.',
+              'maxAge': 86400,
+              'overallRisk': 3,
+              'phone': '55 48 3221 7225',
+              'sector': 'Utilities',
+              'shareHolderRightsRisk': 2,
+              'state': 'SC',
+              'website': 'http://www.engieenergia.com.br',
+              'zip': '88025-255'}}
+{'EGIE3.SA': {'ask': 39.86,
+              'askSize': 0,
+              'averageDailyVolume10Day': 1106985,
+              'averageDailyVolume3Month': 1412292,
+              'bid': 39.8,
+              'bidSize': 0,
+              'bookValue': 9.914,
+              'currency': 'BRL',
+              'earningsTimestamp': 1628190000,
+              'earningsTimestampEnd': 1628190000,
+              'earningsTimestampStart': 1628190000,
+              'epsForward': 3.04,
+              'epsTrailingTwelveMonths': 3.449,
+              'esgPopulated': False,
+              'exchange': 'SAO',
+              'exchangeDataDelayedBy': 0,
+              'exchangeTimezoneName': 'America/Sao_Paulo',
+              'exchangeTimezoneShortName': 'BRT',
+              'fiftyDayAverage': 40.23857,
+              'fiftyDayAverageChange': -0.55857086,
+              'fiftyDayAverageChangePercent': -0.013881478,
+              'fiftyTwoWeekHigh': 47.7,
+              'fiftyTwoWeekHighChange': -8.02,
+              'fiftyTwoWeekHighChangePercent': -0.16813418,
+              'fiftyTwoWeekLow': 38.31,
+              'fiftyTwoWeekLowChange': 1.3699989,
+              'fiftyTwoWeekLowChangePercent': 0.03576087,
+              'fiftyTwoWeekRange': '38.31 - 47.7',
+              'financialCurrency': 'BRL',
+              'firstTradeDateMilliseconds': 1014987600000,
+              'forwardPE': 13.052631,
+              'fullExchangeName': 'São Paulo',
+              'gmtOffSetMilliseconds': -10800000,
+              'language': 'en-US',
+              'longName': 'Engie Brasil Energia S.A.',
+              'market': 'br_market',
+              'marketCap': 32375904256,
+              'marketState': 'CLOSED',
+              'messageBoardId': 'finmb_882974',
+              'priceHint': 2,
+              'priceToBook': 4.002421,
+              'quoteSourceName': 'Delayed Quote',
+              'quoteType': 'EQUITY',
+              'region': 'US',
+              'regularMarketChange': -0.3199997,
+              'regularMarketChangePercent': -0.7999992,
+              'regularMarketDayHigh': 40.37,
+              'regularMarketDayLow': 39.68,
+              'regularMarketDayRange': '39.68 - 40.37',
+              'regularMarketOpen': 39.98,
+              'regularMarketPreviousClose': 40.0,
+              'regularMarketPrice': 39.68,
+              'regularMarketTime': 1626466087,
+              'regularMarketVolume': 1569100,
+              'sharesOutstanding': 815924992,
+              'shortName': 'ENGIE BRASILON      NM',
+              'sourceInterval': 15,
+              'tradeable': False,
+              'trailingAnnualDividendRate': 1.578,
+              'trailingAnnualDividendYield': 0.039449997,
+              'trailingPE': 11.504785,
+              'triggerable': False,
+              'twoHundredDayAverage': 41.622307,
+              'twoHundredDayAverageChange': -1.9423065,
+              'twoHundredDayAverageChangePercent': -0.04666504}}
+39.68
+#+end_example
+[[file:./jupyter/3b87c735f940e00e0783103fd0cd43f0f135781a.png]]
+:END:
+

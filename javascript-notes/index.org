@@ -1,0 +1,14 @@
+#+title: Javascript notes 
+#+date: <2021-06-24 Thu>
+#+author: Nasser Alkmim
+#+draft: t
+#+toc: t
+#+tags[]: javascript
+
+* Functions
+
+** =querySelector()= abd =querySelectorAll()=
+
+Method of =Element= interface.
+Allows to find the first element that match one or more CSS selectors.
+

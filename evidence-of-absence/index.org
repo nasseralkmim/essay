@@ -1,0 +1,19 @@
+#+options: ':nil *:t -:t ::t <:t H:3 \n:nil ^:t arch:headline
+#+options: author:t broken-links:nil c:nil creator:nil
+#+options: d:(not "LOGBOOK") date:t e:t email:nil f:t inline:t num:t
+#+options: p:nil pri:nil prop:nil stat:t tags:t tasks:t tex:t
+#+options: timestamp:t title:t toc:t todo:t |:t
+#+title: Absence of evidence is not evidence of absence
+#+date: <2021-01-21 Thu>
+#+author: Nasser Alkmim
+#+email: nasser.alkmim@gmail.com
+#+language: en
+#+select_tags: export
+#+exclude_tags: noexport
+#+creator: Emacs 27.1 (Org mode 9.4.3)
+#+draft: t
+* Exempli gratia
+
+#+begin_quote
+First, there is no evidence that consumption of consumer staples had actually fallen much during 2020 as people had stayed home but continued to spend on food, drinks and home refurbishment as usual, if not more. -- vlbuzz (FT comment)
+#+end_quote

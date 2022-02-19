@@ -1,0 +1,376 @@
+#+title: Favorite garments 2021
+#+date: <2021-03-15 Mon>
+#+author: Nasser Alkmim
+#+tags[]:  favorites garments 
+#+toc: t
+#+draft: t
+* Insulation
+** Moutain hardwear ghost whisper 350
+
+Good fit.
+
+#+DOWNLOADED: screenshot @ 2021-07-06 07:23:46
+#+attr_html: :width 300px
+[[file:Insulation/2021-07-06_07-23-46_screenshot.png]]
+
+
+** Cumulus inverse 230
+Lightweight down jacket.
+Down is a natural fabric and from my heuristic of favoring natural over synthetic, this is the best option.
+
+#+DOWNLOADED: screenshot @ 2021-06-08 09:19:34
+#+attr_html: :style width: 320px
+[[file:Insulation/2021-06-08_09-19-34_screenshot.png]]
+
+** Arc'teryx Proton LT 250
+Best combination of style, quality, warmth and breathability.
+This is a synthetic insulation for high output activities.
+
+Good as midlayer during bike commuting, skiing, walking in the city.
+Also good for standalone jacket when it's not too cold, which means it can be used year-round.
+
+I think down is better because it's natural, more durable, packs smaller.
+
+#+DOWNLOADED: screenshot @ 2021-03-15 21:56:14
+#+attr_html: :style width: 300px
+[[file:Mid_layer/2021-03-15_21-56-14_screenshot.png]]
+
+** Patagonia Nano air 250 
+Second option.
+People usually complain about durability of face fabric.
+
+#+DOWNLOADED: screenshot @ 2021-03-15 21:51:25
+#+attr_html: :style width: 300px
+[[file:Mid_layer/2021-03-15_21-51-25_screenshot.png]]
+
+** Cumulus Climalite 175
+The price is good, but it lacks style.
+
+#+DOWNLOADED: screenshot @ 2021-03-15 22:05:02
+#+attr_html: :style width: 300px
+[[file:Mid_layer/2021-03-15_22-05-02_screenshot.png]]
+** Enlightened Equipament torrid APEX 142,21
+More for US customers.
+Same as the cumulus, very technical and lacks style.
+
+
+#+DOWNLOADED: screenshot @ 2021-03-15 22:08:14
+#+attr_html: :style width: 300px
+[[file:Mid_layer/2021-03-15_22-08-14_screenshot.png]]
+** Houdini heavenly 280
+
+Primaloft gold active.
+Light weight shell, good to every thing.
+
+This is an alternative to proton lt.
+Breathable synthetic midlayer.
+
+But I prefer the cumulus light weight down.
+
+#+DOWNLOADED: screenshot @ 2021-06-08 15:05:25
+#+attr_html: :style width: 300px
+[[file:Insulation/2021-06-08_15-05-25_screenshot.png]]
+
+** Fjalraven 300
+
+Too warm and bulky for mid layer.
+Fit is loose also, sleeves are too long.
+
+#+DOWNLOADED: screenshot @ 2021-07-06 07:22:11
+#+attr_html: :width 250px
+[[file:Insulation/2021-07-06_07-22-11_screenshot.png]]
+* Hard shell
+** Arc'teryx BETA LT 400
+3L Gore-TEX versatile.
+With pit zippers and adjustable hood.
+
+This is one of the most versitile Gore-TEX jacket.
+
+#+DOWNLOADED: screenshot @ 2021-03-21 17:15:17
+#+attr_html: :style width: 290px
+[[file:Hard_shell/2021-03-21_17-15-17_screenshot.png]]
+** Houdini RollerCoaster
+
+Made out of Loop Hardshell, allegedly quiet fabric.
+Minimalist design with a nice beige color.
+It does not stretch but it is made with a single piece of fabric draped over the body, which supposedly allows mode freedom of movement.
+
+It has a build in snow gaiter, which may reduce flexibility of the garment in other use cases.
+
+
+
+#+DOWNLOADED: screenshot @ 2021-06-26 08:48:54
+#+attr_html: :width 290px
+[[file:Hard_shell/2021-06-26_08-48-54_screenshot.png]]
+
+
+
+
+#+DOWNLOADED: screenshot @ 2021-06-26 08:58:26
+#+attr_html: :style width: 250px
+[[file:Hard_shell/2021-06-26_08-58-26_screenshot.png]]
+
+
+
+** Houdini Leeward 470
+
+Loop Hardshell fabric and Atmos membrane.
+This fabric is has "mechanical stretch", no spandex.
+It has a smooth and silent face.
+
+4-seasons jacket that can be used for skiing but is lightweight for hiking as well.
+
+Made in Estonia.
+
+#+DOWNLOADED: screenshot @ 2021-06-13 16:19:01
+#+attr_html: :style width: 300px
+[[file:Hard_shell/2021-06-13_16-19-01_screenshot.png]]
+
+** Houdini D 500
+
+The alternative to the Beta LT is the D jacket.
+
+Difference is that the D jacket is not Gore-TEX.
+It has a Atmos membrane instead.
+
+The main fabric is Apex 3 layers which is smooth, and friction free inside.
+No stretch like the Leeward.
+
+#+DOWNLOADED: screenshot @ 2021-06-12 07:00:27
+#+attr_html: :style width: 350px
+[[file:Hard_shell/2021-06-12_07-00-27_screenshot.png]]
+
+
+** Norrøna Lofoten 550
+
+This one is good for skiing and everything else.
+However, I think the style is too focused in skiing, its too long.
+
+It is made with Gore-Tex 3-layer, pit zips.
+The yellow color stands out and grows on you.
+
+This jacket was first designed in 2001, which is a long time to improve and perfect its design.
+
+The main difference from the Beta LT is the fit, this one is more boxy and relaxed which is adequate for skiing environment.
+I would say it performs better when biking as well.
+The arcteryx fit is nicer when just walking around.
+
+It has a powderskirt accessory which adds versatility.
+
+I have seen for 380.
+
+#+DOWNLOADED: screenshot @ 2021-04-10 15:17:50
+#+attr_html: :style width: 380px
+[[file:Hard_shell/2021-04-10_15-17-50_screenshot.png]]
+
+
+** Rab Firewall 300
+Pertex shield 3L, not gore-tex but equivalent.
+It can stretches and have pít zips for ventilation.
+Already found it for 190. (campz.at)
+
+
+#+DOWNLOADED: screenshot @ 2021-03-17 15:16:03
+#+attr_html: :style width: 300px
+[[file:Hard_shell_layer/2021-03-17_15-16-03_screenshot.png]]
+* Soft shell
+Mostly for running or as a mid layer.
+Should be black or orange.
+** RAB Borealis 90
+Best option for running considering quality/price ratio.
+
+#+DOWNLOADED: screenshot @ 2021-03-16 13:22:47
+#+attr_html: :style width: 250px
+[[file:Soft_shell/2021-03-16_13-22-47_screenshot.png]]
+** Rab Kinectic Plus 200
+
+Proflex membrane is waterproof and stretchy.
+It is also decently breathable.
+
+Good for running and cycling around the city.
+Contrasting to the Borealis, this one is more waterproof but less breatheable.
+Not so much for skiing.
+
+Worth only if on sale.
+I have seen it for 120 (campz.at)
+
+
+#+DOWNLOADED: screenshot @ 2021-03-20 19:20:23
+#+attr_html: :style width: 250px
+[[file:Soft_shell/2021-03-20_19-20-23_screenshot.png]]
+
+
+** Gore H5 Windstopper 350
+
+Already have seen for 160 (campz.at).
+
+
+#+DOWNLOADED: screenshot @ 2021-03-17 15:47:31
+#+attr_html: :style width: 250px
+[[file:Soft_shell/2021-03-17_15-47-31_screenshot.png]]
+
+* Pants
+
+** Houdini Angular 500
+
+Same material as the leeward jacket, Loop hard shell with mechanical stretch.
+
+I have seen it for 250 already.
+
+** Houdini RollerCoaster
+
+* Gloves
+** Hestra Army leather Heli ski 135
+
+Classic (yet modern).
+I think this is the most popular style.
+
+Goat leather palm for water resistance (not waterproof).
+Nylon on the back.
+
+Removable liner will make this last for a long time.
+(I estimate a decade minimum for moderate usage).
+
+Gauntlet style over elastic cuff makes it easier to go over the jacket sleeve.
+This makes it easier to put them on and off.
+
+
+#+DOWNLOADED: screenshot @ 2021-06-16 07:52:42
+#+attr_html: :style width: 250px
+[[file:Gloves/2021-06-16_07-52-42_screenshot.png]]
+
+
+
+
+#+DOWNLOADED: screenshot @ 2021-07-06 07:37:07
+#+attr_html: :width 350px
+[[file:Gloves/2021-07-06_07-37-07_screenshot.png]]
+
+
+
+#+DOWNLOADED: screenshot @ 2021-07-06 07:37:46
+#+attr_html: :width 350px
+[[file:Gloves/2021-07-06_07-37-46_screenshot.png]]
+
+
+#+DOWNLOADED: screenshot @ 2021-07-06 07:43:56
+#+attr_html: :width 350px
+[[file:Gloves/2021-07-06_07-43-56_screenshot.png]]
+
+
+** Norrona Lofoten 180
+
+My favorite one because it combines performance with clean design.
+
+
+#+DOWNLOADED: screenshot @ 2021-04-14 07:49:19
+#+attr_html: :style width: 350px
+[[file:Gloves/2021-04-14_07-49-19_screenshot.png]]
+
+** Hestra Army leather soft shell 110
+
+Similar to the Army leather but with a more clean stitching.
+
+Water and wind proof.
+
+
+#+DOWNLOADED: screenshot @ 2021-06-16 07:50:20
+#+attr_html: :style width: 250px
+[[file:Gloves/2021-06-16_07-50-20_screenshot.png]]
+
+
+** Hestra Army leather patrol 110
+The best and most afordable option.
+
+Goat leather palm, insulated and with removable linig.
+The backhand has a windproof and water-resistant layer.
+It does not have Gore-Tex, which means it is more breathable.
+
+Very versatile glove, can be used for cycling and skiing.
+It seems to be very durable and will last a long time, specially with option to change the lining in the future.
+
+It can also be used in a layer system.
+If more warm is required, an thin wool layer can be added underneath.
+If waterproof is important, a mitten shell can be added.
+
+I don't like the stitching in the outside.
+It might provide some benefits but it does not look good.
+
+#+DOWNLOADED: screenshot @ 2021-04-15 06:42:06
+#+attr_html: :style width: 350px
+[[file:Gloves/2021-04-15_06-42-06_screenshot.png]]
+
+
+** Hestra Fall line 140
+
+The design is too noisy, but is a good option with performance and durability in mind.
+
+#+DOWNLOADED: screenshot @ 2021-04-14 07:48:49
+#+attr_html: :style width: 350px
+[[file:Gloves/2021-04-14_07-48-49_screenshot.png]]
+
+** Hestra FÄLT 135
+
+This is more for hiking, I do not like the loose wrist cover.
+Prefer it under the jacket.
+
+#+DOWNLOADED: screenshot @ 2021-04-14 07:46:49
+#+attr_html: :style width: 350px
+[[file:Gloves/2021-04-14_07-46-49_screenshot.png]]
+** Mittens or gloves?
+
+Gloves are more versatile since they can be used more easily for bike riding and walking in the city.
+So you can take a picture with your phone with gloves on.
+You can do or undo your zippers more easily as well.
+While ridding a bike it is easier to use the brakes with gloves.
+
+Mittens can keep the heat better, but I think gloves with an extra wool liner are enough for most of the time.
+
+* Base layer
+All good options, get the one on sale.
+Black or orange for consistency.
+*** Karrimor quarter zip 15 
+
+Cheapest one, still waiting to check quality. 
+Update: I tested the t-shirt. The quality is ok, good enough to run with.
+
+#+DOWNLOADED: screenshot @ 2021-03-15 22:02:33
+#+attr_html: :style width: 250px
+[[file:Base_layer/2021-03-15_22-02-33_screenshot.png]]
+
+
+*** Craft CORE gain 35
+
+#+DOWNLOADED: screenshot @ 2021-03-15 21:59:43
+#+attr_html: :style width: 250px
+[[file:Base_layer/2021-03-15_21-59-43_screenshot.png]]
+*** Nike pacer 1/2 zip 40
+
+#+DOWNLOADED: screenshot @ 2021-03-15 22:00:51
+#+attr_html: :style width: 250px
+[[file:Base_layer/2021-03-15_22-00-51_screenshot.png]]
+* Insulated shell
+For wandering around the city and you don't want be like an onion with multiple layers.
+Commuting to a warm place (restaurant or bar) and you are not expecting rain.
+
+Black is the most versatile.
+*** Rab Axion Pro 270
+
+Already have seen for 160 (bergzeit.de).
+
+#+DOWNLOADED: screenshot @ 2021-03-17 15:26:41
+#+attr_html: :style width: 300px
+[[file:Single_insulation/2021-03-17_15-26-41_screenshot.png]]
+*** Arcteryx Atom AR 
+* Technologies
+*** Gore-Tex Pro
+
+Best in terms of breathable waterproof.
+It provides 28 meters of water head hight resistance.
+
+*** Air permeable membranes
+
+When classic Gore-Tex patent expired in 1997,  other manufactures used a single layer ePTFE membrane (expanded polytetrafluoroethylene, "teflon").
+
+This single layers have constant air flow through them, whereas Gore-Tex is monolithic.
+

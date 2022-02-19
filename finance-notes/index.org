@@ -1,0 +1,276 @@
+#+title: Finance notes
+#+date: <2021-07-12 Mon>
+#+lastmod: 2021-08-24 07:50:06
+#+author: Nasser Alkmim
+#+draft: t
+#+toc: t
+#+tags[]: finance
+* Definitions
+** What is Xetra?
+A trading technology.
+One the first electronic trading system.
+It is operated by the Frankfurt Stock Exchange (FRA), one of the oldest exchanges in the world.
+The company holding Deutsche Borse owns the FRA.
+** What is a persons's domicile?
+Where you live and pay taxes.
+Different from nationality.
+** What is the difference between ETF provider and ETF exchange?
+A provider is a company that creates and manages the ETF.
+For instance:
+1. Vangard
+2. BlackRock
+
+An exchange is a "place" where people trade (money for asset/security and vice-versa).
+For instance:
+1. ARCA in New York
+2. Longo Stock Exchange (LSE)
+3. Xetra (Deutsche Borse, in Germany)
+** What is UCIT?
+
+Undertakings for the collective investment in transferable securities.
+
+It is a mutual fund that has an unified regulatory and investor protection requirements.
+
+Most European ETFs are structured as UCITS vehicle.
+
+** Why Ireland for ETF domicile?
+
+Ireland is the main domicile for UCITS funds.
+
+Ireland has favorable tax treaty networks.
+Depends on the particular treat between residency country and Ireland.
+
+Tax regime in Ireland:
+1. exemption for income gains derived from investments.
+2. no taxes on net asset value.
+3. no transfer taxes.
+4. no withholding taxes for payments to non-Irish residents.
+
+** Difference between limit and market order?
+
+Limit order the order is only executed at the price specified.
+Place the order at a price or better.
+
+
+Market order is to trade at any price available in the market.
+
+* Personal finance
+** Why it is good to borrow against your equity hold?
+Because when you sell, it triggers capital gain taxes ("fato gerador", taxable event).
+
+Taxes, for capital gain, usually are double digit.
+Whereas a loan with equity holding as collateral is single digit (IBKR is around 2% a year).
+
+Its better to take a loan then.
+The loan is debt, which can be used to offset taxes also (not true since the 90s, only mortgages).
+[[https://www.schwab.com/resource-center/insights/content/investment-expenses-whats-tax-deductible][Investment Expenses: What’s Tax Deductible?]]
+
+When credit is cheap, you can also refinance your loans.
+
+** How to use debt?
+
+Finance an apartment.
+
+The apartment _most likely_ will increase in price.
+
+Use the equity built on the apartment (A - L) to get a loan.
+
+Use the loan to make a down payment on another property.
+
+Rent the property and use the rent to pay the mortgage.
+Risk of vacancy.
+
+** Insurance and debt as taxes optimizer?
+Insurance proceeds is tax free, differently from inheritance.
+
+** Assets appreciation and inheritance?
+
+Buy equity.
+
+After 50 years, equity multiplies in market value by 100.
+
+If you sell, you have to pay 20% on your gain.
+
+If you inherit the stock, the base value for taxes purposes is reset to the current market value.
+Step up basis rate.
+
+** Why not selling has tax advantages?
+Because when you realize your gains you pay around 20% on capital gains.
+
+* ETF
+** Factors
+*** What are factors?
+Factors are the _underlying exposure_ that _explains risk_.
+This risk is associated with an expected return.
+
+
+For example, consider the *market factor*.
+The *market factor* has as _underlying exposure_ the *market*.
+This factor _explains the  risk_ of market-cap-weighted stock portfolio. 
+Market exposure, as a factor, has an associated expected excess return (above the risk free rate) which is referred as a _premium_.
+*** What it means for a portfolio to have 
+
+*** References
+- [[https://www.vanguard.com.hk/documents/how-to-use-factor-based-investing.pdf]]
+** Combinations
+*** VT (EUNL/VWCE)
+
+Total world from Vanguard, but domiciled in the US.
+
+Alternative to Europe is VWCE exchanged XETRA in EUR.
+Stands for Vanguard FTSE All-World UCITS ETF (USD) Accumulating (ISIN  IE00BK5BQT80, domiciled in Ireland (IE)).
+TER is 0.20%, higher than just an S&P 500 etf (0.07 for SXR8)
+
+
+| EUNL (Xetra EUR) | iShares Core MSCI World ETF USD Acc                  | TER 0.20% |
+| VWCE (Xetra EUR) | Vanguard FTSE All-World UCITS ETF (USD) Accumulating | TER 0.20% |
+
+*** VTI/VXUS (SXR8/IS3N) 70/30
+VT has 40% international holdings.
+VTI is total market for the US.
+VXUS is total market except US.
+
+With VTI and VXUS we can choose the ratio.
+
+I prefer 90% VTI and 10% VXUS, because I already have a lot in Brazil.
+
+This combination VTI/VXUS exists only in US, which is subjected to US taxes.
+To avoid that we need Irish based ETFs.
+
+There is no alternative to VXUS, only Ishares for the EM (TER is 0.18% and it does not japanese companies, but has good Chinese, Taiwanese and Korean).
+IS3N is the ticker for the German exchange, but it is also known as EIMI (London and others exchanges).
+
+[[https://www.bogleheads.org/wiki/EU_investing#Sample_Portfolios][EU investing - Bogleheads]]
+
+Alternatives for EU investors:
+| SPPW (Deutsche Boerse EURopeans) | SPDR MSCI World UCITS ETF USD Acc | TER 0.12% |
+| IS3N (Xetra)                     | iShares Core MSCI EM IMI UCITS    | TER 0.18% |
+*** VOO/VXF
+
+VTI has 72% large caps, 24% mid and 9% small cap.
+VOO is large caps in the US, S&P500. (FAANG, tesla)
+VXF is mid and small caps in the US. (Uber, zoom, square)
+
+I think the VTI ratio is good enough, 70/30.
+
+*** VONV/VUG/VIOV
+
+VONV tracks large cap focused on value.
+VUG large cap focused on growth.
+
+** General question
+*** VTI or VOO?
+*** What is ARCA, IOPV and MEXI?
+
+ARCA is a *electronic* NY securities exchange (NYSE) in the US.
+It is specialized in ETF exchange.
+
+MEXI refers to Mexico?
+*** Growth versus value?
+Value means that the book value of a company is attractive compared with its market value.
+
+Growth means that the company has good potential to increase earning in the future.
+*** US versus the world
+1. US has outperformed the rest of the world for around 10 years now.
+2. the longest period of US dominance was 1995-2001
+   1. this suggests a change in pattern is about to happen, who knows?
+   2. an argument to invest less on VTI and more on VXUS
+   3. the base rate is 80-20, since this evidence I think  a 70-30 is adequate.
+3. US biggest players are in the tech field
+   1. Microsoft, Apple, Amazon, Alphabet, Tesla
+4. Rest of the world are a mixture
+   1. Taiwan semiconductor, Tencent, Alibaba, Samsung, Toyota
+   2. Sony, Siemens, Shopify
+   3. Vale (0.3%)
+
+      
+#+DOWNLOADED: screenshot @ 2021-07-16 21:01:45
+#+attr_html: :width 450px
+[[file:ETF/2021-07-16_21-01-45_screenshot.png]]
+*** US based ETFs and taxa implications
+US based ETFs are subjected to US estate tax.
+It a US based ETF distributes income, you have to pay "withholding taxes" to the US government.
+
+Irish based ETFs are not.
+*** What is investment's domicile?
+Where the funds are _based_ and _which taxation rules_ apply to them.
+*** Why Europeans can not buy US based investments?
+Regulations: MiFID II and PRIIPs.
+*** What tax information an investor should focus?
+Registration.
+
+Reporting.
+*** What is ISIN and WKN?
+The same ETF can have different "share classes" with different currencies.
+The ISIN is unique code that can identify the ETF.
+ISIN stands for international securities identification number.
+First letters indicates the country where the ETF is based.
+
+
+WKN is the German identification number.
+Used for Deutsche Börse, which owns XETRA.
+This was replaced by ISIN.
+*** Same ETF with multiple listing?
+
+For instance [[https://www.justetf.com/en/etf-profile.html?isin=IE00B5BMR087#listing][iShares Core S&P 500 UCITS ETF (Acc) | A0YEDG | IE00B5BMR087]].
+
+The same ISIN, but it has multiple tickers depending on the exchange and currency it is listed.
+In the London Stock Exchange its ticker is CSPX ([[https://finance.yahoo.com/quote/CSPX.L?p=CSPX.L&.tsrc=fin-srch][CSPX.L]]) for the USD listing.
+Whereas SXR8 is used by XETRA for the same ETF traded in EUR [[https://finance.yahoo.com/quote/SXR8.DE?p=SXR8.DE&.tsrc=fin-srch][(SXR8.DE)]].
+
+[[https://money.stackexchange.com/questions/24336/how-does-it-work-when-the-same-etf-is-listed-on-several-stock-exchanges][How does it work when the same ETF is listed on several stock exchanges? - Pe...]]
+*** What is the difference between accumulating and distributing?
+After the distribution, the price goes does by the amount distributed.
+Dividend distribution is taxable event.
+*** Why investments are domiciled in Ireland?
+Tax benefits.
+*** What happens when the broker goes out of business?
+*** What happens if Vanguard goes bankrupt?
+Vangard is a trustee of the ETF and holds the shares that make up the index.
+Vanguard is a trustee for the investor, which has the beneficial title.
+
+That means if Vanguard itself went bust, creditors/liquidators etc don’t have recourse to assets and liabilities of the funds (they are protected). In practice, what is likely to happen is for the funds to be wound up and the net sale proceeds distributed to investors or alternatively a replacement trustee put in place to continue to hold and possibly manage the assets going forwards.
+
+* Options
+** Definitions
+*** What is the difference between selling a put (writing) and buying a put?
+When you write a put, you are obligated to buy the underlying asset from the person who bought your put (the other side of the contract).
+
+Just buying a put, you have the option to sell the asset at the striking price to the person who wrote the contract.
+
+** Covered calls
+* Brokers
+** IBKR
+*** ETF currency, location and exchange
+
+The same ETC can be on multiple exchanges.
+Those exchanges can list the same ETF on different currencies.
+
+It is good to get a listing that in the _same currency_ of your deposit, so you don't have to exchange currencies.
+
+# TODO Check that?
+As a EU resident, it is not possible to buy US-domiciled ETFs.
+Good to buy Ireland
+
+For _exchange currency there is a fee of about 2 USD._
+*** Cash only and margin
+
+Margin we get a short term loan.
+*** Options to buy fraction shares
+Only whole as well.
+
+Trade republic I can only buy whole shares.
+*** Preview order
+
+Preview the amount of shares you will get and the comission.
+*** Can you sell a stock on a different exchange?
+
+1. buy a stock in Stuttgart exchange.
+   1. the "trading venue" is XETRA or "ECN's lie tradegate".
+   2. or IB choose the most favorable execution, "smart routing".
+2. can not enforce specific currency in trade.
+*** IBRK pro or lite?
+
+Pro = through an exchange.
+
+Lite = routed not through an exchange but sold to hedge funds and dark pools.

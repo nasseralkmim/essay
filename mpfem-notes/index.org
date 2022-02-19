@@ -1,0 +1,1539 @@
+#+title: mpFEM notes
+#+date: <2021-05-02 Sun>
+#+author: Nasser Alkmim
+#+email: nasser.alkmim@gmail.com
+#+tags[]: tools c++ 
+#+draft: t
+#+toc: t
+* Questions
+** Solver params
+1. how to specify preconditioners
+2. scaling L,R,T? just number to multiply? 
+** Singularity
+1. sandbox, is like a container with the folder structure accessible
+2. cmakelocal is for the container specific 
+** Comments
+1. dofelement, implements the multiphysics
+   1. virtual classes concept
+2. nlsolver.cpp
+   1. evaluateandassemblelinearsystem function
+   2. grid facility to access elements (map elements to pointer) in the parallel
+   3. data is stored in the node base
+   4. Newton solver
+      1. theLinSys.solve solves the linear system
+      2. inside linsolve/ folder 
+3. analysis: time load increment
+   1. generalAnalysis.cpp inherint to analysis
+   2. runparallelanalysis function (q is the solution)
+* Installation
+** Configure
+* Singularity
+** What is singularity?
+
+Singularity containers provide an application virtualization layer enabling
+mobility of compute via both application and environment portability. With
+Singularity one is capable of building a root file system that runs on any 
+other Linux system where Singularity is installed.
+ 
+** Installation
+[[https://sylabs.io/guides/3.0/user-guide/quick_start.html#quick-installation-steps][Quick Start — Singularity container 3.0 documentation]].
+** mpFEM container download
+
+From the ftp server
+
+#+begin_example
+ftp-Server:  ftp.uibk.ac.at
+User ID:     ftp
+Passwort:    E-Mail-Adresse
+>> bin
+Verzeichnis: /private/c8441094_20210514_5977bfea2d670cbdd7c1aac12f3f25ac
+#+end_example
+
+The =bin= command sent to the server the Type I, which stands for image.
+Image mode and binary mode mean the same in FTP.
+This command tell the server that the transfer will involve a binary data type.
+
+** mpFEM container
+With a pre-built environment inside a container (end =.simg=).
+
+#+begin_src sh
+cd ~/SANDBOX_mpFEM.simg/mpFEM
+tree -L 1
+#+end_src
+
+#+RESULTS:
+#+begin_example
+.
+├── CMakeCache.txt
+├── CMakeFiles
+├── CMakeLists.txt
+├── CMakeListsLocal.txt
+├── EXTERNAL
+├── Makefile
+├── SRC
+├── cmake_install.cmake
+└── mpFEM
+
+3 directories, 6 files
+#+end_example
+
+** Running inside the container
+
+The executable for mpFEM is in =mpFEM/mpFEM= which can be accessed with =singularity exec [exec options...] <container> <command>=.
+
+#+begin_src sh
+singularity exec ~/SANDBOX_mpFEM.simg /mpFEM/mpFEM
+#+end_src
+
+#+RESULTS:
+#+begin_example
+
+2021-05-02 11:31:44 CEST
+
+##############################
+#      Starting mpFEM on     #
+#           1 procs          #
+##############################
+
+-> Using default input dir  INPUT
+-> Using default result dir RESULT
+-> Using default resultfile result
+-> Using default config     files
+
+
+Unable to open config file
+INPUTfiles
+ABORTING.
+#+end_example
+
+** Command to run the container
+
+Flags:
+1. =-i= input directory
+2. =-f= configuration file
+3. =-r= results directory
+4. =-o= results file
+
+#+begin_src sh :results output
+singularity exec ~/SANDBOX_mpFEM.simg /mpFEM/mpFEM -i=/home/nasser/mpfem/SLOPE_SOLVER -f=filesAMGCL -r=/home/nasser/mpfem/SLOPE_SOLVER/results -o=results
+#+end_src
+
+#+RESULTS:
+#+begin_example
+
+2021-05-01 12:37:57 CEST
+
+##############################
+#      Starting mpFEM on     #
+#           1 procs          #
+##############################
+
+-> Using input directory    /home/nasser/mpfem/SLOPE_SOLVER/
+-> Using result directory   /home/nasser/mpfem/SLOPE_SOLVER/results/
+-> Using resultfile         results
+-> Using config file        filesAMGCL
+
+Processing config file
+
+Read input from the following files
+
+-> NODES                    nodes
+-> ELEMENTS                 elements
+-> KNOTS                    -_-
+-> MATERIAL_DATA            materialDP
+-> ELEMENT_DATA             eledata
+-> BC_DIRICHLET             bc_node
+-> BC_FLUX                  neumann
+-> LOCSYS                   -_-
+-> SPACE_SCALING            scaling_space
+-> TIME_SCALING             scaling_time
+-> ANALYSIS                 analysis
+-> CHECKPOINTS              steps
+-> CONSTRUCTION             -_-
+-> EXCAVATION               -_-
+-> COUPLING                 -_-
+-> NONLINEAR_SOLVER         nlsolve
+-> LINEAR_SOLVER            solverAMGCL
+-> RESTART                  restart
+-> OUTPUT                   output
+-> REBAR_BARS               -_-
+-> REBAR_PROP               -_-
+
+
+,******************************
+,*      input mesh data       *
+,******************************
+
+reading restart file: restart
+
+##############################
+#       read coupling        #
+##############################
+
+Master IDs 
+
+Slave IDs 
+
+Matching 0 slave nodes to 0 master nodes
+No master nodes. There is nothing to do.
+
+##############################
+#        read nodes         #
+##############################
+
+There are 1457 nodes in the mesh
+
+##############################
+#      read elements         #
+##############################
+
+PID 0 is aware of  1376 elements in 1 blocks, and expects to receive 1376
+
+##############################
+#  determine parallel mesh   #
+#   layout (call ParMETIS)   #
+##############################
+
+... setup of element graph
+... partitioning of element graph
+... redistribution of elements
+... setup of an appropriate ghosting of nodes
+
+--> Begin setup of element graph
+<-- Completed setup of element graph
+--> Start to generate sendplan for element distribution
+Processor 0
+xadj:   size 1377
+adjncy: size 10536
+
+vtxdist: 
+  0 1376 
+SIZES 8 8 <-> 4 4  | 8 8 8 8 | 4 4 4 8 4 8
+ 1.00000e+00
+<--  successfully generated sendplan for element distribution
+--> Start to redistribute elements according to layout
+<-- Finished to redistribute elements according to layout
+--> Redistribute nodes according to given element layout
+<-- Finished to redistribute nodes according to element layout
+
+##############################
+# generate a grid object
+##############################
+
+... establish tag/id-access methods (maps)
+    for nodes and elements
+
+,******************************
+,*   input of element data   *
+,******************************
+
+##############################
+#      read element data        #
+##############################
+
+contains ... 
+... reduced/full integration flag
+... element specific parameters (except materials)
+will be ... 
+... read
+... communicated to all procs
+... stored at the corresponding elements
+    (prior to material input)
+
+
+,*----------------------
+reading a new element data
+name tag is
+Eledata_Rock
+... reading a data block
+,*----------------------
+reading a element ids block
+The data was assigned to 1376 elements of type SOLID
+
+,******************************
+,*   input of material data   *
+,******************************
+
+##############################
+#      read materials        #
+##############################
+
+materials are ... 
+... read
+... communicated to all procs
+... stored at the corresponding elements
+
+,*----------------------
+reading a new material definition
+name tag is
+SoilDruckerPrager
+TYPE      DruckerPrager (113)
+FORMULATION  TWO_D_PlaneStrain (2)
+primary stress  CAUCHY (1)
+secondary stress  NONE (0)
+... reading a data block
+E                               24.0E6
+NU                              0.2
+TAUY                            5.57E3
+MU                              0.791
+MUBAR                           0.315
+OMEGA                           0.6
+ETA                             0.2
+DENSITY                         2000.0
+POROSITY                        0.0
+STARTUP                         YES
+activate startup
+The data was assigned to 1376 elements
+
+,******************************
+,*introduce degrees of freedom*
+,******************************
+
+##############################
+#  assign degrees of freedom #
+##############################
+
+... determine dof numbering based on node numbering
+%%%%%%%%%%%%%%
+Dof numbers used in computation (name/field/coord):
+        DISP : 1 :  0 
+      DISP_X : 1 :  0 
+      DISP_Y : 1 :  1 
+      DISP_Z : 1 :  2 
+         VEL : 7 :  0 
+       VEL_0 : 7 :  0 
+       VEL_1 : 7 :  1 
+       VEL_2 : 7 :  2 
+           P : 6 
+          PA : 3 
+          PC : 2 
+           T : 4 
+ NLOC_DAMAGE : 5 
+    MICROROT : 8 :  0 
+  MICROROT_0 : 8 :  0 
+  MICROROT_1 : 8 :  1 
+  MICROROT_2 : 8 :  2 
+%%%%%%%%%%%%%%
+
+,************************************
+,*input of node specific coordinates*
+,************************************
+
+x-specific initialisation for spherical or cylindrical coords
+
+,******************************
+,*input of boundary conditions*
+,******************************
+
+##############################
+#  input Dirichlet boundary  #
+#         conditions         #
+##############################
+
+Dirichlet boundary conditions are ...
+... read
+... communicated to all procs
+... stored at the corresponding nodes
+
+,*----------------------
+reading a new boundary condition
+name tag is
+BODEN
+this bc covers 1 dofs
+the unique dof ids to use are:
+  1 (field: DISP)
+the values are:
+ 0.00000e+00
+time scaling funtion is 1
+space scaling funtion is 1
+read node ids for this condition
+The condition contained 49 nodes
+,*----------------------
+reading a new boundary condition
+name tag is
+Seiten
+this bc covers 1 dofs
+the unique dof ids to use are:
+  0 (field: DISP)
+the values are:
+ 0.00000e+00
+time scaling funtion is 1
+space scaling funtion is 1
+read node ids for this condition
+The condition contained 26 nodes
+
+##############################
+#   input Neumann boundary   #
+#         conditions         #
+##############################
+
+Neumann boundary conditions are ...
+... read
+... communicated to all procs
+... stored as boundary elements at the corresponding elements
+
+,*----------------------
+reading a new flux boundary condition
+name tag is
+LOAD_RechteFahrbahn
+acts on side 3 (ABAQUS notation - 1)
+time scaling  funtion is 3
+space scaling funtion is 1
+type is 2
+Time interval ( 1.00000e+00, 1.00000e+10]
+(interval definition might be element specific)
+integer params:
+1
+double params:
+ 9.50000e+04
+read parent ids for this condition
+The condition contained 20 parent elements
+
+##############################
+#  input time/space scaling  #
+#    data (ramp functions)   #
+##############################
+
+reading a new time curve condition
+reading curve id 1
+reading a new time curve condition
+reading curve id 2
+reading a new time curve condition
+reading curve id 3
+reading a new time curve condition
+reading curve id 4
+reading a new time curve condition
+reading curve id 5
+reading a new time curve condition
+reading curve id 6
+reading a new time curve condition
+reading curve id 7
+------------------
+Time scaling:
+Scaling function types (const, lin, ...):
+Id   1   type 1
+Id   2   type 1
+Id   3   type 2
+Id   4   type 2
+Id   5   type 2
+Id   6   type 2
+Id   7   type 2
+Scaling function parameters:
+Id   1   has   4 params
+Id   2   has   4 params
+Id   3   has   6 params
+Id   4   has   4 params
+Id   5   has   4 params
+Id   6   has   4 params
+Id   7   has   4 params
+
+reading a spatial function
+reading a spatial function
+------------------
+Space scaling:
+Scaling function types (const, lin, ...):
+Id   1   type 1
+Id   2   type 1
+Scaling function parameters:
+Id   1   has   1 params
+Id   2   has   1 params
+
+,******************************
+,*   input of rebar elements  *
+,******************************
+
+,*  read rebar def from file  *
+
+No rebar input files declared.
+
+,******************************
+,*  input of analysis params  *
+,******************************
+
+reading an analysis
+analysis name: ANALYSIS_GENERAL
+
+The values for the analysis are:
+predictor  = ConstInc
+dt_start   = 1.00000e-02
+dt_min     = 1.00000e-02
+dt_max     = 1.00000e+00
+start      = 0.00000e+00
+end        = 2.00000e+00
+firststep  =0
+maxstep    =1
+delay_inc  =1
+fac_dt_fast= 1.15000e+00
+fac_dt_slow= 7.50000e-01
+fac_dt_fail= 5.00000e-01
+initial field type=ZeroField
+initial field fx=2
+initial field ip  1:  =2
+initial field ip  2:  =3
+initial field dp  1:  = 1.00000e+00
+initial field dp  2:  = 0.00000e+00
+
+
+found keyword *START CHECKPOINT DEFINITION.
+the file position is 29.
+
+found keyword *BEGIN CHECKPOINT.
+the file position is 47.
+
+found keyword *BEGIN CHECKPOINT.
+the file position is 264.
+
+found keyword *BEGIN CHECKPOINT.
+the file position is 480.
+
+search for keyword *BEGIN CHECKPOINT failed.
+Reverting seek position to 675.
+
+found keyword *END CHECKPOINT DEFINITION.
+the file position is -1.
+Checkpoint facility: 3 checkpoints, active id is 0
+------------------
+NUM: 0
+NAME: day_1
+TIME:  1.00000e-01
+RESET STRAINS AT THIS CHECKPOINT
+RESET DT AT THIS CHECKPOINT
+NEW DT    :  1.80000e-01
+NEW DT_MIN:  1.00000e-06
+NEW DT_MAX:  1.00000e+00
+------------------
+NUM: 1
+NAME: day_1
+TIME:  1.00000e+00
+RESET DT AT THIS CHECKPOINT
+NEW DT    :  1.00000e-02
+NEW DT_MIN:  1.00000e-06
+NEW DT_MAX:  1.00000e+00
+------------------
+NUM: 2
+NAME: day_2
+TIME:  2.00000e+00
+
+There are no construction steps defined in the input data. Continuing.
+
+There are no excavation steps defined in the input data. Continuing.
+,******************************
+,*   input of solver params   *
+,******************************
+
+reading solver parameters:
+,*SOLVER GENERAL INFORMATION
+,*PARAMETERS FOR SCALING
+L>>>> DISP   1.0E0
+R>>>> DISP   1.0E0
+T>>>> DISP   1.0E0
+,*PARAMETERS FOR MUMPS DIRECT SOLVER
+,*BEGIN_PARAMETERS_FOR_AMGCL
+AMGCL >>>> AMGCL_SOLVER             GMRES
+AMGCL >>>> AMGCL_PSIDE              RIGHT
+AMGCL >>>> AMGCL_BLOCKPRECONDTYPE     BGS
+AMGCL >>>> AMGCL_TOL                 1E-12
+AMGCL >>>> AMGCL_ABSTOL              1E-7
+AMGCL >>>> AMGCL_MAXITER              300
+AMGCL >>>> AMGCL_GMRES_KSPACE         300
+AMGCL >>>> AMGCL_LGMRES_KSPACE_KEEP   300
+AMGCL >>>> AMGCL_LGMRES_ALWAYS_RESET  YES
+AMGCL >>>> AMGCL_IDRS_DIMENSION         9
+AMGCL >>>> AMGCL_IDRS_OMEGA           0.7
+AMGCL >>>> AMGCL_IDRS_SMOOTHING        NO
+AMGCL >>>> AMGCL_IDRS_REPLACE_REC_RES  NO
+AMGCL >>>> AMGCL_BICGSTABL_ORDER        2
+AMGCL >>>> AMGCL_BICGSTABL_THRESH     0.0
+AMGCL >>>> AMGCL_BICGSTABL_USE_CONVEX  NO
+AMGCL >>>> *BEGIN_FIELD_TO_BLOCK_ASSIGNMENT
+AMGCL >>>> DISP 0
+AMGCL >>>> DIRICHLET 1
+AMGCL >>>> *END_FIELD_TO_BLOCK_ASSIGNMENT
+AMGCL >>>> *BEGIN_PARAMETERS_FOR_SUBBLOCK_PRECONDITIONER
+AMGCL >>>> AMGCL_BLOCK_ID                                    0
+AMGCL >>>> AMGCL_BLOCK_PRECOND_CLASS                         AMG
+AMGCL >>>> AMGCL_BLOCK_AMG_COARSE_ENOUGH                     5
+AMGCL >>>> AMGCL_BLOCK_AMG_DIRECT_COARSE                     YES
+AMGCL >>>> AMGCL_BLOCK_AMG_MAX_LEVELS                        3
+AMGCL >>>> AMGCL_BLOCK_AMG_NPRE                              1
+AMGCL >>>> AMGCL_BLOCK_AMG_NPOST                             1
+AMGCL >>>> AMGCL_BLOCK_AMG_NCYCLE                            1
+AMGCL >>>> AMGCL_BLOCK_AMG_PRE_CYCLES                        1
+AMGCL >>>> AMGCL_BLOCK_AMG_COARSEN_TYPE                      SMOOTHED_AGGREGATION
+AMGCL >>>> AMGCL_BLOCK_AMG_COARSEN_BLOCK_SIZE                1
+AMGCL >>>> AMGCL_BLOCK_AMG_COARSEN_EPS_STRONG                0.08
+AMGCL >>>> AMGCL_BLOCK_AMG_COARSEN_ESTIMATE_SPECTRAL_RADIUS  YES
+AMGCL >>>> AMGCL_BLOCK_AMG_COARSEN_POWER_ITERS               10
+AMGCL >>>> AMGCL_BLOCK_AMG_COARSEN_RELAX                     1.0
+AMGCL >>>> AMGCL_BLOCK_AMG_COARSEN_OVER_INTERP               1.5
+AMGCL >>>> AMGCL_BLOCK_AMG_RELAXATION_TYPE                   CHEBYSHEV
+AMGCL >>>> AMGCL_BLOCK_AMG_RELAXATION_CHEBY_DEGREE           15
+AMGCL >>>> AMGCL_BLOCK_AMG_RELAXATION_CHEBY_LOWER            0.003
+AMGCL >>>> AMGCL_BLOCK_AMG_RELAXATION_CHEBY_HIGHER           1.1
+AMGCL >>>> AMGCL_BLOCK_AMG_RELAXATION_CHEBY_POWER_ITERS      15
+AMGCL >>>> AMGCL_BLOCK_AMG_RELAXATION_ILU_DAMPING            0.3
+AMGCL >>>> AMGCL_BLOCK_AMG_RELAXATION_ILU_SERIAL_SOLVE       YES
+AMGCL >>>> AMGCL_BLOCK_AMG_RELAXATION_ILUK_K                 2
+AMGCL >>>> AMGCL_BLOCK_AMG_RELAXATION_ILUT_P                 3
+AMGCL >>>> AMGCL_BLOCK_AMG_RELAXATION_ILUT_TAU               1e-12
+AMGCL >>>> AMGCL_BLOCK_AMG_RELAXATION_GAUSS_SEIDEL_SERIAL    YES
+AMGCL >>>> *END_PARAMETERS_FOR_SUBBLOCK_PRECONDITIONER
+AMGCL_BLOCK >>>> DISP 0
+AMGCL_BLOCK >>>> DIRICHLET 1
+AMGCL_BLOCK >>>> AMGCL_BLOCK_ID                                    0
+AMGCL_BLOCK >>>> AMGCL_BLOCK_PRECOND_CLASS                         AMG
+AMGCL_BLOCK >>>> AMGCL_BLOCK_AMG_COARSE_ENOUGH                     5
+AMGCL_BLOCK >>>> AMGCL_BLOCK_AMG_DIRECT_COARSE                     YES
+AMGCL_BLOCK >>>> AMGCL_BLOCK_AMG_MAX_LEVELS                        3
+AMGCL_BLOCK >>>> AMGCL_BLOCK_AMG_NPRE                              1
+AMGCL_BLOCK >>>> AMGCL_BLOCK_AMG_NPOST                             1
+AMGCL_BLOCK >>>> AMGCL_BLOCK_AMG_NCYCLE                            1
+AMGCL_BLOCK >>>> AMGCL_BLOCK_AMG_PRE_CYCLES                        1
+AMGCL_BLOCK >>>> AMGCL_BLOCK_AMG_COARSEN_TYPE                      SMOOTHED_AGGREGATION
+AMGCL_BLOCK >>>> AMGCL_BLOCK_AMG_COARSEN_BLOCK_SIZE                1
+AMGCL_BLOCK >>>> AMGCL_BLOCK_AMG_COARSEN_EPS_STRONG                0.08
+AMGCL_BLOCK >>>> AMGCL_BLOCK_AMG_COARSEN_ESTIMATE_SPECTRAL_RADIUS  YES
+AMGCL_BLOCK >>>> AMGCL_BLOCK_AMG_COARSEN_POWER_ITERS               10
+AMGCL_BLOCK >>>> AMGCL_BLOCK_AMG_COARSEN_RELAX                     1.0
+AMGCL_BLOCK >>>> AMGCL_BLOCK_AMG_COARSEN_OVER_INTERP               1.5
+AMGCL_BLOCK >>>> AMGCL_BLOCK_AMG_RELAXATION_TYPE                   CHEBYSHEV
+AMGCL_BLOCK >>>> AMGCL_BLOCK_AMG_RELAXATION_CHEBY_DEGREE           15
+AMGCL_BLOCK >>>> AMGCL_BLOCK_AMG_RELAXATION_CHEBY_LOWER            0.003
+AMGCL_BLOCK >>>> AMGCL_BLOCK_AMG_RELAXATION_CHEBY_HIGHER           1.1
+AMGCL_BLOCK >>>> AMGCL_BLOCK_AMG_RELAXATION_CHEBY_POWER_ITERS      15
+AMGCL_BLOCK >>>> AMGCL_BLOCK_AMG_RELAXATION_ILU_DAMPING            0.3
+AMGCL_BLOCK >>>> AMGCL_BLOCK_AMG_RELAXATION_ILU_SERIAL_SOLVE       YES
+AMGCL_BLOCK >>>> AMGCL_BLOCK_AMG_RELAXATION_ILUK_K                 2
+AMGCL_BLOCK >>>> AMGCL_BLOCK_AMG_RELAXATION_ILUT_P                 3
+AMGCL_BLOCK >>>> AMGCL_BLOCK_AMG_RELAXATION_ILUT_TAU               1e-12
+AMGCL_BLOCK >>>> AMGCL_BLOCK_AMG_RELAXATION_GAUSS_SEIDEL_SERIAL    YES
+Adding DISP 1 to left scaling
+AMGCL
+-----
+ Left scaling for fields:
+ o  1 ->  1.00000e+00
+,******************************
+,*   setup of linear system   *
+,******************************
+
+Linear system block structure
+
+Block -> Fields:
+
+Block Id  0:         DISP (1)
+
+Field -> Block:
+
+Field Id  1 (        DISP): Block  0
+Block Structure has one extra block for Dirichlet dofs, id is 1
+number on this proc  0:
+.. 2914
+,******************************
+,*  generation of nln system  *
+,******************************
+
+reading nonlinear solver parameters
+
+Input of tolerances
+For field (1) DISP
+Input of monotony check params
+For field (1) DISP
+
+,******************************
+,* init output&start analysis *
+,******************************
+
+... Block preconditioning activated.
+NOT IMPLEMENTED
+Read u
+Read force
+Read ele_eps
+Read ele_epsP
+Read ele_sigma
+Read Type max
+open node restart file /home/nasser/mpfem/SLOPE_SOLVER/results/restart_HDF5.nodes.last
+open element restart file /home/nasser/mpfem/SLOPE_SOLVER/results/restart_HDF5.elements.last
+Writing output.
+Time last output     -1.00000e+00
+Current output time   0.00000e+00
+Current output Delta  1.00000e+00
+Min time elapsed since last output  0.00000e+00
+Write_every is 1
+OPEN AN ENSIGHT GEO FILE FOR WRITE, TIME  0.00000e+00
+Mass/vol summary:  m =  0.00000e+00  v =  0.00000e+00 
+Try analysis step 1 dt=1.00000e-02 (target time +1.00000e-02)
+... using ConstInc predictor
+Syncronisation of nodal forces
+Check convergence using a loop over nodes & fields
++-----------------+-------------+-------------+-------------+
+| step 0          |   ||res||   |   ||inc||   | CONVERGENCE |
++-----------------+-------------+-------------+-------------+
+| DISP            |  1.747e+05  |  0.000e+00  |    - | +    |
++-----------------+-------------+-------------+-------------+
+max residuals and increments on nodes
++-------+-------------------------+-------------------------+
+| field |  max||res||     on node |  max||inc||     on node |
++-------+-------------------------+-------------------------+
+| DISP  |   1.620e+04        1216 |   0.000e+00           0 |
++-------+-------------------------+-------------------------+
+NOT CONVERGED
+BGS Type:             GMRES(300)
+Unknowns:         2914
+Memory footprint: 7.41 M
+
+BGS preconditioner : Empty
+Block 0
+Number of levels:    3
+Operator complexity: 1.14
+Grid complexity:     1.11
+
+level     unknowns       nonzeros
+---------------------------------
+    0         2839          48983 (88.09%) [1]
+    1          293           6251 (11.24%) [1]
+    2           27            369 ( 0.66%) [1]
+
+Block 1
+EMPTY
+
+i    0   ||r||_ini= 1.74727e+05         eps= 1.74727e-07
+i   10   ||r||_abs= 9.33344e+02   ||r||_rel= 5.34172e-03
+i   20   ||r||_abs= 3.04330e-02   ||r||_rel= 1.74175e-07
+iters 27 error  6.86648e-13
+Syncronisation can be improved
+-> include residual
+-> optimize communication pattern
+Syncronisation of nodal forces
+Check convergence using a loop over nodes & fields
+Accept res for field DISP based on abs criterium < 1.00e-06 (TOL)
++-----------------+-------------+-------------+-------------+
+| step 1          |   ||res||   |   ||inc||   | CONVERGENCE |
++-----------------+-------------+-------------+-------------+
+| DISP            |  1.201e-07  |  1.556e+00  |    + | -    |
++-----------------+-------------+-------------+-------------+
+max residuals and increments on nodes
++-------+-------------------------+-------------------------+
+| field |  max||res||     on node |  max||inc||     on node |
++-------+-------------------------+-------------------------+
+| DISP  |   1.354e-08         689 |   4.607e-02          91 |
++-------+-------------------------+-------------------------+
+NOT CONVERGED
+BGS Type:             GMRES(300)
+Unknowns:         2914
+Memory footprint: 7.41 M
+
+BGS preconditioner : Empty
+Block 0
+Number of levels:    3
+Operator complexity: 1.14
+Grid complexity:     1.11
+
+level     unknowns       nonzeros
+---------------------------------
+    0         2839          48983 (88.09%) [1]
+    1          293           6251 (11.24%) [1]
+    2           27            369 ( 0.66%) [1]
+
+Block 1
+EMPTY
+
+i    0   ||r||_ini= 1.20146e-07         eps= 1.00000e-07
+iters 1 error  1.13300e-01
+Syncronisation can be improved
+-> include residual
+-> optimize communication pattern
+Syncronisation of nodal forces
+Check convergence using a loop over nodes & fields
+Accept res for field DISP based on abs criterium < 1.00e-06 (TOL)
++-----------------+-------------+-------------+-------------+
+| step 2          |   ||res||   |   ||inc||   | CONVERGENCE |
++-----------------+-------------+-------------+-------------+
+| DISP            |  2.283e-08  |  2.239e-14  |    + | +    |
++-----------------+-------------+-------------+-------------+
+max residuals and increments on nodes
++-------+-------------------------+-------------------------+
+| field |  max||res||     on node |  max||inc||     on node |
++-------+-------------------------+-------------------------+
+| DISP  |   2.887e-09        1137 |   1.417e-15         156 |
++-------+-------------------------+-------------------------+
+CONVERGED IN   2 STEPS (ATTEMPT  1)
+Successful step 1 (t=0.01, dt=0.01, progress: 0%)
+open node restart file /home/nasser/mpfem/SLOPE_SOLVER/results/restart_HDF5.nodes.last
+open element restart file /home/nasser/mpfem/SLOPE_SOLVER/results/restart_HDF5.elements.last
+Writing output.
+Time last output      0.00000e+00
+Current output time   1.00000e-02
+Current output Delta  1.00000e-02
+Min time elapsed since last output  0.00000e+00
+Write_every is 1
+Mass/vol summary:  m =  0.00000e+00  v =  0.00000e+00 
+AdaptLoadTimeIncrement info 2
+Checkpoint facility: checktime is  1.00000e-01, guess  2.15000e-02, old  1.00000e-02 
+.............................................................
+.                        time monitor                       .
+.............................................................
+.                 .    avg (s)  .    min (s)  .    max (s)  .
+. linear_solve    .  1.133e-01  .  1.133e-01  .  1.133e-01  .
+. assembly        .  5.113e-02  .  5.113e-02  .  5.113e-02  .
+. output          .  5.871e-02  .  5.871e-02  .  5.871e-02  .
+. write_restart   .  3.547e-02  .  3.547e-02  .  3.547e-02  .
+. assembly_comm   .  1.550e-04  .  1.550e-04  .  1.550e-04  .
+. element_loop    .  2.654e-01  .  2.654e-01  .  2.654e-01  .
+. ele_material    .  2.646e-02  .  2.646e-02  .  2.646e-02  .
+. ele_matrixloop  .  3.084e-02  .  3.084e-02  .  3.084e-02  .
+. ele_rhsloop     .  1.524e-02  .  1.524e-02  .  1.524e-02  .
+. ele_shapefct    .  1.855e-02  .  1.855e-02  .  1.855e-02  .
+. ele_boundary    .  3.476e-03  .  3.476e-03  .  3.476e-03  .
+. ele_R_dRdq      .  1.876e-01  .  1.876e-01  .  1.876e-01  .
+.............................................................
+. linear_solve    .  1.133e-01  .  1.133e-01  .  1.133e-01  .
+. assembly        .  5.113e-02  .  5.113e-02  .  5.113e-02  .
+. output          .  5.871e-02  .  5.871e-02  .  5.871e-02  .
+. write_restart   .  3.547e-02  .  3.547e-02  .  3.547e-02  .
+. assembly_comm   .  1.550e-04  .  1.550e-04  .  1.550e-04  .
+. element_loop    .  2.654e-01  .  2.654e-01  .  2.654e-01  .
+. ele_material    .  2.646e-02  .  2.646e-02  .  2.646e-02  .
+. ele_matrixloop  .  3.084e-02  .  3.084e-02  .  3.084e-02  .
+. ele_rhsloop     .  1.524e-02  .  1.524e-02  .  1.524e-02  .
+. ele_shapefct    .  1.855e-02  .  1.855e-02  .  1.855e-02  .
+. ele_boundary    .  3.476e-03  .  3.476e-03  .  3.476e-03  .
+. ele_R_dRdq      .  1.876e-01  .  1.876e-01  .  1.876e-01  .
+.............................................................
+. total           :  5.241e-01  =    00m 01s                .
+.............................................................
+
+2021-05-01 12:37:57 CEST (0h 00m 00s)
+#+end_example
+
+* Input
+** Input flags
+
+Flags:
+1. =-i= input directory
+2. =-f= configuration file
+3. =-r= results directory
+4. =-o= results file
+
+** Input example
+*** Files
+#+begin_src sh
+cd ~/mpfem/SLOPE_SOLVER
+tree -L 2
+#+end_src
+
+#+RESULTS:
+#+begin_example
+.
+├── analysis
+├── analysis~
+├── bc_node
+├── bc_node~
+├── eledata
+├── eledata~
+├── elements
+├── elements~
+├── files
+├── filesAMGCL
+├── filesMUMPS
+├── filesTRILINOS
+├── files~
+├── materialDP
+├── materialDP~
+├── materialHooke
+├── materialHooke~
+├── materialMC
+├── materialMC~
+├── neumann
+├── neumann~
+├── nlsolve
+├── nlsolve~
+├── nodes
+├── nodes~
+├── output
+├── output~
+├── restart
+├── restart~
+├── scaling_space
+├── scaling_space~
+├── scaling_time
+├── scaling_time~
+├── solverAMGCL
+├── solverMUMPS
+├── solverTRILINOS
+├── solver~
+├── steps
+└── steps~
+
+0 directories, 39 files
+#+end_example
+*** Configuration file
+
+Contains all files necessary to define and solve the problem.
+
+#+begin_src sh
+cd ~/mpfem/SLOPE_SOLVER
+cat filesAMGCL
+#+end_src
+
+#+RESULTS:
+#+begin_example
+,*
+,*                   MESH DATA                   
+,*-----------------------------------------------
+NODES                   nodes
+ELEMENTS                elements
+,*
+,*         ELEMENT AND INTEGRATION DATA          
+,*-----------------------------------------------
+MATERIAL_DATA           materialDP
+ELEMENT_DATA            eledata
+,*
+,*              BOUNDARY CONDITIONS              
+,*-----------------------------------------------
+BC_DIRICHLET            bc_node
+BC_FLUX                 neumann
+,*
+,*               SCALING FUNCTIONS               
+,*-----------------------------------------------
+SPACE_SCALING           scaling_space
+TIME_SCALING            scaling_time
+,*
+,*     TIME INTEGRATION AND SOLUTION METHOD      
+,*-----------------------------------------------
+ANALYSIS                analysis
+CHECKPOINTS             steps
+,*
+,*         CONSTRUCTION AND MESH CHANGE               
+,*-----------------------------------------------
+,*EXCAVATION              excavate
+,*CONSTRUCTION            construct
+,*               SOLVER PARAMETERS               
+,*-----------------------------------------------
+NONLINEAR_SOLVER        nlsolve
+LINEAR_SOLVER           solverAMGCL
+,*
+,*          OUTPUT AND RESTART REQUESTS          
+,*-----------------------------------------------
+RESTART                 restart
+OUTPUT                  output
+#+end_example
+
+*** Nodes
+Nodes coordinates.
+
+#+begin_src sh
+cd ~/mpfem/SLOPE_SOLVER
+head -n 10 nodes
+#+end_src
+
+#+RESULTS:
+#+begin_example
+    1 ,  4.55000e+01 ,  0.00000e+00
+    2 ,  4.55000e+01 ,  1.00000e+01
+    3 ,  3.75000e+01 ,  1.00000e+01
+    4 ,  3.75000e+01 ,  0.00000e+00
+    5 ,  4.55000e+01 ,  1.12500e+01
+    6 ,  4.25000e+01 ,  1.12500e+01
+    7 ,  5.35000e+01 ,  1.00000e+01
+    8 ,  4.85000e+01 ,  1.12500e+01
+    9 ,  5.35000e+01 ,  0.00000e+00
+   10 ,  5.55000e+01 ,  0.00000e+00
+#+end_example
+
+*** Element
+Contains element type, dimension (?) and list with element ID and connectivity.
+
+#+begin_src sh
+cd ~/mpfem/SLOPE_SOLVER
+head -n 10 elements
+#+end_src
+
+#+RESULTS:
+#+begin_example
+,*-------------------------------
+QUAD 4
+SOLID 2
+# Ele ID, i(I), ...
+  1,   1,  14, 252,  73
+  2,  14,  15, 253, 252
+  3,  15,  16, 254, 253
+  4,  16,  17, 255, 254
+  5,  17,  18, 256, 255
+  6,  18,  19, 257, 256
+#+end_example
+
+*** Solver
+
+* Example
+** Results folder
+#+begin_src sh
+mkdir results
+#+end_src
+
+#+RESULTS:
+
+** Runing the executable
+
+We need the
+1. singularity container =.simg=.
+2. =mpFEM/mpFEM= goes inside the container and calls the executable.
+3. input directory location with the simulation files
+4. results location
+
+#+begin_src shell
+singularity exec ~/containers/SANDBOX_mpFEM.simg /mpFEM/mpFEM -i=~/containers/slope -f=filesAMGCL -r=~/containers/slope_output -o=results
+#+end_src
+
+#+RESULTS:
+#+begin_example
+
+2021-06-08 16:56:23 CEST
+
+##############################
+#      Starting mpFEM on     #
+#           1 procs          #
+##############################
+
+-> Using input directory    ~/containers/slope/
+-> Using result directory   ~/containers/slope_output/
+-> Using resultfile         results
+-> Using config file        filesAMGCL
+
+
+Unable to open config file
+~/containers/slope/filesAMGCL
+ABORTING.
+#+end_example
+
+** Output
+
+#+begin_example
+
+2021-05-03 20:10:12 CEST
+
+##############################
+#      Starting mpFEM on     #
+#           1 procs          #
+##############################
+
+-> Using input directory    /home/nasser/mpfem/SLOPE_SOLVER/
+-> Using result directory   results/
+-> Using resultfile         results
+-> Using config file        filesAMGCL
+
+Processing config file
+
+Read input from the following files
+
+-> NODES                    nodes
+-> ELEMENTS                 elements
+-> KNOTS                    -_-
+-> MATERIAL_DATA            materialDP
+-> ELEMENT_DATA             eledata
+-> BC_DIRICHLET             bc_node
+-> BC_FLUX                  neumann
+-> LOCSYS                   -_-
+-> SPACE_SCALING            scaling_space
+-> TIME_SCALING             scaling_time
+-> ANALYSIS                 analysis
+-> CHECKPOINTS              steps
+-> CONSTRUCTION             -_-
+-> EXCAVATION               -_-
+-> COUPLING                 -_-
+-> NONLINEAR_SOLVER         nlsolve
+-> LINEAR_SOLVER            solverAMGCL
+-> RESTART                  restart
+-> OUTPUT                   output
+-> REBAR_BARS               -_-
+-> REBAR_PROP               -_-
+
+
+,******************************
+,*      input mesh data       *
+,******************************
+
+reading restart file: restart
+
+##############################
+#       read coupling        #
+##############################
+
+Master IDs 
+
+Slave IDs 
+
+Matching 0 slave nodes to 0 master nodes
+No master nodes. There is nothing to do.
+
+##############################
+#        read nodes         #
+##############################
+
+There are 1457 nodes in the mesh
+
+##############################
+#      read elements         #
+##############################
+
+PID 0 is aware of  1376 elements in 1 blocks, and expects to receive 1376
+
+##############################
+#  determine parallel mesh   #
+#   layout (call ParMETIS)   #
+##############################
+
+... setup of element graph
+... partitioning of element graph
+... redistribution of elements
+... setup of an appropriate ghosting of nodes
+
+--> Begin setup of element graph
+<-- Completed setup of element graph
+--> Start to generate sendplan for element distribution
+Processor 0
+xadj:   size 1377
+adjncy: size 10536
+
+vtxdist: 
+  0 1376 
+SIZES 8 8 <-> 4 4  | 8 8 8 8 | 4 4 4 8 4 8
+ 1.00000e+00
+<--  successfully generated sendplan for element distribution
+--> Start to redistribute elements according to layout
+<-- Finished to redistribute elements according to layout
+--> Redistribute nodes according to given element layout
+<-- Finished to redistribute nodes according to element layout
+
+##############################
+# generate a grid object
+##############################
+
+... establish tag/id-access methods (maps)
+    for nodes and elements
+
+,******************************
+,*   input of element data   *
+,******************************
+
+##############################
+#      read element data        #
+##############################
+
+contains ... 
+... reduced/full integration flag
+... element specific parameters (except materials)
+will be ... 
+... read
+... communicated to all procs
+... stored at the corresponding elements
+    (prior to material input)
+
+
+,*----------------------
+reading a new element data
+name tag is
+Eledata_Rock
+... reading a data block
+,*----------------------
+reading a element ids block
+The data was assigned to 1376 elements of type SOLID
+
+,******************************
+,*   input of material data   *
+,******************************
+
+##############################
+#      read materials        #
+##############################
+
+materials are ... 
+... read
+... communicated to all procs
+... stored at the corresponding elements
+
+,*----------------------
+reading a new material definition
+name tag is
+SoilDruckerPrager
+TYPE      DruckerPrager (113)
+FORMULATION  TWO_D_PlaneStrain (2)
+primary stress  CAUCHY (1)
+secondary stress  NONE (0)
+... reading a data block
+E                               24.0E6
+NU                              0.2
+TAUY                            5.57E3
+MU                              0.791
+MUBAR                           0.315
+OMEGA                           0.6
+ETA                             0.2
+DENSITY                         2000.0
+POROSITY                        0.0
+STARTUP                         YES
+activate startup
+The data was assigned to 1376 elements
+
+,******************************
+,*introduce degrees of freedom*
+,******************************
+
+##############################
+#  assign degrees of freedom #
+##############################
+
+... determine dof numbering based on node numbering
+%%%%%%%%%%%%%%
+Dof numbers used in computation (name/field/coord):
+        DISP : 1 :  0 
+      DISP_X : 1 :  0 
+      DISP_Y : 1 :  1 
+      DISP_Z : 1 :  2 
+         VEL : 7 :  0 
+       VEL_0 : 7 :  0 
+       VEL_1 : 7 :  1 
+       VEL_2 : 7 :  2 
+           P : 6 
+          PA : 3 
+          PC : 2 
+           T : 4 
+ NLOC_DAMAGE : 5 
+    MICROROT : 8 :  0 
+  MICROROT_0 : 8 :  0 
+  MICROROT_1 : 8 :  1 
+  MICROROT_2 : 8 :  2 
+%%%%%%%%%%%%%%
+
+,************************************
+,*input of node specific coordinates*
+,************************************
+
+x-specific initialisation for spherical or cylindrical coords
+
+,******************************
+,*input of boundary conditions*
+,******************************
+
+##############################
+#  input Dirichlet boundary  #
+#         conditions         #
+##############################
+
+Dirichlet boundary conditions are ...
+... read
+... communicated to all procs
+... stored at the corresponding nodes
+
+,*----------------------
+reading a new boundary condition
+name tag is
+BODEN
+this bc covers 1 dofs
+the unique dof ids to use are:
+  1 (field: DISP)
+the values are:
+ 0.00000e+00
+time scaling funtion is 1
+space scaling funtion is 1
+read node ids for this condition
+The condition contained 49 nodes
+,*----------------------
+reading a new boundary condition
+name tag is
+Seiten
+this bc covers 1 dofs
+the unique dof ids to use are:
+  0 (field: DISP)
+the values are:
+ 0.00000e+00
+time scaling funtion is 1
+space scaling funtion is 1
+read node ids for this condition
+The condition contained 26 nodes
+
+##############################
+#   input Neumann boundary   #
+#         conditions         #
+##############################
+
+Neumann boundary conditions are ...
+... read
+... communicated to all procs
+... stored as boundary elements at the corresponding elements
+
+,*----------------------
+reading a new flux boundary condition
+name tag is
+LOAD_RechteFahrbahn
+acts on side 3 (ABAQUS notation - 1)
+time scaling  funtion is 3
+space scaling funtion is 1
+type is 2
+Time interval ( 1.00000e+00, 1.00000e+10]
+(interval definition might be element specific)
+integer params:
+1
+double params:
+ 9.50000e+04
+read parent ids for this condition
+The condition contained 20 parent elements
+
+##############################
+#  input time/space scaling  #
+#    data (ramp functions)   #
+##############################
+
+reading a new time curve condition
+reading curve id 1
+reading a new time curve condition
+reading curve id 2
+reading a new time curve condition
+reading curve id 3
+reading a new time curve condition
+reading curve id 4
+reading a new time curve condition
+reading curve id 5
+reading a new time curve condition
+reading curve id 6
+reading a new time curve condition
+reading curve id 7
+------------------
+Time scaling:
+Scaling function types (const, lin, ...):
+Id   1   type 1
+Id   2   type 1
+Id   3   type 2
+Id   4   type 2
+Id   5   type 2
+Id   6   type 2
+Id   7   type 2
+Scaling function parameters:
+Id   1   has   4 params
+Id   2   has   4 params
+Id   3   has   6 params
+Id   4   has   4 params
+Id   5   has   4 params
+Id   6   has   4 params
+Id   7   has   4 params
+
+reading a spatial function
+reading a spatial function
+------------------
+Space scaling:
+Scaling function types (const, lin, ...):
+Id   1   type 1
+Id   2   type 1
+Scaling function parameters:
+Id   1   has   1 params
+Id   2   has   1 params
+
+,******************************
+,*   input of rebar elements  *
+,******************************
+
+,*  read rebar def from file  *
+
+No rebar input files declared.
+
+,******************************
+,*  input of analysis params  *
+,******************************
+
+reading an analysis
+analysis name: ANALYSIS_GENERAL
+
+The values for the analysis are:
+predictor  = ConstInc
+dt_start   = 1.00000e-02
+dt_min     = 1.00000e-02
+dt_max     = 1.00000e+00
+start      = 0.00000e+00
+end        = 2.00000e+00
+firststep  =0
+maxstep    =1
+delay_inc  =1
+fac_dt_fast= 1.15000e+00
+fac_dt_slow= 7.50000e-01
+fac_dt_fail= 5.00000e-01
+initial field type=ZeroField
+initial field fx=2
+initial field ip  1:  =2
+initial field ip  2:  =3
+initial field dp  1:  = 1.00000e+00
+initial field dp  2:  = 0.00000e+00
+
+
+found keyword *START CHECKPOINT DEFINITION.
+the file position is 29.
+
+found keyword *BEGIN CHECKPOINT.
+the file position is 47.
+
+found keyword *BEGIN CHECKPOINT.
+the file position is 264.
+
+found keyword *BEGIN CHECKPOINT.
+the file position is 480.
+
+search for keyword *BEGIN CHECKPOINT failed.
+Reverting seek position to 675.
+
+found keyword *END CHECKPOINT DEFINITION.
+the file position is -1.
+Checkpoint facility: 3 checkpoints, active id is 0
+------------------
+NUM: 0
+NAME: day_1
+TIME:  1.00000e-01
+RESET STRAINS AT THIS CHECKPOINT
+RESET DT AT THIS CHECKPOINT
+NEW DT    :  1.80000e-01
+NEW DT_MIN:  1.00000e-06
+NEW DT_MAX:  1.00000e+00
+------------------
+NUM: 1
+NAME: day_1
+TIME:  1.00000e+00
+RESET DT AT THIS CHECKPOINT
+NEW DT    :  1.00000e-02
+NEW DT_MIN:  1.00000e-06
+NEW DT_MAX:  1.00000e+00
+------------------
+NUM: 2
+NAME: day_2
+TIME:  2.00000e+00
+
+There are no construction steps defined in the input data. Continuing.
+
+There are no excavation steps defined in the input data. Continuing.
+,******************************
+,*   input of solver params   *
+,******************************
+
+reading solver parameters:
+,*SOLVER GENERAL INFORMATION
+,*PARAMETERS FOR SCALING
+L>>>> DISP   1.0E0
+R>>>> DISP   1.0E0
+T>>>> DISP   1.0E0
+,*PARAMETERS FOR MUMPS DIRECT SOLVER
+,*BEGIN_PARAMETERS_FOR_AMGCL
+AMGCL >>>> AMGCL_SOLVER             GMRES
+AMGCL >>>> AMGCL_PSIDE              RIGHT
+AMGCL >>>> AMGCL_BLOCKPRECONDTYPE     BGS
+AMGCL >>>> AMGCL_TOL                 1E-12
+AMGCL >>>> AMGCL_ABSTOL              1E-7
+AMGCL >>>> AMGCL_MAXITER              300
+AMGCL >>>> AMGCL_GMRES_KSPACE         300
+AMGCL >>>> AMGCL_LGMRES_KSPACE_KEEP   300
+AMGCL >>>> AMGCL_LGMRES_ALWAYS_RESET  YES
+AMGCL >>>> AMGCL_IDRS_DIMENSION         9
+AMGCL >>>> AMGCL_IDRS_OMEGA           0.7
+AMGCL >>>> AMGCL_IDRS_SMOOTHING        NO
+AMGCL >>>> AMGCL_IDRS_REPLACE_REC_RES  NO
+AMGCL >>>> AMGCL_BICGSTABL_ORDER        2
+AMGCL >>>> AMGCL_BICGSTABL_THRESH     0.0
+AMGCL >>>> AMGCL_BICGSTABL_USE_CONVEX  NO
+AMGCL >>>> *BEGIN_FIELD_TO_BLOCK_ASSIGNMENT
+AMGCL >>>> DISP 0
+AMGCL >>>> DIRICHLET 1
+AMGCL >>>> *END_FIELD_TO_BLOCK_ASSIGNMENT
+AMGCL >>>> *BEGIN_PARAMETERS_FOR_SUBBLOCK_PRECONDITIONER
+AMGCL >>>> AMGCL_BLOCK_ID                                    0
+AMGCL >>>> AMGCL_BLOCK_PRECOND_CLASS                         AMG
+AMGCL >>>> AMGCL_BLOCK_AMG_COARSE_ENOUGH                     5
+AMGCL >>>> AMGCL_BLOCK_AMG_DIRECT_COARSE                     YES
+AMGCL >>>> AMGCL_BLOCK_AMG_MAX_LEVELS                        3
+AMGCL >>>> AMGCL_BLOCK_AMG_NPRE                              1
+AMGCL >>>> AMGCL_BLOCK_AMG_NPOST                             1
+AMGCL >>>> AMGCL_BLOCK_AMG_NCYCLE                            1
+AMGCL >>>> AMGCL_BLOCK_AMG_PRE_CYCLES                        1
+AMGCL >>>> AMGCL_BLOCK_AMG_COARSEN_TYPE                      SMOOTHED_AGGREGATION
+AMGCL >>>> AMGCL_BLOCK_AMG_COARSEN_BLOCK_SIZE                1
+AMGCL >>>> AMGCL_BLOCK_AMG_COARSEN_EPS_STRONG                0.08
+AMGCL >>>> AMGCL_BLOCK_AMG_COARSEN_ESTIMATE_SPECTRAL_RADIUS  YES
+AMGCL >>>> AMGCL_BLOCK_AMG_COARSEN_POWER_ITERS               10
+AMGCL >>>> AMGCL_BLOCK_AMG_COARSEN_RELAX                     1.0
+AMGCL >>>> AMGCL_BLOCK_AMG_COARSEN_OVER_INTERP               1.5
+AMGCL >>>> AMGCL_BLOCK_AMG_RELAXATION_TYPE                   CHEBYSHEV
+AMGCL >>>> AMGCL_BLOCK_AMG_RELAXATION_CHEBY_DEGREE           15
+AMGCL >>>> AMGCL_BLOCK_AMG_RELAXATION_CHEBY_LOWER            0.003
+AMGCL >>>> AMGCL_BLOCK_AMG_RELAXATION_CHEBY_HIGHER           1.1
+AMGCL >>>> AMGCL_BLOCK_AMG_RELAXATION_CHEBY_POWER_ITERS      15
+AMGCL >>>> AMGCL_BLOCK_AMG_RELAXATION_ILU_DAMPING            0.3
+AMGCL >>>> AMGCL_BLOCK_AMG_RELAXATION_ILU_SERIAL_SOLVE       YES
+AMGCL >>>> AMGCL_BLOCK_AMG_RELAXATION_ILUK_K                 2
+AMGCL >>>> AMGCL_BLOCK_AMG_RELAXATION_ILUT_P                 3
+AMGCL >>>> AMGCL_BLOCK_AMG_RELAXATION_ILUT_TAU               1e-12
+AMGCL >>>> AMGCL_BLOCK_AMG_RELAXATION_GAUSS_SEIDEL_SERIAL    YES
+AMGCL >>>> *END_PARAMETERS_FOR_SUBBLOCK_PRECONDITIONER
+AMGCL_BLOCK >>>> DISP 0
+AMGCL_BLOCK >>>> DIRICHLET 1
+AMGCL_BLOCK >>>> AMGCL_BLOCK_ID                                    0
+AMGCL_BLOCK >>>> AMGCL_BLOCK_PRECOND_CLASS                         AMG
+AMGCL_BLOCK >>>> AMGCL_BLOCK_AMG_COARSE_ENOUGH                     5
+AMGCL_BLOCK >>>> AMGCL_BLOCK_AMG_DIRECT_COARSE                     YES
+AMGCL_BLOCK >>>> AMGCL_BLOCK_AMG_MAX_LEVELS                        3
+AMGCL_BLOCK >>>> AMGCL_BLOCK_AMG_NPRE                              1
+AMGCL_BLOCK >>>> AMGCL_BLOCK_AMG_NPOST                             1
+AMGCL_BLOCK >>>> AMGCL_BLOCK_AMG_NCYCLE                            1
+AMGCL_BLOCK >>>> AMGCL_BLOCK_AMG_PRE_CYCLES                        1
+AMGCL_BLOCK >>>> AMGCL_BLOCK_AMG_COARSEN_TYPE                      SMOOTHED_AGGREGATION
+AMGCL_BLOCK >>>> AMGCL_BLOCK_AMG_COARSEN_BLOCK_SIZE                1
+AMGCL_BLOCK >>>> AMGCL_BLOCK_AMG_COARSEN_EPS_STRONG                0.08
+AMGCL_BLOCK >>>> AMGCL_BLOCK_AMG_COARSEN_ESTIMATE_SPECTRAL_RADIUS  YES
+AMGCL_BLOCK >>>> AMGCL_BLOCK_AMG_COARSEN_POWER_ITERS               10
+AMGCL_BLOCK >>>> AMGCL_BLOCK_AMG_COARSEN_RELAX                     1.0
+AMGCL_BLOCK >>>> AMGCL_BLOCK_AMG_COARSEN_OVER_INTERP               1.5
+AMGCL_BLOCK >>>> AMGCL_BLOCK_AMG_RELAXATION_TYPE                   CHEBYSHEV
+AMGCL_BLOCK >>>> AMGCL_BLOCK_AMG_RELAXATION_CHEBY_DEGREE           15
+AMGCL_BLOCK >>>> AMGCL_BLOCK_AMG_RELAXATION_CHEBY_LOWER            0.003
+AMGCL_BLOCK >>>> AMGCL_BLOCK_AMG_RELAXATION_CHEBY_HIGHER           1.1
+AMGCL_BLOCK >>>> AMGCL_BLOCK_AMG_RELAXATION_CHEBY_POWER_ITERS      15
+AMGCL_BLOCK >>>> AMGCL_BLOCK_AMG_RELAXATION_ILU_DAMPING            0.3
+AMGCL_BLOCK >>>> AMGCL_BLOCK_AMG_RELAXATION_ILU_SERIAL_SOLVE       YES
+AMGCL_BLOCK >>>> AMGCL_BLOCK_AMG_RELAXATION_ILUK_K                 2
+AMGCL_BLOCK >>>> AMGCL_BLOCK_AMG_RELAXATION_ILUT_P                 3
+AMGCL_BLOCK >>>> AMGCL_BLOCK_AMG_RELAXATION_ILUT_TAU               1e-12
+AMGCL_BLOCK >>>> AMGCL_BLOCK_AMG_RELAXATION_GAUSS_SEIDEL_SERIAL    YES
+Adding DISP 1 to left scaling
+AMGCL
+-----
+ Left scaling for fields:
+ o  1 ->  1.00000e+00
+,******************************
+,*   setup of linear system   *
+,******************************
+
+Linear system block structure
+
+Block -> Fields:
+
+Block Id  0:         DISP (1)
+
+Field -> Block:
+
+Field Id  1 (        DISP): Block  0
+Block Structure has one extra block for Dirichlet dofs, id is 1
+number on this proc  0:
+.. 2914
+,******************************
+,*  generation of nln system  *
+,******************************
+
+reading nonlinear solver parameters
+
+Input of tolerances
+For field (1) DISP
+Input of monotony check params
+For field (1) DISP
+
+,******************************
+,* init output&start analysis *
+,******************************
+
+... Block preconditioning activated.
+NOT IMPLEMENTED
+
+Cannot access output directory results/
+ABORTING.
+#+end_example

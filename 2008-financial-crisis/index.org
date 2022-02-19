@@ -1,0 +1,77 @@
+#+title: 2008 Crises compilation
+#+date: <2021-01-31 Sun>
+#+lastmod: 2021-09-14 18:15:11
+#+author: Nasser Alkmim
+#+email: nasser.alkmim@gmail.com
+#+draft: t
+#+tags[]: finance 
+#+toc: t
+* Introduction
+This is a compilation about my understanding of the 2008 GFC.
+* What is the main difference from a typical crisis?
+*** Hyman Minsky
+Minsky belived that fluctuations in the supply of credit, from expansion during growth and contraction during the bust, would create *fragility in the banking system*. 
+* Why GFC is a market-based credit crisis?
+The FED has tools that were created to support stresses in the *banking credit*
+However it was not prepare to support the so called *market-based* credit.
+* Where does market-based come from?
+
+Shadow banking expanding market-based credit with riskier assets (hedged with derivatives to become quasi-treasuries)
+
+* Why market-based credit has market liquidity risk?
+The market-based credit is created by shadow banking through money-market funding.
+Both sides of the balance sheet of the shadow bank have their values determined bu the market (dealer market).
+The instability comes from problems in the dealer market.
+
+Market liquidity was assumed given.
+Not the case when no one is willing to lend on the money-market.
+
+Market liquidity is the ability to buy and sell securities without affecting its price.
+
+Process that convert liquidity problem to solvency problem: 
+1. price of this assets declined, dealers could not access the usual funding liquidity to roll their loans;
+2. with no access to cash from market-based credit, they were forced to sell their securities;
+3. at the worst day of the crises, they could not even sell their securities;
+4. selling a rapidly depreciated asset makes your insolvent.
+   1. liability larger than assets.
+
+* How the traditional banking system works?
+
+In the traditional *banking-based lending system*, the bank uses its balance sheet to create a *loan* to someone.
+When this loan is due, the borrower has to pay back to the bank with interest.
+If the borrower does not want to settle this transaction he can make another loan to pay for the older one.
+If he is able to find this funding, to get cash (liquidy money) with another loan, he is liquid again to postpone the original obligation.
+This is a *default* risk.
+
+
+* How the shadow banking system is a source of market-based credit?
+
+
+Market liquidity in the modern market-based credit.
+
+
+
+* Why dealers are important?
+
+Dealers are entities that facilitate transaction by been on *both sides of the trade*.
+They use their balance sheet to manage assets inventory and funding liabilities to perform their business.
+The profit comes from a bid-ask spread the trade, or a mark-up.
+Dealers can be banks (accept deposits) or non-bank institutions (e.g. investment banks).
+
+Dealers are important because they facilitate *settlement process*.
+
+* FED as lender of last resort or dealer of last resort?
+
+Dealer because the FED bought MBS.
+
+* Misconceptions?
+
+1. credit crises in the banking system or liquidity crisis in the dealer market?
+
+* References
+
+1. [[https://www.gailfosler.com/understanding-the-financial-crisis-and-the-new-lombard-street-an-interview-with-perry-g-mehrling][Understanding the Financial Crisis and The New Lombard Street: An Interview W...]]
+2. Economics of money and banking - lecture notes. Perry Mehrling.
+3. Manias, panics and crahes. Kindleberger.
+4. [[https://sites.bu.edu/perry/2021/05/19/new-lombard-street-ten-years-on/][New Lombard Street, Ten Years On | Perry G Mehrling]]
+   

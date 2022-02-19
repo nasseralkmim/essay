@@ -1,0 +1,1067 @@
+#+title: TI notes
+#+date: <2021-05-24 Mon>
+#+author: Nasser Alkmim
+#+email: nasser.alkmim@gmail.com
+#+draft: t
+#+toc: t
+#+tags[]: TI
+* General definitions
+** What is the difference between logical CPU and cores?
+1. cores represent actual hardware.
+2. logical cores are the number of cores times the number of threads than can run on each core.
+
+I currently have 12 logical cores:
+
+#+begin_src shell
+neofetch
+#+end_src
+
+#+RESULTS:
+#+begin_example
+[?25l[?7l[0m[31m[1m            .-/+oossssoo+/-.
+        `:+ssssssssssssssssss+:`
+      -+ssssssssssssssssssyyssss+-
+    .ossssssssssssssssss[37m[0m[1mdMMMNy[0m[31m[1msssso.
+   /sssssssssss[37m[0m[1mhdmmNNmmyNMMMMh[0m[31m[1mssssss/
+  +sssssssss[37m[0m[1mhm[0m[31m[1myd[37m[0m[1mMMMMMMMNddddy[0m[31m[1mssssssss+
+ /ssssssss[37m[0m[1mhNMMM[0m[31m[1myh[37m[0m[1mhyyyyhmNMMMNh[0m[31m[1mssssssss/
+.ssssssss[37m[0m[1mdMMMNh[0m[31m[1mssssssssss[37m[0m[1mhNMMMd[0m[31m[1mssssssss.
++ssss[37m[0m[1mhhhyNMMNy[0m[31m[1mssssssssssss[37m[0m[1myNMMMy[0m[31m[1msssssss+
+oss[37m[0m[1myNMMMNyMMh[0m[31m[1mssssssssssssss[37m[0m[1mhmmmh[0m[31m[1mssssssso
+oss[37m[0m[1myNMMMNyMMh[0m[31m[1msssssssssssssshmmmh[0m[31m[1mssssssso
++ssss[37m[0m[1mhhhyNMMNy[0m[31m[1mssssssssssss[37m[0m[1myNMMMy[0m[31m[1msssssss+
+.ssssssss[37m[0m[1mdMMMNh[0m[31m[1mssssssssss[37m[0m[1mhNMMMd[0m[31m[1mssssssss.
+ /ssssssss[37m[0m[1mhNMMM[0m[31m[1myh[37m[0m[1mhyyyyhdNMMMNh[0m[31m[1mssssssss/
+  +sssssssss[37m[0m[1mdm[0m[31m[1myd[37m[0m[1mMMMMMMMMddddy[0m[31m[1mssssssss+
+   /sssssssssss[37m[0m[1mhdmNNNNmyNMMMMh[0m[31m[1mssssss/
+    .ossssssssssssssssss[37m[0m[1mdMMMNy[0m[31m[1msssso.
+      -+sssssssssssssssss[37m[0m[1myyy[0m[31m[1mssss+-
+        `:+ssssssssssssssssss+:`
+            .-/+oossssoo+/-.[0m
+[20A[9999999D[43C[0m[1m[31m[1mnasser[0m@[31m[1mlt135-c842[0m 
+[43C[0m-----------------[0m 
+[43C[0m[31m[1mOS[0m[0m:[0m Ubuntu 20.04.2 LTS on Windows 10 x86_64[0m 
+[43C[0m[31m[1mKernel[0m[0m:[0m 5.4.72-microsoft-standard-WSL2[0m 
+[43C[0m[31m[1mUptime[0m[0m:[0m 1 hour, 26 mins[0m 
+[43C[0m[31m[1mPackages[0m[0m:[0m 1671 (dpkg)[0m 
+[43C[0m[31m[1mShell[0m[0m:[0m bash 5.0.17[0m 
+[43C[0m[31m[1mResolution[0m[0m:[0m 4096x1440[0m 
+[43C[0m[31m[1mTheme[0m[0m:[0m Adwaita [GTK3][0m 
+[43C[0m[31m[1mIcons[0m[0m:[0m Adwaita [GTK3][0m 
+[43C[0m[31m[1mTerminal[0m[0m:[0m emacs[0m 
+[43C[0m[31m[1mCPU[0m[0m:[0m AMD Ryzen 5 PRO 4650U with Radeon Graphics (12) @ 2.095GHz[0m 
+[43C[0m[31m[1mMemory[0m[0m:[0m 474MiB / 12158MiB[0m 
+
+[43C[30m[40m   [31m[41m   [32m[42m   [33m[43m   [34m[44m   [35m[45m   [36m[46m   [37m[47m   [m
+[43C[38;5;8m[48;5;8m   [38;5;9m[48;5;9m   [38;5;10m[48;5;10m   [38;5;11m[48;5;11m   [38;5;12m[48;5;12m   [38;5;13m[48;5;13m   [38;5;14m[48;5;14m   [38;5;15m[48;5;15m   [m
+
+
+
+
+
+[?25h[?7h
+#+end_example
+** What is an API?
+Stands for application programming interface.
+
+Higher level abstraction from the processing code.
+
+The term can be used to describe as a connection interface to the program.
+
+It is designed as a product to be consumed/used externally.
+** What are environment variables?
+Variables that hold values related to current environment.
+Environment can be operation system or "user session".
+** What is path?
+It is one environment variable.
+It specifies directory in which executables are located.
+
+It holds for instance =/bin= folder for the *current user*.
+
+On windows environment variables use =%PATH%= syntax.
+In linux, =$PATH=.
+
+#+begin_src shell
+echo $PATH
+#+end_src
+
+#+RESULTS:
+: /usr/local/go/bin:/home/nasser/.local/bin:/usr/local/go/bin:/home/nasser/miniconda3/condabin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/local/games:/mnt/c/Program Files/WindowsApps/28644OpticosStudios.GWSL_1.3.809.0_x64__r3mwbcqrwk84r/GWSL:/mnt/c/SIMULIA/Commands:/mnt/c/Program Files/Microsoft MPI/Bin/:/mnt/c/Program Files/ImageMagick-7.0.11-Q16-HDRI:/mnt/c/WINDOWS/system32:/mnt/c/WINDOWS:/mnt/c/WINDOWS/System32/Wbem:/mnt/c/WINDOWS/System32/WindowsPowerShell/v1.0/:/mnt/c/Program Files/PuTTY/:/mnt/c/WINDOWS/System32/OpenSSH/:/mnt/c/ProgramData/chocolatey/bin:/mnt/c/Program Files/PowerShell/7/:/mnt/c/Users/c8441205/AppData/Local/SumatraPDF:/mnt/c/Program Files/dotnet/:/mnt/c/Program Files/ParaView 5.9.1-Windows-Python3.8-msvc2017-64bit/bin:/mnt/c/Program Files/Inkscape/bin:/mnt/c/Users/c8441205/AppData/Local/Microsoft/WindowsApps:/home/nasser/go/bin:/home/nasser/go/bin
+** System wide environment variables and user-specific?
+System wide in =/etc=.
+User-specific in the home folder =~/.profile= or =~/.bash_profile.=
+** Current environment?
+
+#+begin_src shell
+env
+#+end_src
+
+#+RESULTS:
+#+begin_example
+SHELL=/bin/bash
+GTK_THEME=Adwaita:dark
+LIBGL_ALWAYS_INDIRECT=1
+CONDA_EXE=/home/nasser/miniconda3/bin/conda
+_CE_M=
+WSL_DISTRO_NAME=Ubuntu-20.04
+EDITOR=/usr/bin/emacs
+NAME=lt135-c842
+PWD=/mnt/c/Users/c8441205/OneDrive/nasser-website/content/notes/ti-notes
+LOGNAME=nasser
+HOME=/home/nasser
+LANG=C.UTF-8
+WSL_INTEROP=/run/WSL/10794_interop
+TERM=dumb
+_CE_CONDA=
+USER=nasser
+CONDA_SHLVL=0
+DISPLAY=172.19.64.1:0
+SHLVL=2
+CONDA_PYTHON_EXE=/home/nasser/miniconda3/bin/python
+PS1=[\[\e[32m\]\u\[\e[m\]@\[\e[36m\]\h\[\e[m\]:\W]$ 
+WSLENV=
+PATH=/usr/local/go/bin:/home/nasser/.local/bin:/usr/local/go/bin:/home/nasser/miniconda3/condabin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/local/games:/mnt/c/Program Files/WindowsApps/28644OpticosStudios.GWSL_1.3.809.0_x64__r3mwbcqrwk84r/GWSL:/mnt/c/SIMULIA/Commands:/mnt/c/Program Files/Microsoft MPI/Bin/:/mnt/c/Program Files/ImageMagick-7.0.11-Q16-HDRI:/mnt/c/WINDOWS/system32:/mnt/c/WINDOWS:/mnt/c/WINDOWS/System32/Wbem:/mnt/c/WINDOWS/System32/WindowsPowerShell/v1.0/:/mnt/c/Program Files/PuTTY/:/mnt/c/WINDOWS/System32/OpenSSH/:/mnt/c/ProgramData/chocolatey/bin:/mnt/c/Program Files/PowerShell/7/:/mnt/c/Users/c8441205/AppData/Local/SumatraPDF:/mnt/c/Program Files/dotnet/:/mnt/c/Program Files/ParaView 5.9.1-Windows-Python3.8-msvc2017-64bit/bin:/mnt/c/Program Files/Inkscape/bin:/mnt/c/Users/c8441205/AppData/Local/Microsoft/WindowsApps:/home/nasser/go/bin:/home/nasser/go/bin
+HOSTTYPE=x86_64
+PULSE_SERVER=tcp:172.19.64.1
+GOPATH=/home/nasser/go
+_=/usr/bin/env
+#+end_example
+** How to set an environment variable?
+
+On linux, command =export var=value=.
+** Should you manipulate you PATH on the shell config file?
+Not ideal.
+
+Better to set up in the profile.
+
+If you manipulate your path from a shell config and then open emacs from a desktop environment or display manager, the emacs instance will not have access to the manipulations in the path. 
+** What is the difference between a desktop environment and a desktop session?
+A desktop environment is a combination of programs that define the interaction of the user and his applications. (e.g. KDE, GNOME)
+
+A desktop session is a running instance of a desktop environment.
+** What is a display manager, a session manager and a window manager?
+
+Display manager provides graphical login and then starts the session.
+
+Session manager controls the session.
+
+Window manager is a program that determines where the windows are placed.
+
+[[https://unix.stackexchange.com/questions/156549/terminology-reconciliation-display-manager-vs-session-manager-windowing-syste][x11 - Terminology reconciliation: Display manager vs. session manager, Window...]]
+* Hardware
+** Processor
+*** What is ARM?
+
+Processor architecture.
+
+#+begin_src shell
+lscpu
+#+end_src
+
+#+RESULTS:
+#+begin_example
+Architecture:                    x86_64
+CPU op-mode(s):                  32-bit, 64-bit
+Byte Order:                      Little Endian
+Address sizes:                   48 bits physical, 48 bits virtual
+CPU(s):                          12
+On-line CPU(s) list:             0-11
+Thread(s) per core:              2
+Core(s) per socket:              6
+Socket(s):                       1
+Vendor ID:                       AuthenticAMD
+CPU family:                      23
+Model:                           96
+Model name:                      AMD Ryzen 5 PRO 4650U with Radeon Graphics
+Stepping:                        1
+CPU MHz:                         2095.984
+BogoMIPS:                        4191.96
+Hypervisor vendor:               Microsoft
+Virtualization type:             full
+L1d cache:                       192 KiB
+L1i cache:                       192 KiB
+L2 cache:                        3 MiB
+L3 cache:                        4 MiB
+Vulnerability Itlb multihit:     Not affected
+Vulnerability L1tf:              Not affected
+Vulnerability Mds:               Not affected
+Vulnerability Meltdown:          Not affected
+Vulnerability Spec store bypass: Mitigation; Speculative Store Bypass disabled via prctl and seccomp
+Vulnerability Spectre v1:        Mitigation; usercopy/swapgs barriers and __user pointer sanitization
+Vulnerability Spectre v2:        Mitigation; Full AMD retpoline, IBPB conditional, IBRS_FW, STIBP conditional, RSB filling
+Vulnerability Srbds:             Not affected
+Vulnerability Tsx async abort:   Not affected
+Flags:                           fpu vme de pse tsc msr pae mce cx8 apic sep mtrr pge mca cmov pat pse36 clflush mmx fxsr sse sse2 ht syscall nx mmxext fxsr_opt pdpe1gb rdtscp lm rep_good nopl cpuid extd_apicid pni pclmulqdq ssse3 fma cx16 sse4_1 sse4_2 movbe popcnt aes xsave avx f16c rdrand hypervisor lahf_lm cmp_legacy cr8_legacy abm sse4a misalignsse 3dnowprefetch osvw topoext ssbd ibrs ibpb stibp vmmcall fsgsbase bmi1 avx2 smep bmi2 rdseed adx smap clflushopt clwb sha_ni xsaveopt xsavec xgetbv1 xsaves clzero xsaveerptr virt_ssbd arat umip rdpid
+#+end_example
+
+* Distributed memory systems
+** What is a distributed memory system?
+Computer architecture that uses multiple processors in parallel.
+Known as massive parallel processor (MPP).
+** What is the problem with MPP?
+Memory architecture.
+** What is MPI?
+A library that adps a code to the architecture of a MPP system.
+It handles data movement between distributed memory nodes.
+** What is CUDA?
+Compute unified device architecture.
+* Cloud
+** Seafile
+*** What is a basic seafile client?
+
+Allows interact with seafile servers.
+This is useful to download files from the a cloud storage.
+
+#+begin_src shell
+seaf-cli download -l "the id of the library" -s  "the url + port of server" -d "the folder where the library folder will be downloaded" -u "username on server" [-p "password"]
+#+end_src
+
+Or just =sync= if you already download the folder but what to update both local and cloud storage.
+
+[[https://help.seafile.com/syncing_client/linux-cli/][Seafile Client for a Cli server - Seafile User Manual]]
+
+
+*** What is a `drive` client?
+The drive client maps your storage space on the _Seafile server_ as a virtual driver in the computer.
+
+It makes the files available without syncing them.
+It does not downloads automatically, it does on demand.
+*** Why a `drive` client?
+
+Problems with just a "sync client":
+
+1. manual initiation of syncing.
+2. amount of sync files is limited by the client computer disk.
+
+[[https://blogs.seafile.com/2016/09/02/announcing-seafile-drive-client-a-new-way-to-map-seafile-storage-as-virtual-drive/comment-page-1/][Announcing Seafile Drive client, a new way to map Seafile storage as virtual ...]]
+
+* GNU/Linux
+** General knowledge
+*** FTP
+File transfer protocol.
+
+***** Unable to build data connection error
+
+Solved with =ftp -p= flag when connecting.
+It begin the client in passive mode.
+
+[[https://superuser.com/questions/356138/cant-connect-to-ftp-server-425-unable-to-build-data-connection-connection-tim][ubuntu - Can't connect to FTP server: 425 Unable to build data connection: Co...]]
+
+*** Bash alias
+
+Useful to reduce typing.
+
+Write in the =~/.bashrc= file:
+
+#+begin_example
+alias proj='cd /mnt/c/Users/c8441205/OneDrive/Academy/PhD/projects'
+#+end_example
+
+Or just add an line to =~/.bashrc= with the shell command:
+
+#+begin_src shell
+echo -e "alias proj='cd /mnt/c/Users/c8441205/OneDrive/Academy/PhD/projects'" >> ~/.bashrc
+#+end_src
+
+#+RESULTS:
+
+*** SSH
+**** Definition
+Secure shell is a protocol to connect securely to a remote computer or a server.
+**** Server side
+
+The server needs a SSH daemon that is constantly listening to a specific TCP/IP port for possible client connections requests.
+
+To install SSH server we need =sudo apt install  openssh-server ii=.
+
+To run a server we type =service ssh restart=.
+
+To check if the server is running =sudo service ssh status.=
+**** Finding IP address
+
+On the server or local =hostname -I=.
+**** Authorizing keys
+
+SSH in WSL need to generate public key and authorized keys.
+
+Go to =cd ~/.ssh= and =ssh-keygen= to generate the key.
+
+To append to the authorized keys =cat id_rsa.pub >> authorized_keys=.
+
+**** Connecting to a server side
+The client, which is the computer used to access the remote one, need a SSH client.
+
+We need the remote host information to initiate a connection.
+
+To connect type =ssh <hostname>@<ip>=.
+If it uses the same username, just type the ip address.
+
+*** =sudo= make install?
+
+With =sudo= it allows to install files in directories that are read only for the user.
+
+If =--prefix=/home/<user>/<dir>= is passed to =./configure= then it will install in user writable directory, then to uninstall is just need to delete the folder.
+
+
+** Linux filesystem hierarchy
+*** Heuristics
+1. avoid writing in the base directory =/=
+2. directory structure
+   1. =lib=: kernel modules and shared library needed to run commands in the root file system.
+   2. =etc=: configuration files.
+   3. =var=: files to which the system writes data during the course of its operation.
+   4. =tmp=: temporary files.
+   5. =mnt=: temporary mount point for mounting storage devices.
+3. =/home/nasser= is equivalent to =~/= and is the home directory for personal use.
+4. =~/Public= is shared to anyone in the network.
+5. software compiled and installed manually usually go to =/usr/local=
+   1. compiled manually *but available to all users*
+   2. if it is just for *one user* should go to =~/.local=
+
+*** What is =/usr=?
+
+System wide, read-only files.
+All installed software.
+
+Back in the 70's =/usr= was user directory.
+Essential binaries were in =/bin= and non essential in =/usr/bin=.
+But, =/usr= became crowded with user's =/home= stuff.
+Thus =/home= was created to solve that and keep =/usr= clean for system.
+
+Then the FHS was created.
+Now, =/usr= is the UNIX source repository and it became the _main system directory_.
+
+=/usr/local= is the analogous for software installed by the user.
+
+*** Writable files
+
+Config files for example.
+This go to =/etc= for system wide.
+And =~/.config= for per-user setting.
+
+Legacy software, =emacs= for instance uses =~/.emacs.d= which "clutters the home folder".
+
+*** Where to install software?
+
+1. traditional software (=bin=, =lib=) should be installed in =/usr/local=
+   1. the default install prefix is =/usr/local=.
+   2. =./configure --prefix=$HOME/.local= for user-only.
+2. self-contained, single directory, software that does not split in =bin=, =lib=, =include=, should be installed in =/opt=
+
+*** What is =~/.local=?
+
+User specific binaries.
+Whereas the =/usr/local= is for the system.
+
+#+begin_src sh
+systemd-path user-binaries
+#+end_src
+
+#+RESULTS:
+: /home/nasser/.local/bin
+
+
+*** What should be in =/share= folder?
+
+The =/usr/share= is for *read only* data files.
+
+Program or package that requires data that does not need to be modified.
+
+the =/usr/local/share= is for files installed locally only.
+
+*** What is the difference between =/usr/= and =/usr/local/=?
+=/usr/= is for the linux distribution.
+Installed and maintained by the system.
+
+=/usr/local/= is to user installed (=./configure && make && make install= goes to =/usr/local=)
+
+The word =local= means that is something just for this machine.
+It persists if the distribution updates.
+
+*** Where should source code for manually built software be?
+
+For all users.
+Source code =/usr/local/src= for programs that are compiled and installed in =/usr/local/=.
+
+For single user =~/.local/src/= is good.
+<2021-11-18 Thu> Some suggest =~/src= for the source code. But keeping at =~/.local= keeps the home tidy.
+It seems to be the new standard [[https://specifications.freedesktop.org/basedir-spec/basedir-spec-latest.html][XDG Base Directory Specification]].
+
+Emacs, for instance.
+Emacs automatically tries to install to =/usr/local/=, which needs =sudo=.
+
+Sometimes =~/.local/bin= is not already on path.
+Needs to add manually, with the =.bashrc=.
+
+Software not managed by the linux distribution.
+Third party software.
+Emacs, for instance.
+
+Own code can be wherever, =~/projects/= is a good place.
+
+
+*** What is the difference between =/usr/local/= and =$HOME/.local/= and =$HOME/=?
+[[https://unix.stackexchange.com/questions/36871/where-should-a-local-executable-be-placed][software installation - Where should a local executable be placed? - Unix & L...]]
+
+
+In =/usr/local= software is available for *all users*.
+It is installed and maintained by non-system, differently from =/usr= which has software installed by the distribution package manager.
+It requires administrator rights, =sudo=.
+
+
+Home refers to a single user.
+You can have the same structure as =/usr/= inside =~/=.
+
+For instance, source code go in =~/src=.
+And =~/share= has local architecture independent hierarchy.
+If want to install packages for a single user, when configuring a program can use =./configure --prefix=$HOME=.
+The =$HOME/bin= should be on path.
+<2021-11-18 Thu> Better to put on =~/.local/=.
+
+
+*** References
+1. [[https://www.freedesktop.org/software/systemd/man/file-hierarchy.html][file-hierarchy]]
+2. [[https://refspecs.linuxfoundation.org/FHS_2.3/fhs-2.3.html]]
+
+** Stow
+*** Definition
+Is a symlink farm manager.
+Makes it easier to create symlinks for all configuration files.
+*** Dotfile folder idea
+
+1. put all configurations in a =~/.dotfiles=
+2. =.= so it is hidden from usual =ls= command
+3. control version this folder
+4. use soft links from the folder to the home location with =ln -s .dotfiles/.bashrc .bashrc=
+*** Where configuration files should be?
+Some will be in =~/=, other will be in =~/.config=.
+
+From /XDG Base Directory Specification/:
+1. =~/.config= is for per-user configuration
+
+*** Why stow?
+
+Before: it was common to compile software from source.
+The binaries folder =/usr/local/bin= would contain symlinks to the user compiled software in =/usr/local/stow/emacs/bin=.
+
+Nowadays most software packages are managed with a package manager.
+Stow currently is used mostly for managing configuration files and not software package management.
+*** What is target and stow directory?
+
+Target is where the the packages will appear.
+Stow directory is the collection of config files in a separate directory.
+
+#+begin_src shell
+tree ~/.dotfiles -d
+#+end_src
+
+#+RESULTS:
+: /home/nasser/dotfiles
+: ├── polybar
+: ├── profile
+: ├── redshift
+: ├── urxvt
+: └── zathura
+: 
+: 5 directories
+*** What is a symlink?
+Symbolic link.
+*** Usage
+Stow all (=.=) of a specific config (=package=).
+
+#+begin_src shell
+cd ~/dofitle && stow .
+#+end_src
+
+If there are previous files that you want overwrite with your stow links, you need the =--adopt= flag.
+
+*** Example
+
+Zathura in =~/.dotfiles/= which is under git version control and saved remotely in github.
+
+#+begin_src shell
+tree  ~/.dotfiles/zathura -a
+#+end_src
+
+#+RESULTS:
+: /home/nasser/.dotfiles/zathura
+: └── .config
+:     └── zathura
+:         └── zathurarc
+: 
+: 2 directories, 1 file
+
+And we want to create a symlink for this zathurarc into =/.config= folder
+
+#+begin_src shell
+cd ~/.dotfiles && stow zathura
+#+end_src
+
+#+RESULTS:
+Then we can see the symlink
+#+begin_src shell
+ls -l ~/.config | grep zat
+#+end_src
+
+#+RESULTS:
+: lrwxrwxrwx 1 nasser nasser   36 Jun  6 08:58 zathura -> ../.dotfiles/zathura/.config/zathura
+
+and the correct configuration
+#+begin_src shell
+tree  ~/.config/zathura -a
+#+end_src
+
+#+RESULTS:
+: /home/nasser/.config/zathura
+: └── zathurarc
+: 
+: 0 directories, 1 file
+
+** Bash
+*** What is a shell?
+
+Generic name for any program that interacts with the computer.
+Multiple shells are available: bash, sh, zsh.
+
+Each has its own scripting language.
+
+*** What is an interactive shell?
+Shell opened with flag =i=. 
+When an interactive shell, not a login shell, is started, =bash= reads the =~/.bashrc= file.
+Which contains aliases and other useful stuff.
+
+*** What is a login shell?
+A login shell, flag =l=, reads the =~/.bash_profile= and others but not the =~/.bashrc=.
+
+When we run =env= then the login shells will run =login=.
+After finished, login shells will run =logout=.
+
+*** What is =/bin/sh=?
+
+So it can use any shell, =bash=, =zsh= or =dash=.
+*** What is the difference between shell, console and terminal?
+
+A _terminal is an environment_ for _text_ input/output.
+It is how you _interact_ with a computer.
+History: a physical equipment, like a typewriter, to type commands to the computer.
+Analogy: is at the end of an electric wire, where one can send inputs or receive outputs.
+Abstract: a way of interact with a computer.
+
+A _console is a physical terminal_.
+The name comes from physical furniture point of view.
+
+A _shell is command line interpreter_.
+It can also be understood as a program that bridges between the user the operating system.
+A common shell technique is /command line/.
+With this technique, a user receives a /prompt/, where it can type a command in a text form, then the command is taken to the kernel.
+
+History: UNIX is an interactive system, users can use the shell to tell the kernel to run applications.
+The kernel is the software that communicate with the hardware.
+So the shell is a wrapper which is convenient for humans to interact with the hardware through the kernel.
+Analogy: a cover to the kernel (seed).
+
+There are many shells: Bash, zsh, fish.
+*** What is the difference between =~/.bashrc= and =~/.profile=?
+
+Modification of environment variables should go in =login=.
+
+=.profile= is for things not related to =bash=, like environment variables.
+
+
+
+** Fonts
+*** Check installed
+Check installed fonts.
+
+#+begin_src shell
+fc-list | grep hack
+#+end_src
+
+#+RESULTS:
+: /usr/share/fonts/truetype/hack/Hack-Regular.ttf: Hack:style=Regular
+: /usr/share/fonts/truetype/hack/Hack-Bold.ttf: Hack:style=Bold
+: /usr/share/fonts/truetype/hack/Hack-BoldItalic.ttf: Hack:style=Bold Italic
+: /usr/share/fonts/truetype/hack/Hack-Italic.ttf: Hack:style=Italic
+
+*** Installing font from =.deb= package
+
+Download the package, in this case a font package [[https://phd-sid.ethz.ch/debian/fonts-iosevka/][Index of /debian/fonts-iosevka/]]
+
+#+begin_src shell
+cd ~/
+wget https://phd-sid.ethz.ch/debian/fonts-iosevka/fonts-iosevka_7.2.3%2Bds-1_all.deb
+#+end_src
+
+#+RESULTS:
+
+#+begin_src shell
+sudo apt install ~/fonts-iosevka_7.2.3+ds-1_all.deb
+#+end_src
+
+#+RESULTS:
+
+Check if it installed
+
+#+begin_src shell
+fc-list | grep iosevka
+#+end_src
+
+#+RESULTS:
+#+begin_example
+/usr/share/fonts/truetype/iosevka/iosevka-extendedmediumoblique.ttf: Iosevka,Iosevka MdExObl:style=Medium Extended Oblique,Regular
+/usr/share/fonts/truetype/iosevka/iosevka-extendedlight.ttf: Iosevka,Iosevka Light Extended:style=Light Extended,Regular
+/usr/share/fonts/truetype/iosevka/iosevka-extendedthin.ttf: Iosevka,Iosevka Thin Extended:style=Thin Extended,Regular
+/usr/share/fonts/truetype/iosevka/iosevka-bolditalic.ttf: Iosevka:style=Bold Italic
+/usr/share/fonts/truetype/iosevka/iosevka-extendedmedium.ttf: Iosevka,Iosevka Medium Extended:style=Medium Extended,Regular
+/usr/share/fonts/truetype/iosevka/iosevka-oblique.ttf: Iosevka,Iosevka Oblique:style=Oblique,Regular
+/usr/share/fonts/truetype/iosevka/iosevka-extendedsemiboldoblique.ttf: Iosevka,Iosevka SmBdExObl:style=Semibold Extended Oblique,Regular
+/usr/share/fonts/truetype/iosevka/iosevka-light.ttf: Iosevka,Iosevka Light:style=Light,Regular
+/usr/share/fonts/truetype/iosevka/iosevka-extendedlightitalic.ttf: Iosevka,Iosevka Light Extended:style=Light Extended Italic,Italic
+/usr/share/fonts/truetype/iosevka/iosevka-extendedboldoblique.ttf: Iosevka,Iosevka Extended Oblique:style=Bold Extended Oblique,Bold
+/usr/share/fonts/truetype/iosevka/iosevka-extendedextraboldoblique.ttf: Iosevka,Iosevka XBdExObl:style=Extrabold Extended Oblique,Regular
+/usr/share/fonts/truetype/iosevka/iosevka-medium.ttf: Iosevka,Iosevka Medium:style=Medium,Regular
+/usr/share/fonts/truetype/iosevka/iosevka-extendedextralightoblique.ttf: Iosevka,Iosevka XLtExObl:style=Extralight Extended Oblique,Regular
+/usr/share/fonts/truetype/iosevka/iosevka-bold.ttf: Iosevka:style=Bold
+/usr/share/fonts/truetype/iosevka/iosevka-extendedthinitalic.ttf: Iosevka,Iosevka Thin Extended:style=Thin Extended Italic,Italic
+/usr/share/fonts/truetype/iosevka/iosevka-extendedoblique.ttf: Iosevka,Iosevka Extended Oblique:style=Extended Oblique,Regular
+/usr/share/fonts/truetype/iosevka/iosevka-extendedextralightitalic.ttf: Iosevka,Iosevka Extralight Extended:style=Extralight Extended Italic,Italic
+/usr/share/fonts/truetype/iosevka/iosevka-extendedbolditalic.ttf: Iosevka,Iosevka Extended:style=Bold Extended Italic,Bold Italic
+/usr/share/fonts/truetype/iosevka/iosevka-extendedsemibold.ttf: Iosevka,Iosevka Semibold Extended:style=Semibold Extended,Regular
+/usr/share/fonts/truetype/iosevka/iosevka-extendedbold.ttf: Iosevka,Iosevka Extended:style=Bold Extended,Bold
+/usr/share/fonts/truetype/iosevka/iosevka-heavyoblique.ttf: Iosevka,Iosevka Heavy Oblique:style=Heavy Oblique,Regular
+/usr/share/fonts/truetype/iosevka/iosevka-semibold.ttf: Iosevka,Iosevka Semibold:style=Semibold,Regular
+/usr/share/fonts/truetype/iosevka/iosevka-extendedheavyitalic.ttf: Iosevka,Iosevka Heavy Extended:style=Heavy Extended Italic,Italic
+/usr/share/fonts/truetype/iosevka/iosevka-extralightitalic.ttf: Iosevka,Iosevka Extralight:style=Extralight Italic,Italic
+/usr/share/fonts/truetype/iosevka/iosevka-extralight.ttf: Iosevka,Iosevka Extralight:style=Extralight,Regular
+/usr/share/fonts/truetype/iosevka/iosevka-boldoblique.ttf: Iosevka,Iosevka Oblique:style=Bold Oblique,Bold
+/usr/share/fonts/truetype/iosevka/iosevka-extrabolditalic.ttf: Iosevka,Iosevka Extrabold:style=Extrabold Italic,Italic
+/usr/share/fonts/truetype/iosevka/iosevka-extendedheavy.ttf: Iosevka,Iosevka Heavy Extended:style=Heavy Extended,Regular
+/usr/share/fonts/truetype/iosevka/iosevka-semiboldoblique.ttf: Iosevka,Iosevka Semibold Oblique:style=Semibold Oblique,Regular
+/usr/share/fonts/truetype/iosevka/iosevka-italic.ttf: Iosevka:style=Italic
+/usr/share/fonts/truetype/iosevka/iosevka-extrabold.ttf: Iosevka,Iosevka Extrabold:style=Extrabold,Regular
+/usr/share/fonts/truetype/iosevka/iosevka-extendedextrabold.ttf: Iosevka,Iosevka Extrabold Extended:style=Extrabold Extended,Regular
+/usr/share/fonts/truetype/iosevka/iosevka-heavy.ttf: Iosevka,Iosevka Heavy:style=Heavy,Regular
+/usr/share/fonts/truetype/iosevka/iosevka-thin.ttf: Iosevka,Iosevka Thin:style=Thin,Regular
+/usr/share/fonts/truetype/iosevka/iosevka-extendedsemibolditalic.ttf: Iosevka,Iosevka Semibold Extended:style=Semibold Extended Italic,Italic
+/usr/share/fonts/truetype/iosevka/iosevka-extendedheavyoblique.ttf: Iosevka,Iosevka Heavy Extended Oblique:style=Heavy Extended Oblique,Regular
+/usr/share/fonts/truetype/iosevka/iosevka-extendedmediumitalic.ttf: Iosevka,Iosevka Medium Extended:style=Medium Extended Italic,Italic
+/usr/share/fonts/truetype/iosevka/iosevka-mediumitalic.ttf: Iosevka,Iosevka Medium:style=Medium Italic,Italic
+/usr/share/fonts/truetype/iosevka/iosevka-extraboldoblique.ttf: Iosevka,Iosevka Extrabold Oblique:style=Extrabold Oblique,Regular
+/usr/share/fonts/truetype/iosevka/iosevka-extendedextralight.ttf: Iosevka,Iosevka Extralight Extended:style=Extralight Extended,Regular
+/usr/share/fonts/truetype/iosevka/iosevka-thinoblique.ttf: Iosevka,Iosevka Thin Oblique:style=Thin Oblique,Regular
+/usr/share/fonts/truetype/iosevka/iosevka-mediumoblique.ttf: Iosevka,Iosevka Medium Oblique:style=Medium Oblique,Regular
+/usr/share/fonts/truetype/iosevka/iosevka-regular.ttf: Iosevka:style=Regular
+/usr/share/fonts/truetype/iosevka/iosevka-heavyitalic.ttf: Iosevka,Iosevka Heavy:style=Heavy Italic,Italic
+/usr/share/fonts/truetype/iosevka/iosevka-extendedextrabolditalic.ttf: Iosevka,Iosevka Extrabold Extended:style=Extrabold Extended Italic,Italic
+/usr/share/fonts/truetype/iosevka/iosevka-semibolditalic.ttf: Iosevka,Iosevka Semibold:style=Semibold Italic,Italic
+/usr/share/fonts/truetype/iosevka/iosevka-extendeditalic.ttf: Iosevka,Iosevka Extended:style=Extended Italic,Italic
+/usr/share/fonts/truetype/iosevka/iosevka-lightitalic.ttf: Iosevka,Iosevka Light:style=Light Italic,Italic
+/usr/share/fonts/truetype/iosevka/iosevka-extralightoblique.ttf: Iosevka,Iosevka Extralight Oblique:style=Extralight Oblique,Regular
+/usr/share/fonts/truetype/iosevka/iosevka-thinitalic.ttf: Iosevka,Iosevka Thin:style=Thin Italic,Italic
+/usr/share/fonts/truetype/iosevka/iosevka-extended.ttf: Iosevka,Iosevka Extended:style=Extended,Regular
+/usr/share/fonts/truetype/iosevka/iosevka-lightoblique.ttf: Iosevka,Iosevka Light Oblique:style=Light Oblique,Regular
+/usr/share/fonts/truetype/iosevka/iosevka-extendedthinoblique.ttf: Iosevka,Iosevka Thin Extended Oblique:style=Thin Extended Oblique,Regular
+/usr/share/fonts/truetype/iosevka/iosevka-extendedlightoblique.ttf: Iosevka,Iosevka Light Extended Oblique:style=Light Extended Oblique,Regular
+#+end_example
+*** Installing from a general download
+
+Download the files,
+
+#+begin_src shell
+cd ~/
+wget https://bboxtype.com/downloads/FiraGO/Download_Folder_FiraGO_1001.zip
+#+end_src
+
+#+RESULTS:
+
+Extract,
+#+begin_src shell
+cd ~/
+unzip Download_Folder_FiraGO_1001.zip
+#+end_src
+
+copy the =.ttf= files into =~/.local/share/fonts=,
+#+begin_src shell
+cd ~/Download_Folder_FiraGO_1001/Fonts/FiraGO_TTF_1001/Roman
+ls
+cp * ~/.local/share/fonts/
+#+end_src
+
+#+RESULTS:
+#+begin_example
+FiraGO-Bold.ttf
+FiraGO-Book.ttf
+FiraGO-Eight.ttf
+FiraGO-ExtraBold.ttf
+FiraGO-ExtraLight.ttf
+FiraGO-Four.ttf
+FiraGO-Hair.ttf
+FiraGO-Heavy.ttf
+FiraGO-Light.ttf
+FiraGO-Medium.ttf
+FiraGO-Regular.ttf
+FiraGO-SemiBold.ttf
+FiraGO-Thin.ttf
+FiraGO-Two.ttf
+FiraGO-UltraLight.ttf
+#+end_example
+
+Refresh the fonts cache,
+
+#+begin_src shell
+fc-cache -f -v
+#+end_src
+
+Check,
+#+begin_src shell
+fc-list | grep Fira
+#+end_src
+
+#+RESULTS:
+#+begin_example
+/home/nasser/.local/share/fonts/FiraGO-ExtraLight.ttf: FiraGO,FiraGO ExtraLight:style=ExtraLight,Regular
+/home/nasser/.local/share/fonts/FiraGO-UltraLight.ttf: FiraGO,FiraGO UltraLight:style=UltraLight,Regular
+/home/nasser/.local/share/fonts/FiraGO-Two.ttf: FiraGO,FiraGO Two:style=Two,Regular
+/home/nasser/.local/share/fonts/FiraGO-Hair.ttf: FiraGO,FiraGO Hair:style=Hair,Regular
+/home/nasser/.local/share/fonts/FiraGO-Eight.ttf: FiraGO,FiraGO Eight:style=Eight,Regular
+/home/nasser/.local/share/fonts/FiraGO-Thin.ttf: FiraGO,FiraGO Thin:style=Thin,Regular
+/home/nasser/.local/share/fonts/FiraGO-Light.ttf: FiraGO,FiraGO Light:style=Light,Regular
+/home/nasser/.local/share/fonts/FiraGO-Regular.ttf: FiraGO:style=Regular
+/home/nasser/.local/share/fonts/FiraGO-Book.ttf: FiraGO,FiraGO Book:style=Book,Regular
+/home/nasser/.local/share/fonts/FiraGO-Bold.ttf: FiraGO:style=Bold
+/home/nasser/.local/share/fonts/FiraGO-ExtraBold.ttf: FiraGO,FiraGO ExtraBold:style=ExtraBold,Regular
+/home/nasser/.local/share/fonts/FiraGO-Medium.ttf: FiraGO,FiraGO Medium:style=Medium,Regular
+/home/nasser/.local/share/fonts/FiraGO-Four.ttf: FiraGO,FiraGO Four:style=Four,Regular
+/home/nasser/.local/share/fonts/FiraGO-Heavy.ttf: FiraGO,FiraGO Heavy:style=Heavy,Regular
+/home/nasser/.local/share/fonts/FiraGO-SemiBold.ttf: FiraGO,FiraGO SemiBold:style=SemiBold,Regular
+#+end_example
+
+** Apt
+*** Definition
+Package manager software.
+
+It looks for packages in repositories at
+
+#+begin_src shell
+grep http /etc/apt/sources.list 
+#+end_src
+
+#+RESULTS:
+#+begin_example
+# See http://help.ubuntu.com/community/UpgradeNotes for how to upgrade to
+deb http://archive.ubuntu.com/ubuntu/ focal main restricted
+# deb-src http://archive.ubuntu.com/ubuntu/ focal main restricted
+deb http://archive.ubuntu.com/ubuntu/ focal-updates main restricted
+# deb-src http://archive.ubuntu.com/ubuntu/ focal-updates main restricted
+deb http://archive.ubuntu.com/ubuntu/ focal universe
+# deb-src http://archive.ubuntu.com/ubuntu/ focal universe
+deb http://archive.ubuntu.com/ubuntu/ focal-updates universe
+# deb-src http://archive.ubuntu.com/ubuntu/ focal-updates universe
+deb http://archive.ubuntu.com/ubuntu/ focal multiverse
+# deb-src http://archive.ubuntu.com/ubuntu/ focal multiverse
+deb http://archive.ubuntu.com/ubuntu/ focal-updates multiverse
+# deb-src http://archive.ubuntu.com/ubuntu/ focal-updates multiverse
+deb http://archive.ubuntu.com/ubuntu/ focal-backports main restricted universe multiverse
+# deb-src http://archive.ubuntu.com/ubuntu/ focal-backports main restricted universe multiverse
+# deb http://archive.canonical.com/ubuntu focal partner
+# deb-src http://archive.canonical.com/ubuntu focal partner
+deb http://security.ubuntu.com/ubuntu/ focal-security main restricted
+# deb-src http://security.ubuntu.com/ubuntu/ focal-security main restricted
+deb http://security.ubuntu.com/ubuntu/ focal-security universe
+# deb-src http://security.ubuntu.com/ubuntu/ focal-security universe
+deb http://security.ubuntu.com/ubuntu/ focal-security multiverse
+# deb-src http://security.ubuntu.com/ubuntu/ focal-security multiverse
+deb https://apt.kitware.com/ubuntu/ focal main
+# deb-src https://apt.kitware.com/ubuntu/ focal main
+#+end_example
+
+*** Adding repository
+
+APT repository is a network server containing the packages and metadata required by the APT tools.
+
+Adding a repository means to add a line into the =sources.list= file.
+Then =sudo apt update= to retrieve the packages list.
+
+*** What does =apt update= do?
+
+It retrieves the updated package list from the repositories.
+
+*** What is =PPA=?
+Personal package archive.
+
+=sudo add-apt-repository ppa:<repository-name>=
+
+
+*** How to install a =.deb= package?
+
+=apt= uses =dpka= under the hook to install the downloaded files.
+
+** Arch/Manjaro
+*** Package signing
+GnuPG is used to check if packages are authentic.
+
+Each user has a PGP key.
+
+The =/etc/pacman.conf= has an option =SigLevel= to control the level of trust to install a package.
+
+[[https://wiki.archlinux.org/title/Pacman/Package_signing][pacman/Package signing - ArchWiki]]
+*** Installing a package
+
+1. =git clone= the package files
+2. =cd= into the folder and =makepkg=
+3. then =sudo pacman -S <package>.pkg= to install into the system
+
+* GIT
+** What is the difference between =git reset= and =git revert=?
+=git revert= will create another commit that will undo the changes of a commit.
+It does not affect other commits.
+
+
+Whereas =git reset= can be a time machine can affect all files in the repository.
+It has options that affect the local environment (staging area and working directory).
+A =--hard= flag will go to the past and will reset the staging area.
+On the other hand, a =--soft= flag only reset the commit pointer in the repository, it does not affect the working directory or staged files.
+
+A branch is a pointer to a specific commit.
+** What is a personal access token (PAT)?
+Alternative to use password for authentication in the command line.
+
+The usual way to access the github repository is by using SSH key or using you username/password.
+PAT supposedly is a better than using username/password. 
+
+Every time you want to interact with the remote repository we need to insert our credentials.
+_The recommended way to prove credentials is with PAT._
+After the first initial credential confirmation, the PAT will be securely stored (cashed in the computer memory) by git credential facilities.
+
+
+** What is the advantage of PAT compared with regular user/password?
+PAT can be generated multiple times and can be revoked any time.
+This is useful if you work from different machines.
+
+A simple password is associated with an account.
+If you change it, it will have consequences every where you use it.
+
+** What is =HEAD=?
+* Network
+** What is the difference between HTTPS and SSH?
+Both are protocols.
+SSH is 
+** What is firewall?
+** What is a web server?
+A hardware that accepts requests via a networks protocol, HTTP.
+
+Web browsers communicate with web servers via HTTP protocol.
+When something happen in the browser, it sends a request to a web server, then the server sends back a response.
+** What is an IP address?
+IP address is unique for all connected devices.
+
+IP allows devices to communicate to each other.
+** What is dynamic and static IP?
+Static is reserved for email server or business server.
+
+Dynamic for residential costumers, often.
+
+** What is a public and private ip?
+Private are for internal network use.
+The router has an external and internal IP adresss.
+Private 10.x.x.x, 172.16-31.x.x and 192.168.x.x.
+
+Public addresses can be reached anywhere in the world.
+** How to find the internal IP address?
+
+#+begin_src shell
+hostname -I
+#+end_src
+
+#+RESULTS:
+: 172.24.27.242 
+
+** What the command =ip addr= does?
+
+Scan the hardware and display the status for each network adapter you have.
+
+This command show the "self configure" address.
+
+** What is a MAC address?
+
+Every network interface has a MAC address, media access controller.
+Also known as physical address.
+
+** What does =ifconfig= shows?
+
+Shows network interface data.
+
+** What is =127.0.0.1=?
+
+Is a localhost wich resolves to the IPv4 loopback address =127.0.0.1=.
+
+The address =127.0.0.1= is the standard for IPv4 loopback traffic.
+
+Loopback is a mechanism that can be used to _run a network service_ on a host without a physical network interface or _without making the service available to the networks the computer may be connected_.
+
+** What is the relation between router and IP?
+
+Each device is assigned a _different local IP_ from the _router_.
+
+Since the devices are connected to the same router, they will have the _same public IP_.
+
+** What is a server port?
+A port is a communication endpoint.
+
+A port is identified for each transport protocol.
+
+A port number is associated with an _IP_ address of a host and the _type of transport_ used.
+
+** What is =ngrok=?
+Program that allows you to expose a _web server running on your local machine_ to the internet.
+
+** What it means to =ping= an address?
+
+Ping sends ICMP Echo Requests to a destination and look for the destination to reply with an ICMP Echo Reply.
+
+#+begin_src shell
+ping 172.20.115.174
+#+end_src
+
+#+RESULTS:
+
+If the destination is running, it will reply.
+
+** WSL2 network?
+
+WSL2 is considered a "public network".
+WSL2 has a virtualized ethernet adapter, which has a unique IP address.
+
+#+begin_src shell
+hostname -I
+#+end_src
+
+#+RESULTS:
+: 172.20.115.174 
+
+which is different from the windows IP,
+IP of the wireless network adapter.
+
+#+begin_src shell
+powershell.exe ipconfig
+#+end_src
+
+#+RESULTS:
+#+begin_example
+
+Windows IP Configuration
+
+
+Ethernet adapter Ethernet:
+
+   Media State . . . . . . . . . . . : Media disconnected
+   Connection-specific DNS Suffix  . : 
+
+Wireless LAN adapter Local Area Connection* 2:
+
+   Media State . . . . . . . . . . . : Media disconnected
+   Connection-specific DNS Suffix  . : 
+
+Wireless LAN adapter Local Area Connection* 3:
+
+   Media State . . . . . . . . . . . : Media disconnected
+   Connection-specific DNS Suffix  . : 
+
+Wireless LAN adapter Wi-Fi:
+
+   Connection-specific DNS Suffix  . : 
+   Link-local IPv6 Address . . . . . : fe80::ddf3:53bd:83e2:a60e%5
+   IPv4 Address. . . . . . . . . . . : 192.168.53.66
+   Subnet Mask . . . . . . . . . . . : 255.255.255.0
+   Default Gateway . . . . . . . . . : 192.168.53.254
+
+Ethernet adapter Bluetooth Network Connection:
+
+   Media State . . . . . . . . . . . : Media disconnected
+   Connection-specific DNS Suffix  . : 
+
+Ethernet adapter vEthernet (WSL):
+
+   Connection-specific DNS Suffix  . : 
+   Link-local IPv6 Address . . . . . : fe80::35b6:3d26:de75:9060%46
+   IPv4 Address. . . . . . . . . . . : 172.20.112.1
+   Subnet Mask . . . . . . . . . . . : 255.255.240.0
+   Default Gateway . . . . . . . . . : 
+#+end_example
+
+We then, can ping from windows to ubuntu and vice versa,
+
+#+begin_src shell
+ping 192.168.53.66
+#+end_src
+
+But an outside computer (cellphone) can not ping the ubuntu because there is no route to its network (vEthernet (WSL)).
+The ubuntu host is connected virtually to the windows host.
+So, devices on the local area network (LAN) don't know about the vEthernet (WSL) network.
+
+#+DOWNLOADED: screenshot @ 2021-08-02 21:18:39
+#+attr_html: :width 350px
+[[file:images/Network/2021-08-02_21-18-39_screenshot.png]]
+
+** How to test network connections?
+
+Find IPs, the first is the windows and the second the WSL2.
+
+#+begin_src shell
+ipconfig.exe | grep IPv4
+#+end_src
+
+#+RESULTS:
+:    IPv4 Address. . . . . . . . . . . : 172.25.4.165
+:    IPv4 Address. . . . . . . . . . . : 172.23.144.1
+
+Ping from WSL2 to windows, it fails
+
+#+begin_src shell
+ping 172.25.4.165
+#+end_src
+
+Each ping test makes 4 tries.
+If the sent packages were received without loss, then the connection was successful.
+
+If the request was timed out, then it fails.
+
+Ping from windows to WSL2, works.
+
+#+begin_src shell
+ping.exe 172.23.144.1
+#+end_src
+
+#+RESULTS:
+#+begin_example
+
+Pinging 172.23.144.1 with 32 bytes of data:
+Reply from 172.23.144.1: bytes=32 time<1ms TTL=128
+Reply from 172.23.144.1: bytes=32 time<1ms TTL=128
+Reply from 172.23.144.1: bytes=32 time<1ms TTL=128
+Reply from 172.23.144.1: bytes=32 time<1ms TTL=128
+
+Ping statistics for 172.23.144.1:
+    Packets: Sent = 4, Received = 4, Lost = 0 (0% loss),
+Approximate round trip times in milli-seconds:
+    Minimum = 0ms, Maximum = 0ms, Average = 0ms
+#+end_example
+
+* Remote
+** How to keep process running in remote after interrupt connection.
+Using =tmux=.
+It protects running programs on remote from disconnects.
+** What is =tmux=?
+Commands can survive disconnects and reconnects.
+
+=tmux= allows interactive commands, =nohup= does not.
+** What is =tmux= client and server?
+** How to use =tmux=?
+
+In the machine you want to run your processes create a session with =tmux=. 
+
+Then, run whatever and detach from the tmux session with =C-b d=.
+
+To check your sessions, use =tmux ls=.
+And to re-attach use =tmux attach-session=.
+

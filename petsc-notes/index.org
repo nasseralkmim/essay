@@ -1,0 +1,24 @@
+#+title: PETSc notes
+#+date: <2021-04-25 Sun>
+#+author: Nasser Alkmim
+#+email: nasser.alkmim@gmail.com
+#+language: en
+#+select_tags: export
+#+exclude_tags: noexport
+#+creator: Emacs 27.2 (Org mode 9.4.5)
+#+tags[]: tools petsc 
+#+draft: t
+#+toc: t
+* What is PETSc?
+Portable, extensible toolkit for Scientific computation.
+It is a collection of data structures and routines for implementing applications for solving partial differential equations numerically.
+* Difference from Trilinos?
+
+
+This stack exchange question [[https://scicomp.stackexchange.com/questions/461/what-are-the-main-differences-between-petsc-and-trilinos][software - What are the main differences between PETSc and Trilinos? - Comput...]] provides a concise comparison.
+
+
+In regards documentation, Trilinos has a Doxygen documentation page for each package.
+* Where it can be used?
+
+PETSc routines can be used in C++ and Python.

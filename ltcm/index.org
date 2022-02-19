@@ -1,0 +1,39 @@
+#+options: ':nil *:t -:t ::t <:t H:3 \n:nil ^:t arch:headline
+#+options: author:t broken-links:nil c:nil creator:nil
+#+options: d:(not "LOGBOOK") date:t e:t email:nil f:t inline:t num:t
+#+options: p:nil pri:nil prop:nil stat:t tags:t tasks:t tex:t
+#+options: timestamp:t title:t toc:t todo:t |:t
+#+title: Did LTCM were too greed?
+#+date: <2020-12-12 Sat>
+#+author: Nasser Alkmim
+#+email: nasser.alkmim@gmail.com
+#+language: en
+#+select_tags: export
+#+exclude_tags: noexport
+#+creator: Emacs 27.1 (Org mode 9.3.7)
+#+draft: t
+#+toc: t
+#+tags[]: economy finance 
+* What was LTCM trade?
+They traded spreads in the bond market.
+Buying under priced bonds and short sell overpriced ones, then wait them to converge to a fair value and unwind the trade.
+Tiny spreads can be amplified with leverage.
+
+Long term means that this convergence of prices can take some time.
+* Why it failed?
+
+A crises in Asian and Russia made all LTCM trades to diverge, risking insolvency by reducing its long position value and increasing its short.
+
+However it was not a solvency problem.
+It was a liquidity problem, because LTCM could not raise funds to maintain its position.
+* Liquidity premium
+
+It seems that the "undervalue" bonds that LTCM was buying, was undervalued because of its lack of liquidity.
+* FED involvement
+
+LTCM was workings as a security dealer.
+In order to refinance its inventory during the crises, meaning raising funds to meet additional margins, it needed to reach to other market makers.
+The market makers went to the banks for refinance themselves, a ultimately the banks can access the FED funds market.
+
+* References
+1. Minsky and Modern Finance. Perry Mehrling (2000).

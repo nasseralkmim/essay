@@ -1,0 +1,55 @@
+#+TITLE:       2019 Books review
+#+AUTHOR:      Nasser Alkmim
+#+EMAIL:       nasser.alkmim@gmail.com
+#+DATE:        2019-01-05
+#+URI:         /notes/%y/%m/%d/2019-books-review
+#+TAGS[]:        books
+#+LANGUAGE:    en
+#+OPTIONS:     H:3 num:nil toc:nil \n:nil ::t |:t ^:nil -:nil f:t *:t <:t
+#+DESCRIPTION: <TODO: insert your description here>
+#+toc: t
+* Books list
+#+begin_export html
+<img src="https://images-na.ssl-images-amazon.com/images/I/51283k0NwXL._SL200_.jpg" style="display: revert; max-width: fit-content;">
+<img src="https://images-na.ssl-images-amazon.com/images/I/514Oi-7cLQL._SL200_.jpg" style="display: revert; max-width: fit-content;">
+<img src="https://images-na.ssl-images-amazon.com/images/I/51xiWB0PfWL._SL200_.jpg" style="display: revert; max-width: fit-content;">
+<img src="https://images-na.ssl-images-amazon.com/images/I/51p7Riv4tjL._SL200_.jpg" style="display: revert; max-width: fit-content;">
+<img src="https://images-na.ssl-images-amazon.com/images/I/513Y4Zp0QuL._SL200_.jpg" style="display: revert; max-width: fit-content;">
+<img src="https://images-na.ssl-images-amazon.com/images/I/51lHQvZOZiL._SL200_.jpg" style="display: revert; max-width: fit-content;">
+<img src="https://images-na.ssl-images-amazon.com/images/I/51dUdCh2ZdL._SL200_.jpg" style="display: revert; max-width: fit-content;">
+<img src="https://images-na.ssl-images-amazon.com/images/I/51wGICTPShL._SL200_.jpg" style="display: revert; max-width: fit-content;">
+<img src="https://images-na.ssl-images-amazon.com/images/I/316IBDS3nhL._SL200_.jpg" style="display: revert; max-width: fit-content;">
+<img src="https://images-na.ssl-images-amazon.com/images/I/31sf4AgyQAL._SL200_.jpg" style="display: revert; max-width: fit-content;">
+<img src="https://images-na.ssl-images-amazon.com/images/I/51u3KCvc1iL._SL200_.jpg" style="display: revert; max-width: fit-content;">
+#+end_export
+* Never let me go
+Ficção sobre uma realidade distópica onde nós criamos clones para suprir nossas necessidades de órgãos. 
+Mas quem são esses clones? A narrativa é contada por um deles.
+Cheio de mistérios e revelações, o livro te prende até o fim.
+Nas entrelinhas é um livro sobre questões existênciais e como aceitar o invevitavel.
+"Ishiguro wanted us to 'know without knowing'"
+* The sailor who fell from grace with the sea
+O livro é um romance do intrigante Yukio Mishima. 
+O livro começa narrando um contidiano ordinário que vai evoluindo até acontecimentos inesperados.
+Me surpreendi com a gangue dos garotos, comportamento totalmente não convencional.
+Lendo um pouco sobre a história do autor que se encerra num suicídio épico, aparentemente meticulasamente desenhado e com sua razões nacionalistas e românticas, entende-se um pouco o posicionamento dos garotos com relação ao ideais de vida.
+Um review no good reads (Megha) descreve bem o estilo do livro "The gracefulness of the writing stands very much in contrast with the ominous content (...) He infuses some beauty even in cringe-worthy scenes."
+Se você não conhece a história do autor e o período histórico em que foi escrito vai achar o livro apenas um romance qualquer com um final escuro.
+* The Dao of capital
+Um livro sobre investimentos usando a teoria austríaca de ciclos econômicos. Como as distorções causadas por bancos centrais podem criar oportunidades. Mas no fundo o livro explica um estilo de vida no qual enchergar além de ganhos imediatos pode trazer muito mais benefícios. Considero do nível do antifragil do Taleb. Apesar de ser uma ideia simples, o Spitznagel é muito prolixo e faz questão de repetir sua tese diversas vezes.
+* The art of learning
+Um livro sobre a jornada de um jovem jogador de xadrez que após alguns anos no circuito profissional muda completamente seu rumo e inicia uma nova empreitada no tão Chico Chuan. Peguei esse livro porque estou aficionado em xadrez, mas ele fala sobre aprendizado em geral. Um ponto interessante é o peso do mindset no crescimento pessoal. Existem dois tipos de mindset: fixo, inato, ou o de crescimento. Apenas o fato de você pensar com a mentalidade de crescimento em vez de botar limites em sua capacidade faz com que sua chance de sucesso aumentem.Não achei o livro tão interessante, depois da metade começa a ficar entediante. O autor não se cansa de modo egocêntrico. Acho que não vale a leitura, um slide com resumo das ideias já comunica o que o autor quer passar ignorando os exemplos práticos da vida dele.
+* Barking up the wrong tree
+Ótim livro, cheio de informações relevantes que podem ser aplicadas imediatamente. O que é sucesso?Esse livro reúne diversas informações provenientes do meios acadêmicos e as expõem como uma série de dicas a serem seguidas. O lado bom é que ele expõem tanto os aspectos positivos e negativos das condutas sugeridas, isso contribui para uma reflexão mais crítica das ideias
+* The case against education
+A tese do libertário Bryan Caplan diz que o sistema educacional é um desperdício de tempo e dinheiro. Ele tem um ponto de vista interessante. No final eu acabei sendo convencido. 
+* Why we sleep
+Resumo do livro: durma pelo menos 7h todos os dias ou você está f****. Sério, o livro é isso ai com algumas evidências suportando os argumentos. Quer aprender? quer ficar forte? quer emagrecer? quer reduzir as chances de desenvolver Alzheimer? a resposta inclui uma boa noite de sono. O livro é meio longo e repetitivo, mas suporta bem os argumentos feitos.
+* The most important thing
+Livro sobre investimentos que me parece como uma sequência lógica do "Fooled by Randomness" do Taleb. Realmente, como o título diz, trata do que é mais importante em investimentos. Principalmente da relação risco/retorno que muitas vezes é deixada de lado.
+* The basic laws of human stupidity
+Li esse livro quando vi que o Taleb escreveu um prefácio sobre ele. No prefácio o Taleb faz um resumo do livro e comenta suas leis. O livro é curto, 60 páginas, e tem um tom cômico/sarcástico. Uma lei interessante é que a proporção de gente estupida é invariante a classes social, nível intelectual, localização geográfica. Qual a lógica por trás dessa lei? se é que existe. Taleb propõem uma explicação interessante sob uma ótica evolutiva que infere a partir do título em italiano "Alegro ma non troppo" . Essa expressão italiana é utilizada na música e significa "rápido mas nem tanto". Dai o Taleb conclui que essa proporção fixa de estúpidos é atribuída à natureza querendo desacelerar o progresso evitando as sequelas e traumas de uma expansão desenfreada. Brilhante e com um tom de humor que aprecio. Outro ponto interessante discutido no livro: qual é pior? um bandido ou um estúpido? por incrível que pareça a pessoa estúpida gera um saldo líquido negativo para a coletividade, enquanto o saldo líquido gerado pelo bandido é zero.
+* This is water
+Ideias profundas e brilhantes.
+* The hungry brain
+Livro tem uma abordagem bem científica sobre questões nutricionais. Achei interessante para entender um pouco mais a fundo o comportamento do nosso corpo. O livro explica com certo detalhes os processos hormonais que estão envolvidos no nosso metabolismo.

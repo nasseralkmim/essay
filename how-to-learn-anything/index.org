@@ -1,0 +1,43 @@
+#+title: How to learn anything
+#+date: <2021-06-25 Fri>
+#+author: Nasser Alkmim
+#+draft: t
+#+toc: t
+#+tags[]: essays learning 
+* Introduction
+How approach learning in an efficient manner.
+
+#+begin_quote
+“If you wish to make an apple pie from scratch, you must first invent the universe” -- Carls Sagan
+#+end_quote
+
+I see a link between this quote and explaining how to learn.
+Before talking about how to learn we need first delve into what it means to learn.
+
+
+* What it means to "learn something?"
+* Difference between going to class and studying?
+* How to read?
+Start with the why.
+
+Read a little, formulate a question, look for the answer.
+
+The act of looking for the answer will create a stimulus for concentration.
+
+* How note-taking and learning is related?
+* Via negativa and learning concepts
+** Dairy example
+
+What is yogurt, cheese and skyr?
+
+Yogurt is milk cultured (bacteria) then fermented.
+Greek yogurt also strains the liquid to make it thicker.
+
+Skyr is made from milk without fat, sub product from making butter.
+To this is added cultured from a previous batch and rennet to start formation of curds.
+The whey part (liquid part after curds are formed) is then drained to result in skyr.
+
+Why skyr is not yogurt?
+In the skyr production there is also yeast together with bacteria.
+Yogurt uses only bacteria.
+

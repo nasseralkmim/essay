@@ -1,0 +1,12 @@
+#+title: Remote workflow with Emacs
+#+date: <2021-08-06 Fri>
+#+lastmod: 2021-08-06 08:35:42
+#+author: Nasser Alkmim
+#+draft: t
+#+toc: t
+#+tags[]: tools 
+* What the hell is =TRAMP=?
+* Unleashing the power of =Dired=
+* =org-babel= *magic*
+* Dotfiles and =stow=
+

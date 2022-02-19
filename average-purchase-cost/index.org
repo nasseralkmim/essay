@@ -1,0 +1,10 @@
+#+title: Average purchase cost of an asset
+#+date: <2021-07-02 Fri>
+#+author: Nasser Alkmim
+#+draft: t
+#+toc: t
+#+tags[]: finance
+In this post I try to explain how to compute the correct way average purchase cost of an asset.
+* The usual way
+
+

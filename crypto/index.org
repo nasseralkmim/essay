@@ -1,0 +1,27 @@
+#+title: Crypto
+#+date: <2021-02-10 Wed>
+#+author: Nasser Alkmim
+#+email: nasser.alkmim@gmail.com
+#+draft: t
+#+tags[]: finance crypto
+* Crypto as an asset
+
+1. no income (like stocks or bonds)
+2. no utility (currency as means of payment)
+
+* Crypto as an alternative to credit
+*** What is credit?
+
+One of the key features of crypto is its manufactured scarcity.
+Whereas current fiat money can be created by the central bank expansion of its balance sheet (increasing both assets and liabilities).
+
+#+begin_quote
+[...] modern society is constructed as a web of interconnected and overlapping promises to pay [...] --- Perry Mehrling
+#+end_quote
+
+Modern society as Mehrling puts is created through credit.
+
+
+* References
+
+1. [[http://sites.bu.edu/perry/2017/09/29/cryptos-fear-credit/][Cryptos Fear Credit | Perry G Mehrling]]

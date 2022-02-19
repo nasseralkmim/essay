@@ -1,0 +1,13 @@
+#+title: Coffee collection
+#+date: <2021-06-19 Sat>
+#+author: Nasser Alkmim
+#+draft: t
+#+toc: t
+#+tags[]: coffee favorites
+* Regional flavors
+
+
+#+DOWNLOADED: screenshot @ 2021-06-19 09:06:50
+#+attr_html: :width 350px
+[[file:Regional_flavors/2021-06-19_09-06-50_screenshot.png]]
+

@@ -1,0 +1,27 @@
+#+title: Passive investing and price discovery in the market
+#+date: <2021-01-16 Sat>
+#+author: Nasser Alkmim
+#+email: nasser.alkmim@gmail.com
+#+draft: t
+#+tags[]: essays finance investing
+* Passive investing
+* Price discovery in a passive market
+* Passive monopoly
+
+#+begin_quote
+RobinWigglesworth
+Muppet I did, and he is pretty unconcerned. He reckons we could
+approach 90% passive and we might not notice any issues, and that will
+take a long long time.. He points out - rightly - that there are
+plenty of companies that are mostly owned by the founder or parent
+company, but no one thinks that price discovery is materially
+impaired. But he IS concerned at the industry's increasing
+concentration. Given the power of incumbency and advantages of scale,
+the big three are likely to only get bigger, so this issue will become
+bigger as well.
+#+end_quote
+
+* References
+1. [[https://www.ft.com/content/807909e2-0322-11e9-9d01-cd4d49afbbe3][Subscribe to read | Financial Times]]
+2. [[http://www.philosophicaleconomics.com/2016/05/indexville/][The Value of Active Management: A Journey Into Indexville | PHILOSOPHICAL ECO...]]
+3. [[https://www.barrons.com/articles/structured-notes-can-new-etfs-make-them-actually-work-for-investors-1543612302][Structured Notes: Can New ETFs Make Them Actually Work for Investors? | Barron's]]

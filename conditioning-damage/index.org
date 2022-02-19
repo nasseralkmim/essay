@@ -1,0 +1,677 @@
+#+title: Eigenvalues and condition number
+#+date: <2021-06-09 Wed>
+#+lastmod: 2021-09-17 09:57:21
+#+author: Nasser Alkmim
+#+toc: t
+#+draft: t
+#+tags[]: python linear-algebra
+* Objective?
+1. find the eigenvalues of the system matrix during the solution procedure of a specific nonlinear problem.
+* Expected results?
+1. eigenvalue distribution at each time step
+   1. particularly the small eigenvalues.
+2. condition number evolution through time steps.
+3. ratio between maximum and minimum eigenvalues (absolute value).
+   1. check its relation with the condition number.
+4. reaction force over time compared with condition number.
+* Why?
+The condition number is related to convergence properties of Krylov subspace methods.
+
+Preconditioning improves convergence by clustering eigenvalues and hence reduces the condition number.
+
+If we know how the nonlinear behavior affects the eigenvalues we can use this information in the preconditioning process.
+
+* Analysis of system matrix
+:PROPERTIES:
+:header-args:python: :session analysis
+:header-args:shell: :dir ./analysis
+:END:
+** Description
+:PROPERTIES:
+:ID:       bea284b9-3f3f-4a20-bac4-356424f15e62
+:END:
+:BACKLINKS:
+[2021-08-02 Mon 15:12] <- [[id:78ce7970-b155-4ffe-aea7-30b29658363a][Problem description]]
+:END:
+
+A rectangular domain size 200x50.
+
+With bottom nodes fixed in the y-direction and the leftmost node fixed in the x-direction.
+
+The load is a specified displacement on the top face of -5 in the y-direction.
+Resulting in compression of the model.
+
+The material model used is the gradient-enhanced micropolar concrete damage-plasticity (GMCDP).
+This model extends on the classic concrete damage-plasticity (CPD) model and attempts to provide mesh-independent behavior when non-associative plastic flow rule is used.
+
+The element used is a the GCCPE8R.
+
+
+** Damage evolution
+
+# convert -delay 5 damage.0*.png -layers optimizePlus damage2.gif
+
+[[file:analysis/damage.gif]]
+
+
+
+** Eigenvalue distribution
+
+With this analysis we want to know if the eigenvalues at each time step are concentrated or spread apart.
+A clustered eigenvalue range is associated with good convergence (specially).
+
+
+#+begin_src python
+import matplotlib.pyplot as plt
+import matplotlib
+matplotlib.style.use('ggplot')
+import numpy as np
+import pandas as pd
+
+fig, ax = plt.subplots()
+
+time_steps = [1, 25, 50, 100]
+df = pd.DataFrame(np.loadtxt("analysis/eigvals_numpy.txt").T)
+for t in time_steps:
+    df[t].plot.kde(ax=ax, label=f't={t}')
+ax.legend()
+ax.set_xlabel('eigenvalues')
+print('Number of eigenvalues, number of time steps: ', df.shape)
+#+end_src
+
+#+RESULTS:
+:RESULTS:
+: Number of eigenvalues, number of time steps:  (5204, 101)
+[[file:./jupyter/f2c595379f4292adf8383abf196d4f88788b4379.png]]
+:END:
+
+Remarks:
+1. The density with =kde= (kernel density estimation) approximates the distribution of the variable.
+   1. the distribution represents the relative frequency of appearance of a particular value.
+   2. the density is related with the probability of the random variable assuming a value in a specific range, this probability is given by the area under the density curve.
+   3. we can see the from the distribution that the eigenvalues concentrate around 0, however there are some _very extreme values_.
+
+** Eigenvalue histogram
+
+A histogram organizes data in specific ranges.
+The goal is to set a small range =[-lim, lim]=, where we want to see if there is an eigenvalue of on this range. 
+
+On this range, the histogram function subdivides it automatically in _10 bins_.
+If during a time step there are an eigenvalues in the range =[-lim, lim]= then plot how many in each bin.
+However, If there is none, then drop the column referring to this time step with =dropna()=.
+
+#+begin_src python 
+df = pd.DataFrame(np.loadtxt("analysis/eigvals_numpy.txt").T)
+lim = 0.1
+print("Range limited by: ", lim)
+ax = df[df.abs() <= lim].dropna(axis=1, how="all").hist(
+    range=(-lim, lim), figsize=(17, 12))
+ax[-1][0].set_ylabel('absolute frequency')
+ax[-1][0].set_xlabel('eigenvalues')
+#+end_src
+
+#+RESULTS:
+:RESULTS:
+: Range limited by:  0.1
+[[file:./jupyter/f96416ae4da8e23d1c04c77b604c14353ad49112.png]]
+:END:
+Remarks:
+1. At those time steps, there is one eigenvalue in the range =[-lim, lim]=.
+2. During the beginning of formation of shear band, close to step 16 we can notice:
+   1. the system getting close of being singular (no inverse, no single solution, determinant equal to zero, eigenvalue close to zero).
+3. Also long after the shear bands formed, steps 90-100, the minimum eigenvalue got very small as well.
+
+** Eigenvalues ratio
+
+#+begin_src python 
+fig, ax = plt.subplots()
+eigvals = pd.DataFrame(np.loadtxt("analysis/eigvals_numpy.txt").T)
+eigen_ratio = eigvals.abs().max() / eigvals.abs().min()
+eigen_ratio.plot(ax=ax, label=r'max $\lambda$ / min $\lambda$')
+eigvals.abs().min().plot(ax=ax, secondary_y=True,
+                      label=r'min $\lambda$')
+ax.set_xlabel('Time step')
+ax.set_ylabel(r'max $\lambda$ / min $\lambda$')
+ax.right_ax.legend()
+ax.right_ax.set_ylabel(r'min $\lambda$')
+ax.legend()
+#+end_src
+
+#+RESULTS:
+[[file:./jupyter/ea6b88b5d362497c96c7b43a0220e13d2d93f9ae.png]]
+   
+Remarks:
+1. At time step 20 the eigenvalues get very small (absolute value).
+2. After the formation of the shear bands, at around step 20, the minimum eigenvalue returns to around 1,
+   1. however, after a while, around step 55, the minimum eigenvalue start to decrease again.
+   2. this phenomena is not captured by the condition number (see next section).
+      
+** Condition number and eigenvalue ratio
+
+#+begin_src python
+fig, ax = plt.subplots()
+
+eigen_ratio.plot(ax=ax, label=r'max $\lambda$ / min $\lambda$', secondary_y=True)
+
+df = pd.DataFrame(np.loadtxt("analysis/cond_AAinv.txt").T)
+df[0].plot(ax=ax, label='cond')
+
+ax.set_xlabel('Time step')
+ax.set_ylabel('Condition number')
+ax.right_ax.set_ylabel(r'max $\lambda$ / min $\lambda$')
+ax.right_ax.legend()
+ax.legend(loc='upper right')
+#+end_src
+
+#+RESULTS:
+[[file:./jupyter/c6c385533d4aeefae457e07fd66532d677f3710c.png]]
+
+Remarks:
+1. The system is not symmetric, hence the condition number is not the same as the eigenvalues ratio.
+   1. For general square matrices, the singular value is the square route of the eigenvalues of the Gram matrix ($A^T A$), so there still some relation between them.
+2. However, this ratio somewhat captures the phenomena.
+3. At around step 55, the minimum eigenvalue starts to get smaller again, making the eigenvalue ration larger and larger.
+   1. this is not captured by the condition number.
+
+** Condition number and reaction force
+
+Computed with the definition $\kappa = \lVert A \rvert \lVert A^{-1} \rVert$.
+
+#+begin_src python :var folder='/mnt/c/Users/c8441205/OneDrive/Academy/PhD/writings/topic-introduction/img'
+fig, ax = plt.subplots()
+
+df = pd.DataFrame(np.loadtxt("analysis/cond_AAinv.txt").T)
+df[0].plot(ax=ax, label='Condition')
+
+df['react'] = pd.DataFrame(np.loadtxt("analysis/RF.csv")[:, 1])
+df['react'].plot(ax=ax, label='Reaction', secondary_y=True) 
+
+ax.set_xlabel('Time step')
+ax.set_ylabel('Condition number')
+ax.right_ax.set_ylabel('Reaction force')
+ax.right_ax.grid(False)
+ax.legend(bbox_to_anchor=(0.75, 1))
+ax.right_ax.legend()
+fig.savefig(f'{folder}/cond_react-0.pdf', dpi=300, bbox_inches='tight')
+#+end_src
+
+#+RESULTS:
+[[file:./jupyter/03d52e7dd8d70a3aa9875dca4559a2bc3173acc5.png]]
+
+
+
+Remarks:
+1. The system becomes close to be singular around the time where the shear band is formed.
+2. The function used to compute the norm uses the Frobenius norm, =scipy.sparse.linalg.norm=, and it does not have a 2-norm implemented.
+   1. from my experiences the difference between the two are small.
+
+
+#+begin_src python :var folder="/home/nasser/SeaDrive/My Libraries/PhD/writings/topic-introduction/img/condition"
+import matplotlib.pyplot as plt
+import matplotlib
+matplotlib.style.use('ggplot')
+import numpy as np
+import pandas as pd
+fig, ax = plt.subplots()
+
+df = pd.DataFrame(np.loadtxt("analysis/cond_AAinv.txt").T)
+df['react'] = pd.DataFrame(np.loadtxt("analysis/RF.csv")[:, 1])
+for i in range(101):
+    ax.clear()
+    df[0][0:i].plot(ax=ax, label='Condition', color='C0')
+
+    df['react'][0:i].plot(ax=ax, label='Reaction', secondary_y=True, color='C1') 
+
+    ax.set_xlabel('Time step')
+    ax.set_ylabel(r'Condition number')
+    ax.right_ax.set_ylabel('Reaction force')
+    ax.set_xlim(-2, 100)
+    ax.set_ylim(-10, 1.2e10)
+    ax.right_ax.set_ylim(0, 3200)
+    fig.legend(['Condition number $\kappa = \Vert A \Vert \Vert A^{-1} \Vert$ ', 'Reaction force top face'])
+    fig.savefig(f'{folder}/cond_react-{i}.pdf', dpi=300, bbox_inches='tight')
+#+end_src
+
+#+RESULTS:
+[[file:./jupyter/119e485979fa3338eeefe4aeae5c41367b5d3a4b.png]]
+
+
+** Damage variable and minimum eigenvalue
+
+# =AlphaP= is the internal hardening variable (strain like), it controls evolution of the yield surface and after the peak it evolves further.
+Plotting the damage variable again the minimum eigenvalue and the ratio between maximum and minimum eigenvalue.
+The damage variable is an internal variable, for each integration point.
+In order to get one damage variable per time step, I got the maximum $\omega$ per element and save it to a file.
+Then, from all elements I selected the maximum.
+
+#+begin_src python
+fig, ax = plt.subplots()
+df = pd.DataFrame(np.loadtxt("analysis/meanOmega.csv"))
+time_steps, num_elem = df.shape 
+print(f'num ele {num_elem - 1} and num of steps {time_steps - 1}')
+df['Omega'] = df.iloc[:, 1:].max(axis=1)
+df['Omega'].plot(secondary_y=True)
+
+eigen_ratio.plot(ax=ax, label=r'max $\lambda$ / min $\lambda$')
+eigvals.abs().min().plot(ax=ax, secondary_y=True,
+                      label=r'min $\lambda$')
+
+ax.set_xlabel('Time step')
+ax.right_ax.legend(loc='center right')
+ax.right_ax.set_ylabel(r'max $\omega$, min $\lambda$')
+ax.legend()
+#+end_src
+
+#+RESULTS:
+:RESULTS:
+: num ele 400 and num of steps 101
+[[file:./jupyter/f419426f71d6738e15d7b02a84b68216830a277b.png]]
+:END:
+Remarks:
+1. When damage starts, we see the beginning of plastic behavior and the minimum eigenvalue gets close to zero.
+2. At around step 55, as the damage variable gets closer to 1, the minim eigenvalue decreases.
+   1. this because as the damage variable approaches 1, the system becomes singular (no solution, no inverse, determinant equal zero).
+   2. the minimum eigenvalue captures this effect.
+
+* References
+
+- Elman, H. C., Silvester, D. J., & Wathen, A. J. (). Finite elements
+  and fast iterative solvers: with applications in incompressible
+  fluid dynamics. : Oxford University Press.
+
+  
+* Methods                                                          :noexport:
+:PROPERTIES:
+:header-args:python: :session methods
+:END:
+** Strategy
+1. setup a simple test problem in edelweissFE.
+2. implement the function to compute the eigenvalue of the system matrix after each Newton step (outer).
+   1. <2021-07-16 Fri> using =scipy.sparse.linalg.eigs=
+3. implement a visualization routine
+   1. eigenvalue as nodal value (average between dofs)
+   2. eigenvalue condition number (max/min) over time step
+4. run analysis on more elaborate.
+** Eigenvalues
+If all eigenvalues are different then all eigenvectors are linearly independent.
+
+When we apply the boundary conditions, the diagonal value is replaced with 1.
+Hence, the degrees of freedom with Dirichlet boundary condition will generate the same eigenvalues.
+
+** =numpy.linalg.eig=
+
+Uses LAPACK routines.
+
+Remarks:
+1. It computes all eigenvalues and returns even repeated ones.
+   1. rank, number of LI columns, number of non zero eigenvalues.
+2. function =np.linalg.eigvals()= computes only eigenvalues.
+
+#+begin_src python
+import numpy as np
+
+D = np.diag((19., 17, 1, 3, 2, 1, 2, 0, 0, 0))
+eigvals, _ = np.linalg.eig(D)
+print(eigvals)
+print(np.linalg.eigvals(D))
+print('Rank of D: ', np.linalg.matrix_rank(D))
+#+end_src
+
+#+RESULTS:
+: [19. 17.  1.  3.  2.  1.  2.  0.  0.  0.]
+: [19. 17.  1.  3.  2.  1.  2.  0.  0.  0.]
+: Rank of D:  7
+
+
+** =scipy.linalg.eig=
+
+Similar to =numpy=.
+
+Remarks:
+1. Even if not complex, it returns in complex form.
+
+
+#+begin_src python
+from scipy.linalg import eig
+
+eigvals, _ = eig(D)
+print(eigvals)
+#+end_src
+
+#+RESULTS:
+: [19.+0.j 17.+0.j  1.+0.j  3.+0.j  2.+0.j  1.+0.j  2.+0.j  0.+0.j  0.+0.j
+:   0.+0.j]
+
+** =scipy.sparse.linalg.eigs=
+
+For sparse matrix, there is a =scipy= implementation that uses ARPACK.
+It uses implicitly restarted Arnoldi Method.
+
+
+Remarks:
+1. Number of _nonzero_ eigenvalues is equal the rank of matrix. 
+   1. full rank when matrix has all non zero eigenvalues.
+   2. if the matrix has 1 zero eigenvalue, it is singular (no inverse, 0 determinant).
+2. =scipy.sparse.linalg.eigs= has a default parameter that limits the number of eigenvalues to =k=6=.
+   1. [[https://docs.scipy.org/doc/scipy/reference/generated/scipy.sparse.linalg.eigs.html][scipy.sparse.linalg.eigs — SciPy v1.7.0 Manual]]
+
+#+begin_src python
+from scipy.sparse.linalg import eigs
+from scipy.sparse import random, csr_matrix
+np.set_printoptions(2)
+np.random.seed(2)
+
+Ds = csr_matrix(D)
+print(Ds)
+print(D.shape[0])
+rank = np.linalg.matrix_rank(D)
+print('Rank of D: ', rank)
+eigvals, _ = eigs(Ds, k=rank)
+print(eigvals)
+print(eigvals.shape)
+#+end_src
+
+#+RESULTS:
+#+begin_example
+  (0, 0)	19.0
+  (1, 1)	17.0
+  (2, 2)	1.0
+  (3, 3)	3.0
+  (4, 4)	2.0
+  (5, 5)	1.0
+  (6, 6)	2.0
+10
+Rank of D:  7
+[19.+0.j 17.+0.j  3.+0.j  2.+0.j  1.+0.j  1.+0.j  2.+0.j]
+(7,)
+#+end_example
+** Comparing
+
+Remarks:
+1. Performance is not clear.
+
+#+begin_src python
+from scipy.sparse import random
+import scipy.linalg as sc
+import scipy.sparse.linalg as scs
+import time
+np.set_printoptions(suppress=True)
+
+np.random.seed(2)
+X = random(1000, 1000, density=0.1)
+Xdense = X.toarray()
+
+%timeit eva, eve = sc.eig(Xdense) 
+print('scipy eig')
+%timeit eva, eve = scs.eigs(X) 
+print('sparse eigs')
+%timeit eva, eve = np.linalg.eig(Xdense) 
+print('numpy eig')
+%timeit eva = np.linalg.eigvals(Xdense)
+print('numpy only eigvals')
+#+end_src
+
+#+RESULTS:
+#+begin_example
+The slowest run took 4.32 times longer than the fastest. This could mean that an intermediate result is being cached.
+7.29 s ± 2.6 s per loop (mean ± std. dev. of 7 runs, 1 loop each)
+scipy eig
+The slowest run took 4.03 times longer than the fastest. This could mean that an intermediate result is being cached.
+1.04 s ± 606 ms per loop (mean ± std. dev. of 7 runs, 1 loop each)
+sparse eigs
+2.08 s ± 282 ms per loop (mean ± std. dev. of 7 runs, 1 loop each)
+numpy eig
+1.35 s ± 238 ms per loop (mean ± std. dev. of 7 runs, 1 loop each)
+numpy only eigvals
+#+end_example
+
+
+** Output treatment
+
+If using the scipy implementation, in order to save into file need to extract the real part first.
+
+#+begin_src python
+open("eval.txt", 'w').close()     # fresh file
+open("eval_np.txt", 'w').close()     # fresh file
+for i in [0, 1]:
+    np.random.seed(i)
+    X = random(10, 10, density=0.1)
+    eva, eve = eigs(X)
+    eva_np = np.linalg.eigvals(X.toarray())
+    print(eva)
+    print(eva_np)
+    with open('eval.txt', 'a') as f:
+        np.savetxt(f, [np.real(eva)], fmt='%.3e')
+    with open('eval_np.txt', 'a') as f:
+        np.savetxt(f, [np.real(eva_np)], fmt='%.3e')
+print(np.loadtxt('eval.txt'))
+
+print(np.loadtxt('eval_np.txt'))
+#+end_src
+
+#+RESULTS:
+#+begin_example
+[ 0.97676109+0.j         -0.00000049+0.00000085j -0.00000049-0.00000085j
+  0.00000098+0.j         -0.        +0.j         -0.        -0.j        ]
+[0.         0.         0.         0.         0.         0.
+ 0.97676109 0.         0.         0.        ]
+[ 0.95588935+0.j         -0.08174288+0.38677177j -0.08174288-0.38677177j
+  0.00000042+0.00000073j  0.00000042-0.00000073j -0.00000084+0.j        ]
+[ 0.        +0.j         -0.08174288+0.38677177j -0.08174288-0.38677177j
+  0.95588935+0.j          0.        +0.j          0.        +0.j
+  0.        +0.j          0.        +0.j          0.        +0.j
+  0.        +0.j        ]
+[[ 0.9768     -0.00000049 -0.00000049  0.00000098 -0.         -0.        ]
+ [ 0.9559     -0.08174    -0.08174     0.00000042  0.00000042 -0.00000084]]
+[[ 0.       0.       0.       0.       0.       0.       0.9768   0.
+   0.       0.     ]
+ [ 0.      -0.08174 -0.08174  0.9559   0.       0.       0.       0.
+   0.       0.     ]]
+#+end_example
+
+** Eigenvalue distribution
+
+#+begin_src python
+import pandas as pd
+eigvals = np.loadtxt('eval.txt')
+df = pd.DataFrame(eigvals.T)
+print(np.shape(eigvals))
+print(df)
+df.hist() 
+#+end_src
+
+#+RESULTS:
+:RESULTS:
+: (2, 6)
+:               0             1
+: 0  9.768000e-01  9.559000e-01
+: 1  9.716000e-07 -8.174000e-02
+: 2 -4.858000e-07 -8.174000e-02
+: 3 -4.858000e-07 -7.207000e-07
+: 4 -4.747000e-19  3.604000e-07
+: 5 -4.747000e-19  3.604000e-07
+[[file:./jupyter/b7f77fe59ef8a65ab815e9e5469e44465a94bac6.png]]
+:END:
+** Max and min eigen values
+
+#+begin_src python
+print(df)
+print(df.max())
+cn = df[df > 0].max().abs()/df[df > 0].min().abs()
+print(cn)
+#+end_src
+
+#+RESULTS:
+#+begin_example
+              0             1
+0  9.768000e-01  9.559000e-01
+1  9.716000e-07 -8.174000e-02
+2 -4.858000e-07 -8.174000e-02
+3 -4.858000e-07 -7.207000e-07
+4 -4.747000e-19  3.604000e-07
+5 -4.747000e-19  3.604000e-07
+0    0.9768
+1    0.9559
+dtype: float64
+0    1.005352e+06
+1    2.652331e+06
+dtype: float64
+#+end_example
+
+** Condition number
+
+Condition number is defined as  $\kappa = \lVert A \rVert \lVert A^{-1} \rVert$.
+The norm used is the induced 2-norm (different from Frobenious).
+This norm is defined as $\lVert A \rVert_2 = \max \lVert A x\rVert_2 \lVert x \rVert_2$, where $\lVert x \rVert_2$ is the Euclidian norm of a vector.
+
+Remarks:
+1. Symmetric matrix the condition number is equal the ratio between the max and min eigenvalue.
+2. default numpy norm is Frobenius.
+   1. however to compute the condition number we need the 2-norm for the matrix.
+   2. they yield similar results, in this case.
+
+#+begin_src python
+np.random.seed(1)
+A = np.random.random((3, 3))
+A = A.T @ A                     # symmetric
+print(A)
+A_eval = np.linalg.eigvals(A)
+print('symm => eigenvalues>0: ', A_eval > 0)               # positive definite
+print('Condition number: ', np.linalg.cond(A))
+print('Eigenvalue ratio: ', A_eval.max() / A_eval.min())
+print('Condition number Frobenius: ', np.linalg.norm(A) * np.linalg.norm(np.linalg.inv(A)))
+print('Condition number 2-Norm: ', np.linalg.norm(A, ord=2) * np.linalg.norm(np.linalg.inv(A), ord=2))
+#+end_src
+
+#+RESULTS:
+: [[0.3  0.41 0.1 ]
+:  [0.41 0.66 0.15]
+:  [0.1  0.15 0.17]]
+: symm => eigenvalues>0:  [ True  True  True]
+: Condition number:  29.434632646466746
+: Eigenvalue ratio:  29.43463264646682
+: Condition number Frobenius:  30.725682754857058
+: Condition number 2-Norm:  29.434632646466817
+
+** Function
+*** Eigenvalues distribution 
+
+#+begin_src python
+def eigenvalues_dist(files):
+    """plot eigenvalues dist from data in files list"""
+    fig, ax = plt.subplots()
+    df = pd.DataFrame()
+    eigvals = np.loadtxt(files)
+    for i, ev in enumerate(eigvals):
+        df[i] = ev 
+        df[i].hist(ax=ax, label=i) 
+        ax.set_xlabel("Eigenvalues")
+        ax.legend()
+eigenvalues_dist('simple-test/eigvals.txt')
+#+end_src
+
+#+RESULTS:
+[[file:./jupyter/5bf544267213f50d525a0a568bb340713351bc6e.png]]
+
+
+
+*** Condition number
+
+#+begin_src python
+def condition_number(files):
+    """Plot condition number evolution"""
+    fig, ax = plt.subplots()
+    
+    eigvals = np.loadtxt(files)
+    cn = []
+    for i, ev in enumerate(eigvals):
+        cn.append(ev.max() / ev.min())
+    ax.plot(cn)
+    ax.set_xlabel("Time step")
+    ax.set_ylabel("Condition number")
+    
+condition_number('simple-test/eigvals.txt')
+#+end_src
+
+#+RESULTS:
+:RESULTS:
+: [2.802157391517529, 2.8119637165972056]
+[[file:./jupyter/25676983da98371575be0ed3ea335a0b1d2943d8.png]]
+:END:
+
+
+* Prototype                                                        :noexport:
+:PROPERTIES:
+:header-args:python: :session simple
+:END:
+** Description
+Single element with 8 nodes and 3 degrees of freedom per node.
+
+
+#+DOWNLOADED: screenshot @ 2021-06-09 16:24:37
+#+attr_html: :width 350px
+[[file:Results/2021-06-09_16-24-37_screenshot.png]]
+
+** Running edelweissFE
+
+=edelweissfe= is an alias to =python= in the correct environment (with all the dependencies) and to the =edelweissfe.py= script.
+
+#+begin_src shell :shebang #!/bin/bash -i
+cd simple-test
+rm eigvals.txt
+edelweissfe simple.inp
+#+end_src
+
+#+RESULTS:
+#+begin_example
+ total size of eq. system: 24                                                                feCore 
++--------------------------------------------------------------------------------------------------+
+   Converting elSet all to a nSet due to requested nodal results                       displacement 
+   Using 12 threads                                                                     NISTPSolver 
++--------------------------------------------------------------------------------------------------+
+   increment 0: 0.000000, 0.000000; time   0.000000 to   0.000000                       NISTPSolver 
+           displacement                                                                 NISTPSolver 
+      ||R||∞      ||ddU||∞                                                              NISTPSolver 
+      0.00e+00✓   0.00e+00✓                                                             NISTPSolver 
+1
+   Converged in 1 iteration(s)                                                          NISTPSolver 
++--------------------------------------------------------------------------------------------------+
+   increment 1: 1.000000, 1.000000; time   0.000000 to   1.000000                       NISTPSolver 
+           displacement                                                                 NISTPSolver 
+      ||R||∞      ||ddU||∞                                                              NISTPSolver 
+      7.17e-16✓   1.00e-02                                                              NISTPSolver 
+      2.64e-16✓   2.48e-18✓                                                             NISTPSolver 
+2
+   Converged in 2 iteration(s)                                                          NISTPSolver 
+   +-------------------------------------+-------------------------------------+        NISTPSolver 
+   |Time in elements                     |     0.0067s                         |        NISTPSolver 
+   |Time in distributed loads            |     0.0001s                         |        NISTPSolver 
+   |Time in body forces                  |     0.0000s                         |        NISTPSolver 
+   |Time in constraints                  |     0.0000s                         |        NISTPSolver 
+   |Time in dirichlet R                  |     0.0001s                         |        NISTPSolver 
+   |Time in CSR generation               |     0.0005s                         |        NISTPSolver 
+   |Time in dirichlet K                  |     0.0001s                         |        NISTPSolver 
+   |Time in linear solve                 |     0.0120s                         |        NISTPSolver 
+   |Time in convergence check            |     0.0005s                         |        NISTPSolver 
+   +-------------------------------------+-------------------------------------+        NISTPSolver 
+ +--------------------------------------+--------------------------------------+                  feCore 
+ |Step computation time                 |    0.0603s                           |                  feCore 
+ +--------------------------------------+--------------------------------------+                  feCore 
+ |Job computation time                     |    0.0603s                              |                 feCore 
+ +-----------------------------------------+-----------------------------------------+                 feCore 
+#+end_example
+
+** Checking on paraview
+
+#+begin_src shell
+paraview.exe simple-test/test.case
+#+end_src
+
+
+** Deformed shape
+
+
+#+DOWNLOADED: screenshot @ 2021-06-11 17:31:28
+#+attr_html: :width 350px
+[[file:Results/2021-06-11_17-31-28_screenshot.png]]
+

@@ -1,0 +1,17 @@
+#+options: ':nil *:t -:t ::t <:t H:3 \n:nil ^:t arch:headline
+#+options: author:t broken-links:nil c:nil creator:nil
+#+options: d:(not "LOGBOOK") date:t e:t email:nil f:t inline:t num:t
+#+options: p:nil pri:nil prop:nil stat:t tags:t tasks:t tex:t
+#+options: timestamp:t title:t toc:t todo:t |:t
+#+title: Hot money impact on EM 
+#+date: <2021-01-21 Thu>
+#+author: Nasser Alkmim
+#+email: nasser.alkmim@gmail.com
+#+language: en
+#+select_tags: export
+#+exclude_tags: noexport
+#+creator: Emacs 27.1 (Org mode 9.4.3)
+#+draft: t
+#+tags[]: economy
+* References
+1. Hot Money Flows, Commodity Price Cycles, and Financial Repression in the US and the People’s Republic of China: The Consequences of Near Zero US Interest Rates. Ronald McKinnon and Zhao Liu. 2013.

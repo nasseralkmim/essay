@@ -1,0 +1,373 @@
+#+title: 2020 Books review
+#+date: <2020-12-17 Thu>
+#+author: Nasser Alkmim
+#+email: nasser.alkmim@gmail.com
+#+tags[]: books
+#+toc: t
+* Books list
+#+begin_export html
+<img src="71H+DyKPwyL._AC_UY218_.jpg" style="display: revert; max-width: fit-content;">
+<img src="41-m35gRb3L._AC_UY218_.jpg" style="display: revert; max-width: fit-content;">
+<img src="" style="display: revert; max-width: fit-content;">
+<img src="81A0MWyFUeL._AC_UY218_.jpg" style="display: revert; max-width: fit-content;">
+<img src="71tET8K-+yL._AC_UY218_.jpg" style="display: revert; max-width: fit-content;">
+<img src="71RJTTcMuVL._AC_UY218_.jpg" style="display: revert; max-width: fit-content;">
+<img src="91I38tbJL6L._AC_UY218_.jpg" style="display: revert; max-width: fit-content; width: 146px" >
+<img src="61ogVbgK7sL._AC_UY218_.jpg" style="display: revert; max-width: fit-content; width: 146px" >
+<img src="51-sQb9AZWL._SX323_BO1,204,203,200_.jpg" style="display: revert; max-width: fit-content; width: 146px;" >
+<img src="71UhBrBaSJL._AC_UY218_.jpg" style="display: revert; max-width: fit-content; width: 146px;" >
+<img src="" style="display: revert; max-width: fit-content; width: 146px;" >
+<img src="710glEdDlfL._AC_UY218_.jpg" style="display: revert; max-width: fit-content; width: 146px;" >
+<img src="7127hsR6OyL._AC_UL320_.jpg" style="display: revert; max-width: fit-content; width: 146px;" >
+<img src="61R9B9qIw1L._AC_UL320_.jpg" style="display: revert; max-width: fit-content; width: 146px;" >
+<img src="41CMC4k3Y6L._AC_UY218_.jpg" style="display: revert; max-width: fit-content; width: 146px;" >
+<img src="715Ez1+4UtL._AC_UY218_.jpg" style="display: revert; max-width: fit-content; width: 146px;" >
+<img src="81Gj5-AvDCL._AC_UY218_.jpg" style="display: revert; max-width: fit-content; width: 146px;" >
+<img src="71-B5PaDmoL._AC_UL320_.jpg" style="display: revert; max-width: fit-content; width: 146px;" >
+#+end_export
+
+* Kafka on the shore
+Murakami escreve bem, não sou especialista em romances mas a forma como ele leva a narrativa realmente é cativante e te prende.
+Esse é o segundo livro que leio desse autor, e fica claro uma tendência na relação do autor com arte em geral. É muito interessante ver como a erudição do autor é projetada nós personagens quando eles discutem alguma peça musical ou literária.
+A questão do surrealismo é outro ponto a se notar, os fenômenos surreais acontecem com uma naturalidade que impressiona.
+
+* Man's search for meaning
+Valioso na parte em que descreve a psicologia das pessoas no campo de concentração e a força que a mente tem em situações difíceis.
+
+* How to take smart notes
+
+Livro muito bom sobre como nosso cérebro funciona. 
+Não se deixe enganar pelo titulo, as ideias apresentadas vão muito além de um simples tutorial prático.
+Fiquei impressionado com o nível de abstração que o autor apresentou a mecânica de anotação e processo criativo de escrever.
+* Range
+Esse é aquele livro que o autor tem uma tese e tenta te convencer que a tese tem relevância ou é valida por meio de exemplos de anedotas.
+Não aprecio muito esse tipo de livro, é estilo best seller com formula do Gladwell.
+Esse foi o primeiro livro que escutei por completo usando Google books.
+O autor fala que ser generalista pode trazer benefícios no longo prazo.
+Eu acredito nessa tese, pois nosso processo criativo parte da capacidade em  estabelecer conexões entre diferentes ideia.
+Chega um ponto que você cansa dos inúmeros exemplos que autor usa pra tentar te convencer.
+Francamente, acho que a argumentação é fraca. Mas reconheço que o autor quer apresentar uma visão contrária ao senso comum atual de focar em especialização.
+* Good economics for hard times
+Livro começa explicando mitos sobre imigração.
+As pessoas evitam incertezas, quando não saber a distribuição, as fomasas unknown unknown.
+Teoria de vantagem comparativa pra especialização da produção.
+Livro comenta das cotas.
+Livro apresenta visão sensata sobre efeito de políticas de corte de imposto e crescimento econômico.
+Corte de imposto nos ricos causa crescimento? Não há evidências paea confirmar.
+Educação causa educação? Ou o contrário? Taleb falou isso também.
+Existe uma receita para crescimento do país? Não.
+Como a China cresceu tanto? Foi porque os recursos era muito mal utilizados.
+Em quem confiar o crescimento, governo ou mercado? Ambos tem problemas, e ambos tem histórias de sucesso.
+Trickle down economics não funcionou e não funcionará.
+Inteligência artificial vai substituir planejadores financeiros.
+Winner takes all e network effect, também discutimos óleo Taleb.
+Privatização não é a solução para melhor gerenciamento de recursos.
+Só trabalhar duro vai fazer você ter mobilidade social? Nao é o que as evidências mostram. 
+Negative income tax em vez de programar de transferência de renda.
+Discute os mitos do ubi.
+* Anything you want
+Livro para se inspirar.
+Hell yeah! or no. Boa heuristics para decidir qual caminho tomar.
+Sobre a necessidade ser a mãe de todo aprendizado  combina com a ideia de que único jeito de aprender é com skin in the game.
+Delegar de mais pode ser ruim.
+* The new lombard street
+** Text book fed role
+1. Control short term interest rate
+2. Papel esquecido: gerenciar elasticidade e regidez no sistema de pagamentos inter bancário.
+
+** 2008 after LB e AIG
+1. Fed beef tornou dealer of last resort quando carregou para seu balanço os ativos do MM.
+
+** Money view
+1. Atividades diária no MM que permite o funcionamento do sistema de crédito
+
+** Liquidez
+1. Idealmente dinheiro deveria ser apenas um detalhe sobre o processo econômico produtivo.
+2. Decisões financeiras deveria ser baseadas somente no orçamento intertemporal e as necessidades imediatas de dinheiro deveriam ser irrelevantes.
+3. Mas não é assim no mundo real, e liquidez mata.
+4. O juros da economia não precifica o custo de liquidez.
+
+** BC e Taylor rule
+1. Bc somente observa os níveis de preços, inflação, para ajustar a taxa básica de juros.
+2. Taylor rule, usa a renda como parâmetro além da inflação.
+3. Não há preocupação com o mercado monetário em si. Nos últimos anos houve um grande crescimento no mercado do crédito privado.
+4. Essa metodologia tem um viés de afrouxamento, o que não foi percebido quando se estava com padrão ouro.
+
+** Conexão entre liquidez e o sistema de pagamentos
+1. Instituições capitalistas fazem negócios gerenciando inflows e outflows de dinheiro.
+2. Os bancos, particularmente, getenciam inflows e outflows que permitem o sistema de pagamentos funcionar.
+
+** Instabilidade inerente do crédito
+1. É nocivo pois a falta de um devedor perante o credor em cumprir suas obrigações pode desencadear faltas sucessivas em uma espiral.
+2. Quando um devedor falta com sua obrigações o credor fica sem renda.
+
+** Instabilidade e crescimento capitalista
+1. Crédito permite que inovadores obtenham recurso do passado na tentativa de gerar/produzir/inovar etc.
+2. Crescimento está acompanhando de instabilidade, caminham juntos.
+
+** Disciplina suprema
+1. Bancos precisam liquidar transações líquidas entre si diariamente
+2. Survival constraint minsky
+3. Bc compra títulos relaxa a survivor constraint, se vender títulos enrijece.
+
+** 3 opções para devedores vulneráveis
+1. Reduzir despesas, finito
+2. Pegar mais emprestado, finito
+3. Vender ativos, pelo preço de mercado
+4. Problemas de liquidez viram problema de solvência
+
+** Crise no ponto de vista dos bancos
+1. Demanda repentina por dinheiro
+
+** Gold standard
+1. Financiamento interno, local, para comércio internacional. Estrangeiros não querem Bill of exchange, querem ouro.
+2. Demanda estrangeira significa reduzir reservas de ouro
+3. O que ocorre se beo não consegue mais aparidade ouro libra, sai do padrão ouro..
+4. Gold dollar par ficou marcado pro Bretton woods em 1944 e acabou em 1973.
+5. Fed, após saída do padrão ouro, pode criar moeda para atender demanda externa e também demanda externa, pois o dólar é considerado reserva global.
+6. Fed não precisou manter juros alto para preservar suas reservas internacionais, não é mais ouro, é o próprio dólar no passivo.
+7. Juros altos atraem ouro de mm internacional. Fora do padrão ouro não é necessário flutuações no juros para satisfazer demanda por ouro.
+
+** Problemas do padrão ouro
+1. Flutuações nas negociações, especialmente pelo caráter sazonal da agricultura.
+2. Inelasticidade do dinheiro e rigidez no requerimento de reservas era receita para crashes.
+3. Um banco que empresta dinheiro perde reservas quando seus depósitos são transferidos para outros bancos como pagamento.
+4. Esse banco é forçado a pegar emprestado reservas para manter nível legal mínimo.
+5. Durante safra, demanda por crédito aumenta, pressionando juros pra cima. Bancos prevendo esse ciclo, mantém reservas em excesso e as emprestam no mm em NY. Diminui o juros no mm. Cria sazonalidade de juros.
+6. Crise se manifesta como dificuldade dos bancos em manter reservas mínimas.
+
+** The new lombardstreet
+1. Money market mais usado repo
+2. Bc reserves em vez de Pound e dollar em vez de gold
+3. Financiamento não é usado para possibilitar a produção de um ativo mas simplesmente para controla-lo (holding of financial asset)
+4. Em vez de o fed apenas controlar a taxa na discount window, ele controla a oferta que é usada no mercado interbancário.
+5. Bancos resolviam problema de falta de reservas emitindo uma moeda emergencial contra colateral de dívida privada.
+
+** Primary dealers
+1. Entidades que ofertam pra comprar os títulos oferecidos pelo bc sempre que ele quiser.
+
+** Money market and capital markets
+1. Private dealers se financiam no mercado monetário, funding liquidity é crucial para controle do inventário
+2. Transações de mercado representam o market liquidity como sendo a habilidade do dealer em vender suas posições.
+
+** Monetary policy mechanism before 2008
+1. Fed alterar a ffm pra cima
+2. Custo de financiamento aumenta para os dealers
+3. Induz deleaveraging prós dealers, e altera o spread
+4. Fed alterar para baixo diminui a pressão para loquidar
+5. After 2008. Valuations foram dúvidadas, haircut aumentou. Forçou deleaveraging.
+6. Private credit market o colateral usa os preços de mercado. Não usa valuations.
+7. Bc é um mm dealer de last resort porque permite que lenders e borrowers se encontrem através dele, cobrando um pouco a mais por isso.
+
+** Bancos americanos e londrinos
+1. Americanos também financiavam capital fixo e não só working capital
+2. Bancos americanos, no que se trata de liquidez diária, não precisam se preocupar tanto com liquidar os ativos (empréstimos de longo prazo) mas sim do poder de shiftability no mm.
+3. Shiftability depende de security dealers.
+4. Shiftability impõem problemas em tempos de crise quando todo mundo quer vender e poucos querem comprar.
+
+** War finance
+1. 1916 fed passou a poder emitir federal reserve notes contra treasury colateral.
+2. Dívida pública multiplicou por 25 em 2 anos.
+3. Fed absorveu 2bi de ust para distribuir.
+
+** Tentativas de retornar ao padrão ouros após ww1 e crise de 29
+1. Saída do padrão ouro na ww1
+2. Demanda por reservas eram prontamente fornecidas pelo fed e reabsorvidas quando não necessárias.
+3. Juros menos volátil e baixo acelerou a bolha de ações.
+4. Reservas flutuantes implica a não dependência dos EUA no mercado de ouro internacional.
+5. Crédito externo continuou expandindo tendo como base maiores valuations (boom).
+6. Em vez dos bancos precisaram recorrer ao mercado internacional para atender requerimentos de reservas, eles eram atendidos pelo fed. Isso reduziu volatilidade nós juros que já estavam baixos.
+7. Fed percebeu tarde, aumento no discount window não preveniu expansão do crédito fora do sistema bancário (shadow banking)
+8. No boom, bancos em NY, eram apenas "brokers". Não entendi...(using their "brokers' loans for the account of others" to channel funds to the stock market)
+9. Aumento no juros do discount window atraiu mais investidores para a bolsa...
+
+** Erros do FED em 29
+1. Fed estava disposto a emprestar, mas não contra colateral de títulos do setor privado cujo preço vinha caindo.
+2. Problemas com shadow banking, seus ativos derretendo, não conseguiam financiar eles, liquidez, ameaça a solvência. Afetou os bancos que estavam sob controle do fed.
+3. Em 31 fed aumentou taxa de desconto para reduzir saídas de ouro.
+4. Fed não monetizou ativos dos bancos por eles serem especulativos. Isso foi um erro que levou vários bancos a falência.
+
+** Before 2008 monetary policy strong rule
+1. Discount rate acima da taxa de mercado
+2. Usar omo para acomodar aumento da demanda por descontos, com isso não precisa aumenta o número de descontos e sim ativamente acomodar com omo.
+3. Fed expandia e contraia suas reservas para acomodar as flutuações sazonais da demanda por crédito.
+4. Tentativas de voltar ao padrão ouro pre ww1, prevenir que flutuações no crédito interno influencie o mercado global de ouro.
+5. 1920 controle das reservas por meio de omo.
+
+
+** Government as investment bank
+1. Intermediario entre ultimate savers e investment outlet.
+2. Período entre guerras.
+3. Fed manteve juros baixo para os títulos públicos por meio da garantia em converter em cash.
+4. Teoria de empréstimos comercial foi esquecida em detrimento do conceito de shiftability.
+5. Fed se livrou da obrigação de travar juros da diva apenas em 1951. E se livrou do controle da dívida de longo prazo, apenas bills. Shiftability de longe term maturities cabe aos dealers setor privado.
+6. Dealers privados se financiam no mercado monetário de curto prazo que o fed controla. Fed influência indiretamente shiftability de títulos de longo prazo.
+7. Conexão do money market com securities market através dos dealers. Retorna aos tempos antes da depressão.
+
+** Shiftability view e atuação do fed
+1. Shiftability significa que o fed iria estar disposto a emprestar contra qualquer colateral de forma a fornecer liquidez imediata para que obrigações sejam cumpridas. Bank act 1935. Fed suportando os dealers que em momentos de crise teriam garantia de liquidez na discount window.
+2. 1937 fed se comprometeu a intervir ativamente no mm por omo em vez de esperar bancos pedirem desconto. Fed assume papel de dealer.
+3. Shiftability se opõem ao caso de self liquidation, acho que cria uma espiral de depreciação do ativo.
+4. Fed foca em funding liquidity, suportando dealers, e indiretamente suporta market liquidity desempenhado pelos dealers.
+
+** Fed ww2
+1. Fed se tornou market maker pra ust e fixava o preço.
+2. Novo crédito ia primariamente para o governo. Setor privado apenas pagava dívida e acumulava ust.
+3. Private capital market desapareceram.
+4. Juros baixo nas bills de curto prazo fez com que ninguém do setor privado quisesse. Fed era dono de quase todas. Aumentou juros de curto prazo para recriar mm.
+5. Reconstruir o sistema de dealers no mercado de capitais privado.
+6. Fed focava em monitorar as reservas em excesso. Desenvolvimento do ffm.
+
+** Gurley and shaw
+1. New deal regulações nos bancos estava causando supressão na acumulação de capital.
+2. Novos intermediários como fundos de pensão, seguradoras estavam agindo como banco.
+3. Households preferem ativos liquidos
+
+** Market liquidity e funding liquidity
+1. Market liquidity quando o emprestador faz um empréstimo, ele entrega dinheiro. Para receber esse dinheiro antes o único modo é "vender o empréstimo" no mercado.
+2. Funding liquidity quando o mutuário se propõem a fazer pagamento ao credor,. Única forma de postergar o pagamento é pagar pra outra pessoa fazer.
+
+** Minsky e instabilidade
+1. Fragilidade vem de mensuração de ativos e score de crédito.
+
+** Currency swap
+1. Variação de swap de iou
+2. Empréstimos paralelos podem circundar restrições em negociações com moedas
+3. Empréstimos são feitos entre subsidiárias nos respectivos países. Não há fluxo de moeda entre os países.
+4. Na prática o empréstimo paralelo é implícito para evitar necessidades de reservas de capital requeridas
+5. Bancos são intermediários naturais, por isso tem filiais em vários países.
+6. Hedge dessa operação é feita por meio do swap reverso? Com outro banco. Baixo risco aparente.
+7. Arbitragem entre moedas faz a precificação de empréstimos seja independente da nacionalidade....
+8. Essa transação afeta juros americano e expectativa de valorização do dólar frente a outras moedas 
+
+** Uip
+1. Uncovered interest parity
+2. Dois investimentos são equivalentes e a única diferença é o exchange rate
+
+** Pós guerra, dólar e ouro
+1. Moedas estavam desvalorizadas com Relação ao dólar para facilitar transição após guerra. Dólar comprava muitas libras, eg.
+2. Moeda desvalorizada causa pressão no dólar... Dificulta manter padrão ouro. Pois vai ter mais dólares saindo que entrando pois importados são mais acessíveis.
+3. Para manter paridade do ouro em dólar vai ser difícil pois vão ter menos dólares?
+4. Para os EUA terem juros baixo, o dólar é esperado ser apreciado perante outras moedas. Se não ocorrer investidores vão querer converter em outras moedas
+5. Pois com juros baixos, investidores não investem no país e consequentemente não compram dólares.
+** Old
+Definitivamente um livro que não dá pra só escutar, cada frase vem com um jargão técnico que precisa ser desbravado. Cada palavra tem um conceito abstrato que expande o significado.
+
+Livro não é de entretenimento, contém muitas informações relevantes e com certeza irei voltar a referiar ele para explicar algo.
+
+Repo market faz com que o sistema descentralizado funcione como um grande banco.
+Instituições financeiras conseguem financiar ativos com empréstimos, ou seja, aumenta ativo e passivo.
+
+ Quando encargos financeiros são devidos, essas instituições podem utilizar do repo market para conseguir liquidez usando o próprio ativo como colateral. E assim a vida segue, até o dia que o mercado de crédito não aceita mais esse colateral e as instituições não conseguem cumprir suas obrigações.
+
+Por que  a crise de 2008 foi causada pela falta de colateral no mercado monetário e consequentemente a taxa da libor subiu muito. Historicamente, todos os as instituições financeiras utilizam de alguma forma o mercado de crédito para se financiar. Se for uma instituição financeira cadastrada no banco Central ela usa o sistema de financiamento do banco Central caso contrário usa o mercado de compromissadas ou o mercado do Euro dólar internacional. Durante a crise os títulos de hipoteca foram considerados ruins fez com que eles não fossem mais aceitos no mercado de compromissadas fazendo com que muitos instituições não conseguisse em fundos de liquidez no mercado de crédito nacional buscaram financiamento no mercado do eurodólar. Isso fez a taxa da libor subir.
+
+Vez do Fred usar a discount window, ele empresta pros primary dealer aumentar as reservar e expandindo a sua balance sheet. Com isso o Fed atua para que a taxa inter banking seja próxima do target. 
+
+Repo veio a Ted do federal Funds market, bancos transacionavam para aproximar a um grande banco.
+
+Dois players centrais: bancos e security dealers. Is bancos usam o money market para financiar a elasticidade de pagamentos. E os security dealer usam o money market para financiar market liquidity.
+
+Security dealers ganham em um 2 way market de securities. E usam o repo market como fonte de financiamento. 
+
+Conexão entre funding liquidity e market liquidity é feita pelo dealer. O dealer se financia no money market e faz mercado no capital market, comprando e vendendo.
+
+Market liquidity, shiftability, e a predisposição dos dealers fazerem o two way market.
+
+Trasury bill tem maturação de curto prazo, Bond de longo prazo.
+
+O que acontece quando o preço das bonds cai? Os dealers que se financiaram ficam sem liquidez, pois se o valor dos financiamento por compromissadas depende do valor dos títulos. Os dealers passam a depender de financiamento caro do sistema bancário.
+
+Diferença entre um dealer e um trader. O dealer gera liquidez pro mercado.
+
+Shadow banking. 
+
+Schumpeter. Crédito permite a criatividade destrutiva. Fonte do dinamismo capitalista. pois permite o novo ofertar para conseguir recursos do velho. Crescimento então gera instabilidade.
+
+Minsky. Survival constraint. Cash inflows must encounter cash outflow.
+
+Bc relaxa ou restringe survival constraint dos bancos com omo. Criando disciplina. Omo alteram o short term interest rate que os bancos transacional reservas entre si. preço que eles pagam para postergar uns dias o pagamento final.
+
+Bancos podem usar outras fontes para equilibrar o fluxo de caixa. Fontes privada.
+
+Instabilidade inerente do crédito.
+
+Problemas de liquidez vira problema de solvência quando devedores precisam liquidar ativos para cobrir obrigações de saída de caixa presente.
+
+Write down. Ou perda por redução ao valor recuperável é o análogo para estoques. Redução ao valor realizável líquido. Reduz valor dos ativos e diminui linha de crédito no money market, criando problema de liquidez. Foi o aconteceu na crise de 2008 com hipoteca.
+
+Expansão no crédito e aumento no preço dos ativos está correlacionado com problemas de liquidez e de solvência. Aumento no preço está ligado ao aumento do gasto de devedores por meio do crédito que representa renda do outro lado da transação. Aumento no preço implica em reavaliação nos estoques o que permite expansão ainda maior do crédito.
+
+London. Rate of interest era usado com preço para o banco aceitar novos desconto ( Gold outflow) e inflow (prazo de maturação de Bill of exchange internacional). Receber por empréstimos internacionais.
+
+No padrão ouro. Banco pode criar depósitos para demanda interna. Não pode criar ouro para demanda externa.
+
+Primary dealer oferta por treasury qualquer momento que o governo quer empréstimo.
+
+Currency swap.
+* Lifespan
+O livro da uma perspectiva sobre os avanços na tecnologia anti envelhecimento. Ele explora as implicações de uma vida mais longa em diversos aspectos: econômico, político, social, ambiental.
+
+O que eu tiro do livro? Os avanços tecnológicos irão nos permitir uma vida mais longa.
+* Pragmatic capitalism
+Lições
+
+1. Você não vai ser Warren buffet, o argumento foi fraco mas concordo
+2. Taxas importam, no mercado americano principalmente por causa dos etf baratos
+3. Não existe investimento passivo
+4. Sunken cost falacy é perigoso... Mas acho que existe um motivo 
+
+Muita boa explicação do sistema bancário moderno.
+* The psychology of influence
+
+1. Priming, contrast effect, o segundo valor vai ser influenciado pelo primeiro
+2. Reciprocidade, você vai estar influenciado a retribuir um favor
+3. Concistencia, uma vez que aceitamos algo estamos influenciado a aceitar o resto... Compliance tática. 
+4. Foot in the door technique, fazer com que a pessoa aceite um requerimento pequeno para em seguida aceitar um pedido maior.
+5. Perguntar como está para a pessoa faz com que elas sejam menos sting depois.
+6. Prova social, mostra como depoimentos são poderoso pois influenciam outras pessoas.
+
+
+Compliance, aceitação, fechar negócio
+
+1. Boa aparência, Halo effect carrega pre julgamentos inconscientes
+2. Similaridade, roupa, ideias, background, religião, hábitos (mirror and match)
+3. Holy day card "I like you" funciona. Somos afficionados por elogios.
+* Valsa brasileira
+2003-2011
+
+Milagre brasileiro favorecido pelo cenário externo.
+Internamente com políticas distributiva e investimento em infraestrutura básica.
+
+Diminuicao das desigualdades foi combinação de bolsa família e a própria dinâmica de consumo numa economia crescente.
+
+Contabilidade criativa. Não contabilizar investimento do PAC no cálculo fiscal.
+
+Divida pública brasileira apresenta composição de curto prazo e parcela grande pós fixada, que eleva o risco e demonstra fragilidade perante necessidades de financiamento e alterações na taxa de juros da economia.
+
+Questão do caso atípico e particular brasileiro de alto juros e inflação na crise de 2014.
+* Fischer Black
+Capm funciona mesmo sem o ativo livre de risco.
+
+Liquidity is about price. 
+
+Crise 2007 teve novos instrumentos de transferência de risco que causaram distorção na precificação.
+
+Stewart Myers corporate finance.
+
+Black conectou finance view com o economics view quando coloca o preço do risco junto com juros. Capm extende o conceito do preço relativo do dinheiro numa análise intertemporal.
+
+Capm mostra algo no presente, ele não tenta prever o futuro.
+
+Há um equilíbrio instantâneo. Mas o sistema evolui a todo instante fora de equilíbrio.
+
+Capm não funciona para prever. Ele permite ter insights sobre como o mundo funciona. Ele fala de equilíbrio em um ponto no tempo e não como esse equilíbrio evolui.
+* Laws of human nature
+
+Criar um self que possa nos suportar. Selfestem from within. Não negar nossa auto absorção. Embrace the full picture of themselves.
+
+Não terminei...
+* The debt myth
+Mmt. nao li tudo pois vi bons contra argumentos.
+* Crashed
+* Adaptive markets

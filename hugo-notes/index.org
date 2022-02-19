@@ -1,0 +1,10 @@
+#+title: Hugo Notes
+#+date: <2021-06-06 Sun>
+#+author: Nasser Alkmim
+#+draft: t
+#+toc: t
+#+tags[]: hugo
+* Introduction
+Hugo notes on templates.
+* Templates
+** Definition

@@ -1,0 +1,123 @@
+#+TITLE:       2018 Books review
+#+AUTHOR:      Nasser Alkmim
+#+EMAIL:       nasser.alkmim@gmail.com
+#+DATE:        2018-05-31
+#+URI:         /notes/%y/%m/%d/2018-books-review
+#+TAGS[]:        books
+#+LANGUAGE:    en
+#+OPTIONS:     H:3 num:nil toc:nil \n:nil ::t |:t ^:nil -:nil f:t *:t <:t
+#+DESCRIPTION: books review 2018
+#+toc: t
+* Books list
+#+begin_export html
+<img src="https://images-na.ssl-images-amazon.com/images/I/51f0LFPzwAL._SL200_.jpg" style="display: revert; max-width: fit-content;">
+<img src="https://images-na.ssl-images-amazon.com/images/I/41FdmYnaNuL._SL200_.jpg" style="display: revert; max-width: fit-content;">
+<img src="https://images-na.ssl-images-amazon.com/images/I/41eOUSH5%2BTL._SL200_.jpg" style="display: revert; max-width: fit-content;">
+<img src="https://images-na.ssl-images-amazon.com/images/I/81-cfmm7CML._SL200_.jpg" style="display: revert; max-width: fit-content;">
+<img src="https://images-na.ssl-images-amazon.com/images/I/71Xl4odUUIL._SL200_.jpg" style="display: revert; max-width: fit-content;">
+<img src="https://images-na.ssl-images-amazon.com/images/I/81x2aSRQqGL._SL200_.jpg" style="display: revert; max-width: fit-content;">
+<img src="https://images-na.ssl-images-amazon.com/images/I/81E1geR07jL._SL200_.jpg" style="display: revert; max-width: fit-content;">
+<img src="https://images-na.ssl-images-amazon.com/images/I/818B2wyHQ8L._SL200_.jpg" style="display: revert; max-width: fit-content;">
+<img src="https://images-na.ssl-images-amazon.com/images/I/818qWkHcICL._SL200_.jpg" style="display: revert; max-width: fit-content;">
+<img src="https://images-na.ssl-images-amazon.com/images/I/71weUhdIQoL._SL200_.jpg" style="display: revert; max-width: fit-content;">
+<img src="https://images-na.ssl-images-amazon.com/images/I/81wjQh2YSnL._SL200_.jpg" style="display: revert; max-width: fit-content;">
+<img src="https://images-na.ssl-images-amazon.com/images/I/71-G5rIIEML._SL200_.jpg" style="display: revert; max-width: fit-content;">
+<img src="https://images-na.ssl-images-amazon.com/images/I/81hOJPopfXL._SL200_.jpg" style="display: revert; max-width: fit-content;">
+<img src="https://images-na.ssl-images-amazon.com/images/I/81zoMCGPTOL._SL200_.jpg" style="display: revert; max-width: fit-content;">
+<img src="https://images-na.ssl-images-amazon.com/images/I/516c6gUQLaL._SL200_.jpg" style="display: revert; max-width: fit-content;">
+<img src="https://images-na.ssl-images-amazon.com/images/I/51CYeWfnWsL._SL200_.jpg" style="display: revert; max-width: fit-content;">
+<img src="https://images-na.ssl-images-amazon.com/images/I/41iW9a%2BnyZL._SL200_.jpg" style="display: revert; max-width: fit-content;">
+#+end_export
+* The Dao of capital
+Esse livro mostra a estratégia de investimento do Mark Spitznagel.
+Ele utiliza de operações assimétricas para ter um grande upside em face à eventos inesperados (ou eventos esperados e previsíveis mas que não se sabe quando ocorrerão).
+No decorrer do livro ele explica a estratégia adotada com exemplos das coníferas
+* The 4-hour workweek
+Excelente livro para remoldar a forma de pensar o tradicional caminho corporativista.
+* Factfulness
+An essential. 
+This book will show you how fact based informations can be useful on business or any type o decision making.
+But it also shows how harmful ignorance can be specially in regards children safety in level 1 and 2 countries where the majority of the world is.
+It presents data on how misinformed everybody is, you may already have suspected that.
+Well, just read it.
+* When Genius Failed
+* Learn Better
+I really liked this book, it has so much useful information that is ready to be applied.
+It is a great introduction to the research on learning process.
+You have basically four components that are essential for an effective learning: value, target, develop and rethink.
+Value is the essential first step, you can only learn if you see value and meaning on the skill you are learning.
+Target is to know a priori exactly what you are learning and set specific goals to it.
+Develop is the step to sharp your skill to master it.
+Finally, you have rethink, which is also essential part of learning.
+It means that you have to constantly assess your learning by asking yourself reflecting questions, "Did I really understand this concept?", for instance.
+I recommend this book to everyone.
+* Skin in the game
+With this book we can get deeper in Taleb's logic, now with an ethical perspective
+Multiple conclusions are  given in a maxim form, I found them all (most of them actually) very insightful and I'm glad I bought a physical book because I will be referring to it many times
+I like his argument about robustness of behavioral psychology, or economy, found in ancient texts.
+Not so much his argument about minority rule, I wondered about vegetarians.
+* Remains of the day
+This is a romance well written by Kazuo Ishiguro, 2017 nobel prize winner.
+I enjoy reading this book, it is not my current kind of book but it's nice to get some casual and peaceful history.
+I found interesting the way the author jumped between time frames to describe the butler life.
+The description of his work life makes you think about your own life decisions when you dedicate yourself to a single carer that defines who you are.
+Read if you want experience for yourself how it is to be a high end butler in England.
+* Touch
+This book contains a lot of information about your skin.
+I end up reading this randomly.
+I don't know how I feel about it, maybe because I just picked it out of nowhere I didn't know what to expect from it.
+Read if you want know more about your skin.
+* The hour between dog and wolf
+This book was great to read, it contains loads of information about a trader's day and its interesting connection with humans endocrine system.
+Read if you want to experience for yourself how stressful a trader's day is and if you want to know how your body reacts to it.
+* Nudge
+Interesting way of think a different approach to libertarianism.
+Thaler starts by acknowledging how bad we humans are when making decisions, we are definitely no /homo economicus./
+Taleb has some serious problem with nudging, and he also critics a lot Thaler about his statistics knowledge.
+* O alquimista
+This book packs a lot of insightful information on how one guides its own life journey.
+* 12 rules for life
+As regras que mais me chamaram atenção foram "Stand up straight with your shoulders back", "Compare yourself to who you were yesterday, not to someone else is today" e "Be precise in your speech".
+A primeira é simples, tenha a consciência de que sua postura afeta como os outros veem você.
+Comparar-se com os outros é sem sentido ainda mais hoje em dia com o espaço amostral global.
+Seja preciso no seu diálogo. Têm algo a dize? diga da maneira mais clara possível.
+Pode ser difícil no começo, mas comece a praticar e eventualmente seu discurso será mais claro.
+Ler ajuda nesse ponto pois expande seu campo de ideias e seu vocabulário. 
+As outras regras são interessantes, irei manter esse livro para consultas futuras.
+* Money master the game
+Esse livro contém dicas financeiras básicas.
+Tempo vai jogar a seu favor se for disciplinado com aportes e paciente para colher os frutos do juros composto.
+Diversifique seu portfolio para não ir a falência se algum black swan ocorrer.
+Use uma estratégia assimétrica, ou seja, limite seu downside e amplifique seu upside.
+Se você já sabe dessas coisas irá achar o livro chato e repetitivo.
+* Debt the first 5000 years
+Livro extenso e complexo, li o primeiro e o último capítulo.
+O primeiro fala sobre as origens do dinheiro e o último sobre as tendências modernas após o desatrelamento da moeda do ouro.
+O fato de ser extenso é positivo pelo detalhe com que o assunto é descrito mas torna a leitura difícil.
+* The millionaire fast lane
+Your time is limited, therefore trading it for money is wasteful
+It inspires you to change
+Whatever you are doing and have been doing for a couple of years, if you are not rich, STOP! rethink and start again
+* Meditations
+Estou lendo esse aos poucos.
+Geralmente olho o sumário, escolho um tópico e leio as cartas e as explicações extras.
+Excelente fonte de sabedoria prática que irá te ajudar em diversos momentos.
+Talvez nunca leia esse livro inteiro mas o mantenha como fonte de consulta.
+* 1Q84
+Terminei o primeiro livro, sensação de querer saber como o resto da história irá se desenrolar.
+Mas por enquanto irei deixar de lado, no momento não tenho tanto interesse em continuar com essa ficção.
+A narrativa do Murakami realmente é cativante e te prende à história.
+* Algorithms to live by
+Livro com insights interessantes sobre como problemas cotidianos podem ser resolvidos com algoritmos computacionais.
+Por exemplo o problema clássico de pesquisar um imóvel para compra, quando devo tomar minha decisão definitiva? no primeiro imóvel que eu gostar? ou no quinto?
+Na verdade, a resposta irá depender de quanto imóveis eu estou disposto a procurar e a partir desse valor eu posso tomar um boa decisão após me informar sobre os 37% das minhas opções.
+Então se eu for visitar 10 apartamentos, os 4 primeiros eu só uso para guiar meus parâmetros.
+A partir do 5 se eu considerar que é a melhor opção, posso automaticamente tomar minha decisão.
+O livro apresenta alguns outros problemas interessantes que fazem a leitura valer a pena.
+* Sidarta
+Li esse livro depois de uma indicação que vi no reedit.
+É um livro sobre a jornada do protagonista na sua busca sobre questões filosóficas como erudição, auto-conhecimento e virtudes a serem perseguidas.
+Um trecho interessante que me chamou atenção foi quando Sidarta é desafiado a obter riqueza material e após conseguir percebe que a conquista não traz engrandecimento espiritual.
+Outra parte interessante é quando o Sidarta é perguntado sobre o que ele é capaz, respondendo: "Eu posso pensar, posso esperar e posso jejuar".
+Essas podem ser capacidades simples e nada excepcionais mas no futuro provam ser de grande importância. 
+* Fooled by randomness

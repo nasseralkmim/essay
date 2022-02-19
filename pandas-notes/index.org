@@ -1,0 +1,158 @@
+#+title: Pandas notes
+#+date: <2020-12-24 Thu>
+#+lastmod: 2021-08-03 18:43:15
+#+author: Nasser Alkmim
+#+email: nasser.alkmim@gmail.com
+#+toc: t
+#+tags[]: data-analysis python 
+#+draft: t
+* Apply
+** When to use?
+Use cases:
+
+1. apply a function along rows or column (default).
+2. apply a user-defined function with "lambda" construct.
+3. perform element wise transformation, with a specific condition for instance.
+4. better alternative than for loops, more efficient.
+
+Alternatives:
+
+1. itertuples seems to be faster if the data is smaller than 100k rows [[https://stackoverflow.com/questions/52581057/is-dataframe-apply-really-slower-than-dataframe-itertuples]]
+
+** When to avoid?
+
+I honestly think that =apply()= sometimes makes it harder to read, specially with nested conditions.
+It is also slow.
+
+
+[[https://stackoverflow.com/questions/54432583/when-should-i-not-want-to-use-pandas-apply-in-my-code][python - When should I (not) want to use pandas apply() in my code? - Stack O...]]
+
+** Row wise operation with numbers
+
+If it is just numbers, you can pass =raw=True= to the =apply()= so the function will receive a =ndarray= before passing to the function.
+The default is convert each row or column to a =Series=.
+
+
+#+begin_src python :session pandas-row-numbers
+import pandas as pd
+import numpy as np
+
+np.random.seed(1)
+df = pd.DataFrame(np.random.randn(1000))
+print('Regular apply:')
+%timeit df.apply(np.sum)
+print('Apply with raw=True:')
+%timeit df.apply(np.sum, raw=True)
+print('Optmized version:')
+%timeit df.sum()
+#+end_src
+
+#+RESULTS:
+: Regular apply:
+: 262 µs ± 8.1 µs per loop (mean ± std. dev. of 7 runs, 1000 loops each)
+: Apply with raw=True:
+: 89.1 µs ± 263 ns per loop (mean ± std. dev. of 7 runs, 10000 loops each)
+: Optmized version:
+: 236 µs ± 4.67 µs per loop (mean ± std. dev. of 7 runs, 1000 loops each)
+
+Remarks:
+1. raw was faster than the cython version.
+
+** Alternatives when you need to perform row wise operation based on a string
+* Groupby
+** Groupby with conditional sum
+
+first groupby, then apply with a condition.
+
+* Resampling
+
+* Changing =DataFrame= inside a function
+** Modify the DF inside a function
+If you pass a DF to a function, manipulate it and return it.
+The result is the DF modified.
+
+
+#+begin_src python
+import pandas as pd
+df_old = pd.DataFrame({'column': [1.]})
+print(f'Original! \n {df_old}')
+
+def manipulate(df):
+    df['new column added'] = 99
+    return df
+
+df_new = manipulate(df_old)
+print(f'Different DF (no copy)! \n {df_new}')
+print(f'Original MODIFIED! \n {df_old}')                    # old also changed
+#+end_src
+
+#+RESULTS:
+: Original! 
+:     column
+: 0     1.0
+: Different DF (no copy)! 
+:     column  new column added
+: 0     1.0                99
+: Original MODIFIED! 
+:     column  new column added
+: 0     1.0                99
+
+** Keep original DF unmodified
+If you want to keep the old DF *unmodified* you need to _make a copy_ of it inside the function.
+
+#+begin_src python
+df_old = pd.DataFrame({'column': [1.]})
+print(f'Original! \n {df_old}')
+
+def manipulate(df):
+    df_n = df.copy()
+    df_n['new column'] = 10
+    return df_n
+
+df_new = manipulate(df_old)
+print(f'Different DF (WITH copy)! \n {df_new}')
+print(f'Original NOT modified! \n {df_old}')
+#+end_src
+
+#+RESULTS:
+: Original! 
+:     column
+: 0     1.0
+: Different DF (WITH copy)! 
+:     column  new column
+: 0     1.0          10
+: Original NOT modified! 
+:     column
+: 0     1.0
+
+** Modify dataframe with new assignment
+
+If you want just modify the original DF in a function, the function don't even need to return.
+
+#+begin_src python
+import pandas as pd
+df_old = pd.DataFrame({'column': [1.]})
+print(f'Original! \n {df_old}')
+
+def manipulate(df):
+    df['new column added'] = 99
+    return df
+
+df_old = manipulate(df_old)
+print(f'Original MODIFIED! \n {df_old}')
+#+end_src
+
+#+RESULTS:
+: Original! 
+:     column
+: 0     1.0
+: Original MODIFIED! 
+:     column  new column added
+: 0     1.0                99
+
+Remarks:
+1. The function should =return= the =DataFrame= if you want to call them with an /assignment statement/ =df = func(df)=. 
+
+* Types
+** What is =object= type?
+It is related to =str= or mixed python types.

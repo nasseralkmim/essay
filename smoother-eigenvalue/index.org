@@ -1,0 +1,10 @@
+#+title: How smoothers affects eigenvalues of a matrix
+#+date: <2021-09-14 Tue>
+#+lastmod: 2021-09-14 13:28:32
+#+author: Nasser Alkmim
+#+draft: t
+#+toc: t
+#+tags[]: numerical-analysis
+* Objective
+1. error modes and eigenvalues
+2. smoother damps high energy modes, associated with large eigenvalues

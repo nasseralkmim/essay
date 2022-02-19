@@ -1,0 +1,58 @@
+#+title: One liners commands
+#+date: <2021-05-03 Mon>
+#+author: Nasser Alkmim
+#+draft: t
+#+toc: t
+#+tags[]: tools favorites
+* tree -L 1
+Show tree directory up to the first level.
+
+=-d= show only the directory.
+
+Needs the tree package.
+* ls -d */
+Shows just the folders.
+* grep . *
+Shows the content of all files.
+* rm -f !(exception)
+Remove all files except the one within brackets.
+* grep -E "string1|string2" <folder>
+search multiple strings.
+better yet, use =egrep= instead of the =-E= flag
+
+This is different from =grep -e "str1" -e "str2"= which searches str1 OR str2.
+
+* cd -
+go to previous commands
+* cp <source> <dest>
+copying files.
+* grep <str> <file>
+Read lines with str in file.
+* man <software> | grep <keyword>
+Search manual.
+* grep -v
+
+#+begin_src shell
+man grep | grep -C 2 invert-match
+#+end_src
+
+#+RESULTS:
+#+begin_example
+              two options override each other.
+
+       -v, --invert-match
+              Invert the sense of matching, to select non-matching lines.
+
+--
+       -c, --count
+              Suppress  normal output; instead print a count of matching lines
+              for each input file.  With the -v,  --invert-match  option  (see
+              below), count non-matching lines.
+
+--
+              lines, it outputs any trailing context lines.  When  the  -c  or
+              --count  option  is  also  used,  grep  does  not output a count
+              greater than NUM.  When the -v or --invert-match option is  also
+              used, grep stops after outputting NUM non-matching lines.
+
+#+end_example
