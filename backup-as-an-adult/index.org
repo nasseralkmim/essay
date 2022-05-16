@@ -1,0 +1,11 @@
+#+title: Backing up as an adult
+#+date: <2022-05-16 Mon>
+#+author: Nasser Alkmim
+#+draft: t
+#+toc: t
+#+tags[]:  
+#+lastmod: 2022-05-16 11:34:52
+* Introduction
+* Objectivs
+* Tools
+* Workflow
