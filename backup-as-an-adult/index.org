@@ -4,8 +4,15 @@
 #+draft: t
 #+toc: t
 #+tags[]:  
-#+lastmod: 2022-05-16 11:34:52
+#+lastmod: 2022-05-17 07:56:15
 * Introduction
-* Objectivs
-* Tools
-* Workflow
+
+After a couple of year of relying on Onedrive as a backup solution for my documents, I decided to find an alternative.
+
+One in the computer hard disk, one as a =restic= backup in the cloud storage (Backblaze B2).
+
+The documents are gathered in the main computer from cellphone and other computers using =syncthing=.
+In the main computer, the sync folder "only receives" which means that if accidentally deletes or modifies files, they will be intact on the source.
+Errors will not propagate.
+
+Then, =restic= runs daily as a timer unit and directly save to the Backblaze B2 bucket repository.
