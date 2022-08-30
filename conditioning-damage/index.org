@@ -1,6 +1,6 @@
 #+title: Eigenvalues and condition number
 #+date: <2021-06-09 Wed>
-#+lastmod: 2021-09-17 09:57:21
+#+lastmod: 2022-06-07 16:13:41
 #+author: Nasser Alkmim
 #+toc: t
 #+draft: t
@@ -210,6 +210,8 @@ Remarks:
 import matplotlib.pyplot as plt
 import matplotlib
 matplotlib.style.use('ggplot')
+import figtex
+figtex.style()
 import numpy as np
 import pandas as pd
 fig, ax = plt.subplots()
@@ -230,6 +232,8 @@ for i in range(101):
     ax.right_ax.set_ylim(0, 3200)
     fig.legend(['Condition number $\kappa = \Vert A \Vert \Vert A^{-1} \Vert$ ', 'Reaction force top face'])
     fig.savefig(f'{folder}/cond_react-{i}.pdf', dpi=300, bbox_inches='tight')
+    folder2="/home/nasser/SeaDrive/My Libraries/presentations/annual-presentation-2022/figures/condition"
+    fig.savefig(f'{folder2}/cond_react-{i}.pdf', dpi=300, bbox_inches='tight')
 #+end_src
 
 #+RESULTS:

@@ -1,0 +1,8 @@
+#+title: Remote workflow with emacs
+#+date: <2022-08-30 Tue>
+#+author: Nasser Alkmim
+#+draft: t
+#+toc: t
+#+tags[]: tools emacs 
+#+lastmod: 2022-08-30 16:20:43
+* Introduction

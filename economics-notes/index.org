@@ -1,0 +1,8 @@
+#+title: Economics notes
+#+date: <2022-06-24 Fri>
+#+author: Nasser Alkmim
+#+draft: t
+#+toc: t
+#+tags[]:  
+#+lastmod: 2022-06-24 14:04:03
+* Monetary policy
