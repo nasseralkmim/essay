@@ -1,0 +1,17 @@
+#+title: Books review 2022
+#+date: <2022-09-26 Mon>
+#+author: Nasser Alkmim
+#+draft: t
+#+toc: t
+#+tags[]: books 
+#+lastmod: 2022-10-19 13:40:47
+
+
+* Crashed
+** Why the gold standard was abondened?
+1. upholding the gold standard would end up in deflation.
+2. neoliberalism introduce "discipline" to tame unlimited elasticity of money.
+** Fed roles
+*** Liquidity provisor
+* Money and empire
+**  
