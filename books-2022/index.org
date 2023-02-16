@@ -4,14 +4,176 @@
 #+draft: t
 #+toc: t
 #+tags[]: books 
-#+lastmod: 2022-11-13 22:16:59
+#+lastmod: 2023-02-16 07:03:11
 
+* List of books
+#+begin_export html
+<img src="images/zenandart.jpg" style="display: revert; max-width: fit-content; width: 146px">
+#+end_export
+* Zen and the art of motorcycle maintenance
+** About traveling
+1. On a cycle the frame is gone. You're completely in contact with it all. You're in the scene, not just watching it anymore, and the sense of presence is overwhelming.
+2. We're in such a hurry most of the time we never get much chance to talk. The result is a kind of endless day-to-day shallowness, a monotony that leaves a person wondering years later where all the time went and sorry that it's all gone.
+3. We have been on so many trips together we know from a glance how one another feels. Right now we are just quiet and looking around.
 
-* Crashed
-** Why the gold standard was abondened?
-1. upholding the gold standard would end up in deflation.
-2. neoliberalism introduce "discipline" to tame unlimited elasticity of money.
-** Fed roles
-*** Liquidity provisor
-* Money and empire
-**  
+** Disharmony
+1. One diy other hire others to do.
+1. when you discover something like that it's like discovering a tooth with a missing filling. You can never leave it alone.
+2. Goodness for him has other sources which he values as much as or more than social practicality.
+3. Blind alley, though. If somone's ungrateful and you tell him he's ungrateful, okay, you've called him a name. You haven't solved anything.
+4. I was going at it in terms of underlying form. He was going at it in terms of immediate appearance. I was seeing what the shim meant. He was seeing what the shim was.
+
+** Modern ghosts
+1. Those Indians and medieval men were just as intelligent as we are, but the context in which they thought was completely different. Within that context of thought, ghosts and spirits are quite as real as atoms, particles, photons and quants are to a modern man. In that sense I believe in ghosts. Modern man has his ghosts and spirits too, you know.”
+
+** Items to take on bike trip
+1. Unlined leather gloves are best because they prevent sunburn, absorb sweat and keep your hands cool. When you're going for an hour or two little things like this aren't important, but when you're going all day long day after day they become plenty important.
+2. They have become filled with oil and sweat and dirt and spattered bugs and now when I set them down flat on a table, even when they are not cold, they won't stay flat. They've got a memory of their own.
+3. That is impractical, but practicality isn't the whole thing with gloves or with anything else.
+
+** Real object of motorcycle maintenance
+1. is this personality that is the real object of motorcycle maintenance.
+
+** Classic and romantic
+1. Classical underlying form. Essence.
+2. Romantic immediate aparece. Surface.
+3. and this is their classical beauty…not what you see, but what they mean…
+4. He thinks I'm working on parts.I‘m working on concepts.
+5. Quality can be split in classic/romantic.
+6. Classical beauty, sense of harmony of the cosmos that guides our decisions such that we contribute to this harmony.
+
+** When analytic thought is applied something is killed
+And instead of just dwelling on what is killed it's important also to see what's created and to see the process as a kind of death-birth continuity that is neither good nor bad, but just is.
+
+** Intelligence and loneliness
+1. No one really knew him. That is evidently the way he wanted it, and that's the way it was. Perhaps his aloneness was the result of his intelligence. Perhaps it was the cause. But the two were always together. An uncanny solitary intelligence.
+
+** Rationality
+1. A motorcycle functions entirely in accordance with the laws of reason, and a study of the art of motorcycle maintenance is really a miniature study of the art of rationality itself.
+
+** Functional description and system structure
+1. Describe a system by a chain of causal relations.
+2. A chain is a structure.
+3. Government is a system in this sense.
+4. But to tear down a factory or to revolt against a government or to avoid repair of a motorcycle because it is a system is to attack effects rather than causes; and as long as the attack is upon effects only, no change is possible.
+5. If a revolution destroys a systematic government, but the systematic patterns of thought that produced that government are left intact, then those patterns will repeat themselves in the succeeding government.
+
+** Scientific method
+1. In scientific work and electronics technology this is necessary because otherwise the problems get so complex you get lost in them and confused and forget what you know and what you don't know and have to give up.
+2. An experiment is a failure only when it also fails adequately to test the hypothesis in question, when the data it produces don't prove anything one way or another.
+
+** Scientifically produced antiscience
+
+** Hume
+1. empiricist, all thought derive from senses.
+2. “Nature” and “Nature's laws” are creations of our own imagination. To deny that is to deny empiricism.
+3. Critique of Pure Reason, critiques this idea and saves scientific empiricism from its own devouring logic.
+
+** Kant
+1. To follow Kant one must also understand something about the Scottish philosopher David Hume.
+2. all knowledge begins with experience it doesn't follow that it arises out of experience.
+3. A priori, there are aspects of reality which are not supplied immediately by the senses.
+4. We sense objects in a certain way because of our application of a priori intuitions
+5. reality is a continuous synthesis of elements from a fixed hierarchy of a priori concepts and the ever changing data of the senses.
+6. Critique of Pure Reason is concerned with how this a priori knowledge is acquired and how it is employed.
+
+** Oriental philosophy
+1. In all of the Oriental religions great value is placed on the Sanskrit doctrine of Tat tvam asi, “Thou art that,” which asserts that everything you think you are and everything you think you perceive are undivided. To realize fully this lack of division is to become enlightened.
+2. Hegel was the bridge between Western and Oriental philosophy.
+
+** Knowledge church and university
+1. The real University, he said, has no specific location. It owns no property, pays no salaries and receives no material dues. The real University is a state of mind.
+2. The real University is nothing less than the continuing body of reason itself.
+
+** Machine test
+1. The test of the machine is the satisfaction it gives you. There isn't any other test. If the machine produces tranquillity it's right. If it disturbs you it's wrong until either the machine or your mind is changed. The test of the machine's always your own mind. There isn't any other test.”
+
+** Newton way of thinking analogy
+1. So what Newton did was say, in effect, ‘We're going to presume there's such a thing as instantaneous change, and see if we can find ways of determining what it is in various applications.'
+2. Newton invented a new form of reason.
+
+** Analogy and learning
+1. I've heard it said that the only real learning results from hang-ups, where instead of expanding the branches of what you already know, you have to stop and drift laterally for a while until you come across something that allows you to expand the roots of what you already know
+
+** Journey and end goal
+1. To live only for some future goal is shallow. It's the sides of the mountain which sustain life, not the top. Here's where things grow. But of course, without the top you can't have any sides. It's the top that defines the sides.
+2. Any effort that has self-glorification as its final endpoint is bound to end in disaster.
+
+** Via negativa Definition of quality
+1. Since the world obviously doesn't function normally when Quality is subtracted, Quality exists, whether it's defined or not.
+2. Hold Quality undefined. That was the secret.
+3. The “object” is an intellectual construct deduced from the qualities.
+4. Qualities define an object not the other way. Locke's statement that no object, scientific or otherwise, is knowable except in terms of its qualities.
+5. “Quality is what you like,”
+
+** Logic of argument
+1. It's an old rule of logic that the competence of a speaker has no relevance to the truth of what he says,
+
+** Why quality is not just what you liked?
+1. Something different than superficial immediate appeal.
+2. Quality is not objective, it is not in the material world.
+3. Quality is no subjective, it is not only on the mind.
+4. It is independent of mind/matter.
+5. Quality is an event when the subject becomes aware of the object.
+
+** Quality as an event not a thing
+1. Without object there can be no subject.
+2. The object creates awareness of the subject.
+3. Quality event is the cause of object and subject, not the opposite.
+
+** Analytic process
+1. Breakdown into subject and predicate
+
+** Analogies for quality
+1. Quality is the response of an organism to it's environment. 
+
+** Tao, Buddha and quality
+
+** Poincaré and mathematical truth
+1. Geometric axioms as synthetic a priori judgement (Kant). They exist without man's experience. Poincaré didn't believe so. Because non euclidian geometry exists.
+2. Geometric axioms as experimental thing? No, because they would be subjected to laboratory variation.
+3. Geometric axioms are conventions. Choose among others with the constraint of avoiding contradiction. They are a definition.
+4. There is no single true, just convenience.
+5. "The burden of sustaining the order of the universe rests on facts".
+
+** Facts and via negativa learning
+1. Begin with facts until a rule is established.
+2. After a while, facts in conformity with the rule become dull and don't teach us anything.
+3. Then, the execution become Important.
+4. "We seek not resemblance, but differences."
+
+** Subliminal self and preintelectual awareness
+1. Subliminal self, by Poincaré. Only a few break into consciousness by a subliminal process.
+2. The selection is based on aesthetics.
+
+** Surfaces and essence
+1. Good and bad mechanic is the ability to narrow a selection of facts based on quality.
+2. Narrowing from the collection to the essence.
+
+** Objective insistence
+1. There is always an object and a subject.
+2. When this paradigma is used, it shuts the quality.
+
+** Been stuck and 
+1. Stuckness is the predecessor of all real understanding.
+2. Asking functional questions, you are not interested in the "what is" but "what it does". Associated with the question is a "subliminal quality discrimination".
+
+** Return of the fishmen and real universe awareness 
+1. Someone that connects with quality is filled with "gumptuon". Greeks called this enthusiasm.
+2. It is the "psychics gasoline" that keeps things going.
+3. Enthusiasm is something that can increase with perseption of quality.
+
+** PhD and fishing
+1. If you know which facts you are fishing for you are not fishing. You already cought them.
+
+** Ego and internal trap
+1. Elevated ego means you have a high evaluation of yourself, this prevents you from recognizing new facts.
+2. The ego is a Buble that separetes you from the quality reality.
+
+** Definition by analogy
+1. Definition is made up of what you know. It's an analogue to what you already know.
+2. Quality directs the analogy building pattern.
+
+** Description of a hero
+Thus the hero of the Odyssey is a great fighter, a wily schemer, a ready speaker, a man of stout heart and broad wisdom who knows that he must endure without too much complaining what the gods send; and he can both build and sail a boat, drive a furrow as straight as anyone, beat a young braggart at throwing the discus, challenge the Pheacian youthat boxing, wrestling or running; flay, skin, cut up and cook an ox, and be moved to tears by a song. He is in fact an excellent all-rounder; he has surpassing areté.
+

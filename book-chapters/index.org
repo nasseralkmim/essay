@@ -4,7 +4,7 @@
 #+draft: t
 #+toc: t
 #+tags[]: essays 
-#+lastmod: 2021-12-09 15:19:50
+#+lastmod: 2023-01-16 10:10:39
 * How we went from Pareto to "winner takes all"
 ** When did the change happened?
 What happened that we went from Pareto 80/20 to "winner takes all" 99/1.

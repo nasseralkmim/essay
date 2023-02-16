@@ -1,0 +1,10 @@
+#+title: Org-mode (emacs) as learning platform
+#+date: <2023-01-16 Mon>
+#+author: Nasser Alkmim
+#+draft: t
+#+toc: t
+#+tags[]: org-mode emacs
+#+lastmod: 2023-01-16 10:10:32
+* Learning and experimentation
+* Learning and repetition
+* Learning and friction

@@ -7,6 +7,7 @@
 #+tags[]: c++
 * Prologue
 ** C++ compiler
+
 #+begin_src shell
 g++ --version
 #+end_src
@@ -26,6 +27,7 @@ g++ --version
 : g++
 
 ** Tangle block into file
+
 C++ org-babel block have no support for session.
 Which means I can not use one block definitions/declarations in another one, like in a Jupyter notebook or python org-babel blocks.
 
@@ -41,7 +43,7 @@ To begin, lets start with current directory.
 #include <string>
 class Widget {
 public:
-std::string value {"from the class!!"};
+  std::string value {"from the class!!"};
 };
 std::string foo () {return "from the function";}
 #+end_src
@@ -50,7 +52,9 @@ std::string foo () {return "from the function";}
 
 I don't know why the block execution gives an error (=(.text+0x24): undefined reference to `main'=), but it works as intended.
 The file is created after I save the buffer.
+
 ** Including external file
+
 I need to include the file with absolute path which is annoying.
 
 #+header: :includes /mnt/c/Users/c8441205/OneDrive/nasser-website/content/notes/numerical-experiments/test_class.cpp
