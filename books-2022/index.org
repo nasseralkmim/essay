@@ -1,10 +1,9 @@
 #+title: 2022 Books review
 #+date: <2022-09-26 Mon>
 #+author: Nasser Alkmim
-#+draft: t
 #+toc: t
 #+tags[]: books 
-#+lastmod: 2023-02-16 07:03:11
+#+lastmod: 2023-02-16 07:06:20
 
 * List of books
 #+begin_export html
