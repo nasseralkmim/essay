@@ -1,0 +1,122 @@
+#+title: Managing multiple software versions with Org-mode
+#+date: <2023-02-16 Thu>
+#+author: Nasser Alkmim
+#+draft: t
+#+toc: t
+#+tags[]: tools emacs C++ org-mode trilinos
+#+lastmod: 2023-02-17 12:42:16
+#+PROPERTY: header-args :exports both
+* Introduction
+
+Have you ever had to deal with multiple versions of the same C++ software?
+Right now I am dealing with those questions: Where should I build the binaries? How can I keep track of which version? How can I keep track of which configuration options? Where should I install it? How to link to the right libraries with a specific version?
+A lot to think about and keep track.
+Fortunately, [[https://orgmode.org/][Org mode]] makes things a bit easy (maybe even fun).
+
+In this post, I will go to explain my workflow on how to manage this situation with Org-mode.
+The particular software that I am dealing with is [[https://trilinos.github.io/][Trilinos]].
+Therefore, another title for this post could be "installing Trilinos for absolute beginners". 
+
+* Keeping track of configuration setting and versions with =:tangle= (tango?💃)
+
+I like consistency and order (who doesn't?).
+To make this organized, I keep track of configuration files within a code block.
+This code block is then exported (tangled) to a specific folder.
+
+For example, let's say we want to install Trilinos[fn:1] on this specific release:
+
+#+begin_src sh
+cd ~/.local/src/Trilinos
+git describe --tag
+#+end_src
+
+#+RESULTS:
+: trilinos-release-13-4-1
+
+Then we create a build folder inside the source directory ~build/trilinos-release-13-4-1/~ where we place our specific configuration.
+
+#+begin_src makefile :tangle ~/.local/src/Trilinos/build/trilinos-release-13-4-1/config.cmake
+set(CMAKE_INSTALL_PREFIX "/home/nasser/.opt/trilinos-release-13-4-1" CACHE PATH "Set in my config.cmake" FORCE)
+set(Tpetra_INST_INT_INT ON CACHE BOOL "Set in my config.cmake") 
+set(Trilinos_ENABLE_TESTS ON CACHE BOOL "Set in my config.cmake") 
+set(Trilinos_ENABLE_Amesos ON CACHE BOOL "Set in my config.cmake")                      
+set(Trilinos_ENABLE_Amesos2  ON CACHE BOOL "Set in my config.cmake") 
+set(Amesos2_ENABLE_TESTS ON CACHE BOOL "Set in my config.cmake") 
+set(Trilinos_ENABLE_Epetra ON CACHE BOOL "Set in my config.cmake")
+set(Trilinos_ENABLE_EpetraExt ON CACHE BOOL "Set in my config.cmake")                  
+set(Trilinos_ENABLE_Ifpack ON CACHE BOOL "Set in my config.cmake")                      
+set(Trilinos_ENABLE_AztecOO ON CACHE BOOL "Set in my config.cmake")                     
+set(Trilinos_ENABLE_Sacado ON CACHE BOOL "Set in my config.cmake")                      
+set(Trilinos_ENABLE_SEACAS OFF CACHE BOOL "Set in my config.cmake")                      
+set(Trilinos_ENABLE_MueLu ON CACHE BOOL "Set in my config.cmake")                       
+set(Trilinos_ENABLE_ML ON CACHE BOOL "Set in my config.cmake")                          
+set(Trilinos_ENABLE_ROL ON CACHE BOOL "Set in my config.cmake")                         
+set(Trilinos_ENABLE_Belos ON CACHE BOOL "Set in my config.cmake") 
+set(Belos_ENABLE_EXAMPLES ON CACHE BOOL "Set in my config.cmake") 
+set(Belos_ENABLE_TESTS ON CACHE BOOL "Set in my config.cmake")   
+set(Trilinos_ENABLE_Ifpack2 ON CACHE BOOL "Set in my config.cmake") 
+set(Kokkos_ENABLE_SERIAL ON CACHE BOOL "Set in my config.cmake") 
+set(Trilinos_ENABLE_Teuchos ON CACHE BOOL "Set in my config.cmake") 
+set(rilinos_ENABLE_Tpetra ON CACHE BOOL "Set in my config.cmake")                      
+set(Tpetra_ENALE_DEPRECATED_CODE ON CACHE BOOL "Set in my config.cmake") 
+set(Tpetra_ENABLE_TESTS ON CACHE BOOL "Set in my config.cmake")  
+set(Trilinos_ENABLE_Xpetra ON CACHE BOOL "Set in my config.cmake") 
+set(Xpetra_ENABLE_Experimental ON CACHE BOOL "Set in my config.cmake") 
+set(Xpetra_ENABLE_Kokkos_Refactor ON CACHE BOOL "Set in my config.cmake") 
+set(Xpetra_ENABLE_Epetra ON CACHE BOOL "Set in my config.cmake") 
+set(Trilinos_ENABLE_Galeri ON CACHE BOOL "Set in my config.cmake") 
+set(Galeri_ENABLE_Xpetra ON CACHE BOOL "Set in my config.cmake") 
+set(Trilinos_ENABLE_COMPLEX_DOUBLE ON CACHE BOOL "Set in my config.cmake")              
+set(Trilinos_ENABLE_COMPLEX_FLOAT ON CACHE BOOL "Set in my config.cmake")               
+set(Trilinos_ENABLE_Zoltan ON CACHE BOOL "Set in my config.cmake")
+set(Trilinos_ENABLE_PyTrilinos OFF CACHE BOOL "Set in my config.cmake")
+set(Trilinos_VERBOSE_CONFIGURE OFF CACHE BOOL "Set in my config.cmake")                 
+set(TPL_ENABLE_MPI ON CACHE BOOL "Set in my config.cmake")                              
+set( TPL_ENABLE_BLAS  ON CACHE BOOL "Set in my config.cmake")    
+set( TPL_ENABLE_LAPACK ON CACHE BOOL "Set in my config.cmake")   
+set( TPL_ENABLE_UMFPACK ON CACHE BOOL "Set in my config.cmake")  
+set(BUILD_SHARED_LIBS ON CACHE BOOL "Set in my config.cmake")    
+set(CMAKE_VERBOSE_MAKEFILE OFF CACHE BOOL "Set in my config.cmake")
+set(CMAKE_BUILD_TYPE RELEASE CACHE INTERNAL "Set in my config.cmake")           
+set(Trilinos_ENABLE_EXPLICIT_INSTANTIATION ON CACHE BOOL "Set in my config.cmake")      
+set( Trilinos_ASSERT_MISSING_PACKAGES ON CACHE BOOL "Set in my config.cmake") 
+set(CMAKE_MESSAGE_LOG_LEVEL "DEBUG" CACHE STRING "Set in my config.cmake") 
+#+end_src
+
+In this block, I use the source block header option with the tangle file specification.
+
+#+begin_example
+,#+begin_src makefile :tangle ~/.local/src/Trilinos/build/trilinos-release-13-4-1/config.cmake
+#+end_example
+
+[fn:1] I like to keep packages source codes inside ~~/.local/src~. The ~~/.local~ seems to be the [[https://specifications.freedesktop.org/basedir-spec/basedir-spec-latest.html][standard]] here.  
+
+* Configuring and building
+
+Now that the configuration setting is defined and properly stored, we can continue to configure and build.
+
+#+begin_src sh
+TRILINOS_BUILD_DIR=trilinos-release-13-4-1
+cd ~/.local/src/Trilinos/build/$TRILINOS_BUILD_DIR
+rm -f CMakeCache.txt
+cmake -D Trilinos_CONFIGURE_OPTIONS_FILE=config.cmake ../../ | tee config.out
+make -j32
+make install
+#+end_src
+
+We can check the installation with,
+
+#+begin_src sh
+grep -R def.*TRILINOS_VERSION_STRING ~/.opt/trilinos-release-13-4-1/include
+#+end_src
+
+#+RESULTS:
+: /home/nasser/.opt/trilinos-release-13-4-1/include/Trilinos_version.h:#define TRILINOS_VERSION_STRING "13.4.1"
+
+In Org mode, I use the [[https://www.google.com/url?q=https://sr.ht/~niklaseklund/detached.el/&sa=U&ved=2ahUKEwjNl_eA7Jn9AhXqxwIHHVsUCi4QFnoECAoQAg&usg=AOvVaw1P7qtc_mkzNpopXCkrjB2n][Detached]] package, which runs this shell command in a process independent of emacs.
+This works like an "async" feature, and the result is that it does not block emacs.
+It could be even used to run things on another computer.
+
+* Using the specific Trilinos version in a "downstream" application
+
+After installing the specific version we can use it (linking/including) in our application (a.k.a downstream application).
