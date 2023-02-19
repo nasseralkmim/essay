@@ -4,7 +4,7 @@
 #+draft: t
 #+toc: t
 #+tags[]: tools emacs C++ org-mode trilinos
-#+lastmod: 2023-02-17 12:42:16
+#+lastmod: 2023-02-19 12:15:30
 #+PROPERTY: header-args :exports both
 * Introduction
 
@@ -17,7 +17,7 @@ In this post, I will go to explain my workflow on how to manage this situation w
 The particular software that I am dealing with is [[https://trilinos.github.io/][Trilinos]].
 Therefore, another title for this post could be "installing Trilinos for absolute beginners". 
 
-* Keeping track of configuration setting and versions with =:tangle= (tango?💃)
+* Keeping track of configuration setting and versions with =:tangle=
 
 I like consistency and order (who doesn't?).
 To make this organized, I keep track of configuration files within a code block.
