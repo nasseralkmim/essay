@@ -4,20 +4,20 @@
 #+draft: t
 #+toc: t
 #+tags[]: tools emacs C++ org-mode trilinos
-#+lastmod: 2023-02-19 12:15:30
+#+lastmod: 2023-03-14 10:27:22
 #+PROPERTY: header-args :exports both
 * Introduction
 
 Have you ever had to deal with multiple versions of the same C++ software?
 Right now I am dealing with those questions: Where should I build the binaries? How can I keep track of which version? How can I keep track of which configuration options? Where should I install it? How to link to the right libraries with a specific version?
-A lot to think about and keep track.
+A lot to think about and keep track of.
 Fortunately, [[https://orgmode.org/][Org mode]] makes things a bit easy (maybe even fun).
 
 In this post, I will go to explain my workflow on how to manage this situation with Org-mode.
 The particular software that I am dealing with is [[https://trilinos.github.io/][Trilinos]].
 Therefore, another title for this post could be "installing Trilinos for absolute beginners". 
 
-* Keeping track of configuration setting and versions with =:tangle=
+* Keeping track of configuration settings and versions with =:tangle=
 
 I like consistency and order (who doesn't?).
 To make this organized, I keep track of configuration files within a code block.
@@ -33,7 +33,9 @@ git describe --tag
 #+RESULTS:
 : trilinos-release-13-4-1
 
-Then we create a build folder inside the source directory ~build/trilinos-release-13-4-1/~ where we place our specific configuration.
+Then we create a build folder inside the source directory[fn:2] ~build/trilinos-release-13-4-1/~ where we place our specific configuration[fn:3].
+Notice that, in the CMake configuration we specify the =CMAKE_INSTALL_PREFIX=, which is where the installation files will be copied to.
+I use ~/.opt~ for prefixed installations[fn:4].
 
 #+begin_src makefile :tangle ~/.local/src/Trilinos/build/trilinos-release-13-4-1/config.cmake
 set(CMAKE_INSTALL_PREFIX "/home/nasser/.opt/trilinos-release-13-4-1" CACHE PATH "Set in my config.cmake" FORCE)
@@ -91,6 +93,14 @@ In this block, I use the source block header option with the tangle file specifi
 
 [fn:1] I like to keep packages source codes inside ~~/.local/src~. The ~~/.local~ seems to be the [[https://specifications.freedesktop.org/basedir-spec/basedir-spec-latest.html][standard]] here.  
 
+[fn:2] Convention: I like to build in a ~build/~ folder in the source directory. If multiple builds are expected one can create subdirectories for each version/configuration (a.k.a "prefix").
+
+[fn:3] This configuration file makes it "traceable", so you know which configuration was used. 
+
+[fn:4] One could also "install" in the same build folder.  This would make things a little more contained. But, build files sometimes are often disposable and you want to keep just the libraries/header to be used elsewhere. That is why I put it in ~/.opt/~, which is a local user (no need for root permission) version of ~/opt/[fn:5].
+
+[fn:5] [[https://www.pathname.com/fhs/pub/fhs-2.3.html#OPTADDONAPPLICATIONSOFTWAREPACKAGES]] 
+
 * Configuring and building
 
 Now that the configuration setting is defined and properly stored, we can continue to configure and build.
@@ -104,7 +114,7 @@ make -j32
 make install
 #+end_src
 
-We can check the installation with,
+We can check the installation by "grepping" the Trilinos version in the installation directory.
 
 #+begin_src sh
 grep -R def.*TRILINOS_VERSION_STRING ~/.opt/trilinos-release-13-4-1/include
@@ -120,3 +130,37 @@ It could be even used to run things on another computer.
 * Using the specific Trilinos version in a "downstream" application
 
 After installing the specific version we can use it (linking/including) in our application (a.k.a downstream application).
+The downstream application combines the Trilinos packages to solve a problem.
+For instance, use Belos Krylov solver with MueLu preconditioner to solve a linear system iteratively.
+
+Here I will use CMake to configure my build files to automatically find the libraries that I want to link to and include.
+
+** CMake /prefix path/
+
+CMake /config files/ allow CMake to find the packages with =find_package= function.
+For Trilinos, there is this option that is turned on by default.
+
+#+begin_src sh
+grep "ENABLE.*CMAKE_CONFIG_FILES.*BOOL" build/CMakeCache.txt
+#+end_src
+
+#+RESULTS:
+: Trilinos_ENABLE_INSTALL_CMAKE_CONFIG_FILES:BOOL=ON
+
+On the "downstream" project, if a nonstandard location is used for the installation, we need to tell CMake where to look for the config files with[fn:73],
+
+#+begin_src sh
+-D CMAKE_PREFIX_PATH=<where you installed>
+#+end_src
+
+Or in the ~CMakeLists.txt~ directly[fn:74]
+
+#+begin_src makefile
+list(APPEND CMAKE_PREFIX_PATH "<where you installed>")
+#+end_src
+
+[fn:73] [[https://cmake.org/cmake/help/v3.0/variable/CMAKE_PREFIX_PATH.html#:~:text=Path%20used%20for%20searching%20by,subdirectories%20to%20the%20base%20directories.][CMAKE_PREFIX_PATH — CMake 3.0.2 Documentation]] 
+
+[fn:74] [[https://stackoverflow.com/a/55122281][c++ - CMakeList set CMAKE_PREFIX_PATH - Stack Overflow]] 
+
+

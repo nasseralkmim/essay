@@ -1,6 +1,6 @@
 #+title: GIT notes
 #+date: <2021-06-04 Fri>
-#+lastmod: 2021-08-23 10:16:19
+#+lastmod: 2023-02-23 12:32:23
 #+author: Nasser Alkmim
 #+draft: t
 #+toc: t
@@ -142,6 +142,7 @@ Or a specific commit, "detached mode".
 
 Add the pattern to =.gitignore=, removed from cached git with =git rm --cached <file>=.
 This does not delete the file on the system, it just remove from git cached information.
+
 ** Adding changes to a previous commit
 
 If you want to add to the previous one, use =amend=.

@@ -1,0 +1,13 @@
+#+title: Keep track of capital gains with plain text account (PTA) software
+#+date: <2023-05-18 Do>
+#+author: Nasser Alkmim
+#+draft: t
+#+toc: t
+#+tags[]: plain text accounting, tools, accounting
+#+lastmod: 2023-05-18 11:50:09
+* Introduction
+
+Last cold winter I decided that my spreadsheet solution for tracking my finances was obsolete.
+It was simple yet complicated, the spreadsheet format hides the complex formulas.
+It is true that with the Google query language things got better, but still, there still some lack of flexibility with the spreadsheet format.
+

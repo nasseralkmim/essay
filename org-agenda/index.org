@@ -1,0 +1,33 @@
+#+title: Org-mode agenda workflow
+#+date: <2023-03-02 Thu>
+#+author: Nasser Alkmim
+#+draft: t
+#+toc: t
+#+tags[]: tools org-mode emacs 
+#+lastmod: 2023-03-02 10:24:49
+* Introduction
+
+When tasks start to pile up, we can not rely only on our brain power.
+It is a relief to rely on tools that can empty our minds from all the scheduling madness.
+In this post, I will go over some /simple/ workflow for keeping track of events (or tasks).
+It is my workflow, I'm not attempting to write something general for everyone.
+Take it as inspiration.
+
+Notice the emphasis on /simple/.
+There is no point in deliberately adding complexity to our lives.
+Only /simple/ is welcomed.
+
+* Overview
+
+1. Capture event[fn:1].
+
+[fn:1] Something that happens at specific date. Optionally, it can have a duration, location and other details.   
+
+* Google calendar synchronization
+
+* What to do with events that have passed?
+
+If an event passed.
+I acted on it or not.
+The way =org-mode= allows us to differentiate that is with =TODO= and =DONE= keywords.
+
