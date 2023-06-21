@@ -1,0 +1,12 @@
+#+title: Emacs for scientific computing 2: Remote workflows
+#+date: <2023-06-02 Fri>
+#+author: Nasser Alkmim
+#+draft: t
+#+toc: t
+#+tags[]: scientific-computing emacs tools
+#+lastmod: 2023-06-23 12:51:24
+* Introduction
+
+Do you spend time remembering which commands you used to perform a certain task?
+Or — after contemplation — decided to write a bash script to easily repeat whatever you are doing. 
+And, after some time, you wonder where is this script.

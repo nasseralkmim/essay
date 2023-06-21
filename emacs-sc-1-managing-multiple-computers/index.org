@@ -1,0 +1,35 @@
+#+title: Emacs for scientific computing 1: Why Emacs?
+#+date: <2023-06-02 Fri>
+#+author: Nasser Alkmim
+#+draft: t
+#+toc: t
+#+tags[]: scientific-computing emacs tools
+#+lastmod: 2023-07-12 12:21:37
+* Introduction
+
+In this short series, I will describe my experiences with Emacs in the field of scientific computing.
+Scientific computing involves managing computers resources and sometimes it can get a bit chaotic.
+Hence we need tools to help us deal with complex workflows.
+In this series, I will show how I use Emacs to help me with that.
+
+The subjects of each article will be:
+
+1. =TRAMP=
+2. =org-babel=
+
+* Why Emacs? 
+
+Before starting, we need to ask the question: why emacs?
+Well, if you are reading this, you probably are interested in computers and use them to perform daily tasks.
+If you ever need to write text on the computer, prose or code, you will need a text editor to do that.
+There are many out there, Emacs is one of them[fn:1].
+
+The editor you choose to use is a personal choice.
+Here I will say some advantages and disadvantages of choosing Emacs.
+
+[fn:1] You can say emacs is a text editor, even though it can be much more.
+
+* Complexity as the enemy and =org-mode=
+
+
+

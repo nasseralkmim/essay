@@ -3,8 +3,8 @@
 #+author: Nasser Alkmim
 #+draft: t
 #+toc: t
-#+tags[]: plain text accounting, tools, accounting
-#+lastmod: 2023-05-18 11:50:09
+#+tags[]: plain text accounting, tools
+#+lastmod: 2023-06-11 10:52:15
 * Introduction
 
 Last cold winter I decided that my spreadsheet solution for tracking my finances was obsolete.

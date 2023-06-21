@@ -1,0 +1,14 @@
+#+title: Why plain text account?
+#+date: <2023-06-11 So>
+#+author: Nasser Alkmim
+#+draft: t
+#+toc: t
+#+tags[]:  "plain text accounting" tools
+#+lastmod: 2023-06-23 12:52:33
+* Introduction
+
+Why use plain text accounting tools?
+First, what is plain text accounting?
+Actually, why keep track of your finances in the first place?
+
+
