@@ -1,10 +1,10 @@
 #+title: Managing multiple software versions with Org-mode
 #+date: <2023-02-16 Thu>
 #+author: Nasser Alkmim
-#+draft: t
+#+draft: nil
 #+toc: t
 #+tags[]: tools emacs C++ org-mode trilinos
-#+lastmod: 2023-03-14 10:27:22
+#+lastmod: 2023-05-18 11:58:06
 #+PROPERTY: header-args :exports both
 * Introduction
 

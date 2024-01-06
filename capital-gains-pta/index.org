@@ -4,10 +4,12 @@
 #+draft: t
 #+toc: t
 #+tags[]: plain text accounting, tools
-#+lastmod: 2023-06-11 10:52:15
+#+lastmod: 2024-01-06 09:26:52
 * Introduction
 
 Last cold winter I decided that my spreadsheet solution for tracking my finances was obsolete.
 It was simple yet complicated, the spreadsheet format hides the complex formulas.
-It is true that with the Google query language things got better, but still, there still some lack of flexibility with the spreadsheet format.
+It is true that with the Google query language things got better, but still, there still some lack of flexibility with the spreadsheet format.[fn:1]
+
+[fn:1] This is an important footnote that I would want on the side. 
 
