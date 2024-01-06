@@ -1,0 +1,279 @@
+#+title: Computing returns with plain text account tools
+#+date: <2024-01-06 Sa>
+#+author: Nasser Alkmim
+#+draft: t
+#+toc: t
+#+tags[]: "plain text accounting" finance
+#+lastmod: 2024-01-06 09:25:22
+
+* Introduction
+
+In this post, I go over an example of how to compute returns using a plain text accounting (PTA) tool =hledger=.
+PTA just means that we process our transactions recorded in plain text files to extract useful accounting information.
+
+* Initial investment
+
+To begin, we consider a purchase of an asset
+
+#+begin_src ledger :tangle examples/finance/tir.ledger
+2023-01-01 * Buy some shares
+    assets:investments:stocks  1 SHARE @ $ 100.00
+    assets:cash
+#+end_src
+
+Then the price increases[fn:27] on the next month, recorded with the =P= directive.
+
+#+begin_src ledger :tangle examples/finance/tir.ledger
+P 2023-02-01 SHARE $ 102.00
+#+end_src
+
+* Cost and value
+
+We can check how hledger deals with "cost" and "value".
+Cost is what resources (cash) were mobilized to obtain an asset.
+The value option[fn:31] is a bit more general and can depends on what one wants from the data.
+Here are some options,
+
+#+begin_src sh :dir examples/finance
+hledger -f tir.ledger reg investments -B
+hledger -f tir.ledger reg investments -V
+hledger -f tir.ledger reg investments --value=end
+hledger -f tir.ledger reg investments --value=then
+#+end_src
+
+#+RESULTS:
+: 2023-01-01 Buy some shares      as:in:stocks              $ 100.00      $ 100.00
+: 2023-01-01 Buy some shares      as:in:stocks              $ 102.00      $ 102.00
+: 2023-01-01 Buy some shares      as:in:stocks              $ 102.00      $ 102.00
+: 2023-01-01 Buy some shares      as:in:stocks               1 SHARE       1 SHARE
+
+We notice that =-B= results in the cost of the asset when we bought it.
+The =-V= flag results in the same as =--value=end= which uses the journal's end date — in this case, 02/01, when we informed the new market price.
+However, if we specify manually the end date, it takes this date,
+
+#+begin_src sh :dir examples/finance
+hledger -f tir.ledger reg investments -V -e 2023-01-31
+hledger -f tir.ledger reg investments --value=end -e 2023-01-31 
+#+end_src
+
+#+RESULTS:
+: 2023-01-01 Buy some shares      as:in:stocks               1 SHARE       1 SHARE
+: 2023-01-01 Buy some shares      as:in:stocks               1 SHARE       1 SHARE
+
+Notice that before we use the directive =P= to inform the price, hledger does not know about the /market price/.
+We can use the price specified in the asset purchase as market price on that day.
+This is done with the flag =--infer-market-prices=.
+
+#+begin_src sh :dir examples/finance
+hledger -f tir.ledger reg investments -V -e 2023-01-31 --infer-market-price
+hledger -f tir.ledger reg investments --value=end -e 2023-01-31 --infer-market-price
+#+end_src
+
+#+RESULTS:
+: 2023-01-01 Buy some shares      as:in:stocks              $ 100.00      $ 100.00
+: 2023-01-01 Buy some shares      as:in:stocks              $ 100.00      $ 100.00
+
+Now hledger knows that on 01/01 the market price is $100.
+And by this date, we only know the price on 01/01.
+
+The =--then= flag uses the value determined by the market on the day of the posting — or cash flow.
+This is useful to compute the return on our investments, so we can compare our portfolio with the market.
+That is the most useful information an investor can have.
+It answers the simple question: "Should I have just bought the market portfolio?" — and not doing any miraculous allocation. 
+
+[fn:31] Valuation: The act of estimating the value of something. In the case of a stock, we can have the market decide the value.
+
+* Initial ROI report
+
+Let's check the output of hledger for the calculation of the return on investment.
+
+#+begin_src sh :dir examples/finance
+hledger -f tir.ledger roi --inv investments --pnl "unrealized" --value=then --infer-market-prices -e 2023-02-01
+#+end_src
+
+#+RESULTS:
+: +---++------------+------------++---------------+----------+-------------+--------++--------+--------+
+: |   ||      Begin |        End || Value (begin) | Cashflow | Value (end) |    PnL ||    IRR |    TWR |
+: +===++============+============++===============+==========+=============+========++========+========+
+: | 1 || 2023-01-01 | 2023-01-31 ||             0 | $ 100.00 |    $ 102.00 | $ 2.00 || 26.26% | 26.26% |
+: +---++------------+------------++---------------+----------+-------------+--------++--------+--------+
+: 
+
+In this command:
+
+1. =--inv= queries for transactions involving accounts that contain "investments"
+2. the =--pnl= indicates which account tracks the returns, in our case, it is unrealized pnl – we didn't sell yet.
+
+
+Notice that we need to pass the end date, so hledger can take into account the market value we passed with the "P" directive.
+
+We can see the IRR and TWR are the same.
+We can check that this number is the anual rate, with monthly rate of 2%.
+
+#+begin_src python
+print(f"{((1 + 2/100)**(365/31) - 1) * 100:.2f} % considering number of days")
+#+end_src
+
+#+RESULTS:
+: 26.26 % considering number of days
+
+* Cash flow event
+
+Next month, we add another share,
+On the day we buy, the share market value increased.
+
+#+begin_src ledger :tangle examples/finance/tir.ledger
+2023-03-01 * Buy some shares
+    assets:investments:stocks  1 SHARE @ $ 103.00
+    assets:cash
+#+end_src
+
+* What is IRR (internal rate of return)
+
+Let's check out the return of investment report.
+
+#+begin_src sh :dir examples/finance
+hledger -f tir.ledger roi --inv investments --pnl "unrealized" --value=then --infer-market-price
+#+end_src
+
+#+RESULTS:
+: +---++------------+------------++---------------+----------+-------------+--------++--------+-------+
+: |   ||      Begin |        End || Value (begin) | Cashflow | Value (end) |    PnL ||    IRR |   TWR |
+: +===++============+============++===============+==========+=============+========++========+=======+
+: | 1 || 2023-01-01 | 2023-03-01 ||             0 | $ 203.00 |    $ 206.00 | $ 3.00 || 19.35% | 9.35% |
+: +---++------------+------------++---------------+----------+-------------+--------++--------+-------+
+: 
+
+First thing we notice is that the IRR and TWR are different.
+What the number means?
+Which one is better?
+We can check the calculation it with,
+
+\begin{equation}
+\dfrac{206}{(1 + IRR)^2} - \dfrac{103}{(1 + IRR)^2} - 100 = 0
+\end{equation}
+
+This means:
+
+1. we bring the final value to the present based on a rate that "acts" with compound interest during the period.
+2. the cash flow of the new investment is also brought to the present
+
+So the IRR is the rate that acts equally on all cash flows and is responsible to generate the final return.
+It takes into account time, older cash flows have a bigger impact.
+That is why it is called "time value of money"
+
+#+begin_src python
+from scipy.optimize import fsolve
+
+def f(x):
+    return 206 / (1 + x)**(28+31+1) - 103 / (1 + x)**(31+28) - 100 
+
+x = fsolve(f, x0=0)
+print(f"Daily rate {x[0]*100:.2f} %")
+print(f"Annualized {((1 + x[0])**(365) - 1) * 100:.2f} %")
+#+end_src
+
+#+RESULTS:
+: Daily rate 0.05 %
+: Annualized 19.35 %
+
+Notice that the first day of March is included in the computation of the present value of the final portfolio value.
+Meanwhile, when bringing the stock purchase cash flow, it does not consider this first day.
+Even though the purchase was on this day.
+This means that the purchase cash flow occurs a the beginning of the day and the final return cash flow at the end[fn:28].
+
+
+* What is TWR (time weighted return)
+
+The TWR *does not consider the impact of the cash flow* and measures how much the asset is increasing in market value – or decreasing.
+It is the information to use when comparing your return with market portfolio.
+Can inform if our timing and allocation is good or bad compared with actively managed portfolio.
+
+If we check the monthly calculation,
+
+#+begin_src sh :dir examples/finance
+hledger -f tir.ledger roi --inv investments --pnl "unrealized" --value=then,$ --infer-market-price --monthly
+#+end_src
+
+#+RESULTS:
+: +---++------------+------------++---------------+----------+-------------+--------++--------+--------+
+: |   ||      Begin |        End || Value (begin) | Cashflow | Value (end) |    PnL ||    IRR |    TWR |
+: +===++============+============++===============+==========+=============+========++========+========+
+: | 1 || 2023-01-01 | 2023-01-31 ||             0 | $ 100.00 |    $ 102.00 | $ 2.00 || 26.26% | 26.26% |
+: | 2 || 2023-02-01 | 2023-02-28 ||      $ 102.00 |        0 |    $ 103.00 | $ 1.00 || 13.56% | 13.56% |
+: | 3 || 2023-03-01 | 2023-03-31 ||      $ 103.00 | $ 103.00 |    $ 206.00 |      0 ||  0.00% |  0.00% |
+: +---++------------+------------++---------------+----------+-------------+--------++--------+--------+
+: 
+
+This is using the formula[fn:29],
+
+\begin{equation}
+R = \dfrac{V_{end} - (V_{bgn} + C_f)}{V_{bgn} + C_f}
+\end{equation}
+which considers the cash flow.
+Lets do a quick check.
+
+#+name:p1
+#+begin_src python
+Vend = 102
+Vbgn = 0
+Cf = 100
+R1 = (Vend - (Vbgn + Cf)) / (Vbgn + Cf)
+period_days = 31
+print(f"Period return {R1*100:.2f} %")
+print(f"Period return annualized {((1 + R1)**(365/period_days)- 1)*100:.2f} %")
+#+end_src
+
+#+RESULTS: p1
+: Period return 2.00 %
+: Period return annualized 26.26 %
+
+
+Doing a quick sanity check to see if we got it right,
+
+#+name:p2
+#+begin_src python
+Vend = 103
+Vbgn = 102
+Cf = 0
+R2 = (Vend - (Vbgn + Cf)) / (Vbgn + Cf)
+period_days = 28
+print(f"Period return {R2*100:.2f} %")
+print(f"Period return annualized {((1 + R2)**(365/period_days)- 1)*100:.2f} %")
+#+end_src
+
+#+RESULTS: p2
+: Period return 0.98 %
+: Period return annualized 13.56 %
+
+Then, the total for the period is,
+
+#+begin_src python
+R = 206/203 -1
+period_days = 31 + 28 + 1 
+print(f"Period return {R*100:.2f} %")
+print(f"Period return annualized {((1 + R)**(365/period_days)- 1)*100:.2f} %")
+#+end_src
+
+#+RESULTS:
+: Period return 1.48 %
+: Period return annualized 9.33 %
+
+#+begin_src sh :dir examples/finance
+hledger -f tir.ledger roi --inv investments --pnl "unrealized" --value=then,$ --infer-market-price
+#+end_src
+
+#+RESULTS:
+: +---++------------+------------++---------------+----------+-------------+--------++--------+-------+
+: |   ||      Begin |        End || Value (begin) | Cashflow | Value (end) |    PnL ||    IRR |   TWR |
+: +===++============+============++===============+==========+=============+========++========+=======+
+: | 1 || 2023-01-01 | 2023-03-01 ||             0 | $ 203.00 |    $ 206.00 | $ 3.00 || 19.35% | 9.35% |
+: +---++------------+------------++---------------+----------+-------------+--------++--------+-------+
+: 
+
+
+[fn:27] This price refers to the end of the day. With =--infer-market-prices= options, and not providing the price directive with =P=, hledger would take the value of the transaction as the day price, which might not be desired if the price fluctuated during the day. For example, bought at $100 in the morning but at the end of the day it is now $103. 
+
+[fn:29] [[https://en.wikipedia.org/wiki/Time-weighted_return][Time-weighted return - Wikipedia]] 
+
+[fn:30] Maybe some rounding errors?
