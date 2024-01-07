@@ -1,10 +1,9 @@
 #+title: Computing returns with plain text account tools
 #+date: <2024-01-06 Sa>
 #+author: Nasser Alkmim
-#+draft: t
 #+toc: t
-#+tags[]: "plain text accounting" finance
-#+lastmod: 2024-01-06 09:25:22
+#+tags[]: pta finance
+#+lastmod: 2024-01-06 15:20:16
 
 * Introduction
 
@@ -272,7 +271,7 @@ hledger -f tir.ledger roi --inv investments --pnl "unrealized" --value=then,$ --
 : 
 
 
-[fn:27] This price refers to the end of the day. With =--infer-market-prices= options, and not providing the price directive with =P=, hledger would take the value of the transaction as the day price, which might not be desired if the price fluctuated during the day. For example, bought at $100 in the morning but at the end of the day it is now $103. 
+[fn:27] This price refers to the end of the day. With =--infer-market-prices= options, and not providing the price directive with =P=, hledger would take the value of the transaction as the day price, which might not be desired if the price fluctuated during the day. For example, bought at \$100 in the morning but at the end of the day it is now \$103. 
 
 [fn:29] [[https://en.wikipedia.org/wiki/Time-weighted_return][Time-weighted return - Wikipedia]] 
 
