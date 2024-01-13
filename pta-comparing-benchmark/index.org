@@ -3,7 +3,7 @@
 #+author: Nasser Alkmim
 #+toc: t
 #+tags[]: pta
-#+lastmod: 2024-01-07 17:12:40
+#+lastmod: 2024-01-07 17:14:47
 * Introduction
 
 In this post I go over an example of computing a portfolio return (TWR) and comparing it each month with a benchmark.
@@ -298,8 +298,8 @@ And repeating for the whole period, plotting the accumulated return each month.
 We can do that by saving the monhthly TWR for the portfolio and for the benchmark,
    
 #+begin_src sh :results silent
-hledger -f portfolio.ledger -f aapl.ledger roi --inv investments --pnl "unrealized" --value=then --monthly --infer-market-price --end=2024-01-01 > portfolio-twr.org
-hledger -f benchmark.ledger -f ^spx.ledger roi --inv investments --pnl "unrealized" --value=then --monthly --infer-market-price --end=2024-01-01 > benchmark-twr.org
+hledger -f portfolio.ledger -f aapl.ledger roi --inv investments --pnl "unrealized" --value=then --monthly --infer-market-price --end=2024-01-01 > portfolio-twr.txt
+hledger -f benchmark.ledger -f ^spx.ledger roi --inv investments --pnl "unrealized" --value=then --monthly --infer-market-price --end=2024-01-01 > benchmark-twr.txt
 #+end_src
 
 Then we can just load that with python and plot the cummulated value,
@@ -313,8 +313,8 @@ import figtex; figtex.style()
 import pandas as pd
 
 files = {
-    "portfolio-twr.org": dict(label="portfolio", linewidth=2),
-    "benchmark-twr.org": dict(label="S\&P500", linewidth=6, alpha=.3, color="black"),
+    "portfolio-twr.txt": dict(label="portfolio", linewidth=2),
+    "benchmark-twr.txt": dict(label="S\&P500", linewidth=6, alpha=.3, color="black"),
 }
 
 fig, ax = plt.subplots(figsize=(4, 3))
