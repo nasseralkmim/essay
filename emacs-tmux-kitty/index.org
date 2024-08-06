@@ -1,0 +1,25 @@
+#+title: How to use kitty
+#+date: <2024-08-06 Di>
+#+author: Nasser Alkmim
+#+draft: t
+#+toc: t
+#+tags[]:  emacs, tmux, kitty
+#+lastmod: 2024-08-06 18:11:37
+
+Using some emacs shortcuts in the terminal is rough.
+For example, I use =C-;= for =iedit-mode=, regular terminal emulators can not recognize that.
+This is specially the case when using tmux or mosh.
+With kitty's keyboard protocol[fn:1] and emacs's kkp[fn:2] package, this can be solved and AFAIK any emacs keybindings can be reproduced in the terminal.
+
+One minor inconvenience, is that, when working remotely, with tmux, this keyboard protocol is not implemented.
+There was some discussion[fn:3] about it, but it is not done yet.
+
+One solution I found with emacs, is to run a emacs server inside tmux, detaching, and run a emacsclient outside tmux.
+This gives us emacs with full keybindings capabilities, running in a persistent server inside tmux.
+In case our connection with the remote is lost, we can just connect to the emacs server inside tmux.
+
+[fn:1] https://sw.kovidgoyal.net/kitty/keyboard-protocol/ 
+
+[fn:2] https://github.com/benjaminor/kkp 
+
+[fn:3] https://github.com/tmux/tmux/issues/3335 
